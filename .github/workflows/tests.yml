@@ -1,0 +1,44 @@
+name: Tests
+
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+
+env:
+    PHP_VERSION: 7.2
+
+jobs:
+    PHPUnit:
+        name: PHPUnit
+        runs-on: ubuntu-18.04
+        steps:
+            -   uses: webfactory/ssh-agent@v0.3.0
+                with:
+                    ssh-private-key: ${{ secrets.ORG_SSH_PRIVATE_KEY }}
+            -   uses: actions/checkout@v2
+            -   name: Configure Composer
+                run: |
+                    mkdir -p ~/.composer/cache
+                    umask 077 && cat > ~/.composer/auth.json <<< '${{ secrets.ORG_COMPOSER_AUTH_JSON }}'
+            -   name: Richte ein $TEMP-Verzeichnis ein
+                run: |
+                    echo ::set-env name=TEMP::$GITHUB_WORKSPACE/tmp
+                    $(umask 000; mkdir -p $GITHUB_WORKSPACE/{tmp,logs})
+            -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
+                run: |
+                    sudo update-alternatives --set php /usr/bin/php$PHP_VERSION
+                    echo 'variables_order = "EGPCS"' | sudo tee /etc/php/$PHP_VERSION/cli/conf.d/99-local.ini
+            -   name: Cache Composer Dependencies
+                uses: actions/cache@v1
+                with:
+                    path: vendor/
+                    key: composer-${{ env.PHP_VERSION }}-${{ hashFiles('composer.*') }}
+                    restore-keys: |
+                        composer-${{ env.PHP_VERSION }}-${{ github.ref }}
+                        composer-${{ env.PHP_VERSION }}-
+            -   run: |
+                    composer install --no-interaction --no-scripts --no-progress --no-suggest
+                    composer show
+            -   run: vendor/bin/phpunit
