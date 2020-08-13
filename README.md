@@ -13,3 +13,20 @@ protection and a smooth user journey:
 - Additional user data can be provided after double opt in (planned)
 - Supports newsletter categories
 - Highly customizable
+
+
+Installation
+------------
+
+    composer req webfactory/newsletter-registration-bundle
+    
+activate in `src/bundles.php`:
+
+```php
+<?php
+
+return [
+    // ...
+    Webfactory\NewsletterRegistrationBundle\WebfactoryNewsletterRegistrationBundle::class => ['all' => true],
+];
+```
