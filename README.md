@@ -12,7 +12,8 @@ protection and a smooth user journey:
 - No data is saved until the newsletter recipient verifies their email address (double opt in)
 - Additional user data can be provided after double opt in (planned)
 - Supports newsletter categories
-- Highly customizable
+- Highly customizable due to small interfaces, Doctrine interface mapping (e.g. there are some webfactory specific names
+  you might want to change) and service replacements.
 
 
 Installation
@@ -29,4 +30,33 @@ return [
     // ...
     Webfactory\NewsletterRegistrationBundle\WebfactoryNewsletterRegistrationBundle::class => ['all' => true],
 ];
+```
+
+
+Usage
+-----
+
+Implement all `src/Entity/*Interface.php` in your project. The easiest way is to extend the corresponding abstract
+class, add class level Doctrine ORM annotations (find template for them in the abstract classes) and customize them to
+your liking.
+
+Example:
+
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity()
+ * @ORM\Table(name="wfd_newsletterRecipient", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="email_unique",columns={"email"}),
+ *     @ORM\UniqueConstraint(name="uuid_unique",columns={"uuid"}),
+ * })
+ */
+class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipient
+{
+}
 ```
