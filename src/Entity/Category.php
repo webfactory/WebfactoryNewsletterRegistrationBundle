@@ -5,7 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ ORM\Entity()
+ * @ ORM\Entity(repositoryClass="\Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface")
  * @ ORM\Table("wfd_newsletterCategory")
  */
 abstract class Category implements CategoryInterface

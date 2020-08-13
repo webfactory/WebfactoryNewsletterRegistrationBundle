@@ -69,10 +69,20 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="\AppBundle\Entity\CategoryRepository")
  * @ORM\Table("wfd_newsletterCategory")
  */
 class Category extends \Webfactory\NewsletterRegistrationBundle\Entity\Category
+{
+}
+```
+
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+class CategoryRepository extends \Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepository
 {
 }
 ```
