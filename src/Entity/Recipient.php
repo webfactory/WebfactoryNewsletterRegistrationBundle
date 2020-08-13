@@ -2,7 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
-use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -49,10 +50,22 @@ abstract class Recipient implements RecipientInterface
      */
     protected $registrationDate;
 
-    public function __construct(?string $uuid, string $emailAdress, ?\DateTime $registrationDate = null)
+    /**
+     * @ORM\ManyToMany(targetEntity="CategoryInterface")
+     * @ORM\JoinTable(name="wfd_newsletterSubscription",
+     *      joinColumns={@ORM\JoinColumn(name="recipient_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id")}
+     * )
+     *
+     * @var Collection of CategoryInterface
+     */
+    protected $categories;
+
+    public function __construct(?string $uuid, string $emailAdress, array $categories = [], ?\DateTime $registrationDate = null)
     {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $this->normalize($emailAdress);
+        $this->categories = new ArrayCollection($categories);
         $this->registrationDate = $registrationDate ?: new \DateTime();
     }
 
@@ -69,6 +82,16 @@ abstract class Recipient implements RecipientInterface
     public function getRegistrationDate(): \DateTime
     {
         return $this->registrationDate;
+    }
+
+    public function getCategories(): array
+    {
+        return $this->categories->toArray();
+    }
+
+    public function setCategories(array $categories): void
+    {
+        $this->categories = new ArrayCollection($categories);
     }
 
     protected function normalize(string $string): string

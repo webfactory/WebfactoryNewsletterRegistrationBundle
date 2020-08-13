@@ -60,3 +60,30 @@ class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipien
 {
 }
 ```
+
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity()
+ * @ORM\Table("wfd_newsletterCategory")
+ */
+class Category extends \Webfactory\NewsletterRegistrationBundle\Entity\Category
+{
+}
+```
+
+Configure Doctrine's interface mapping with your actual entity classes:
+
+```yml
+// config.yml
+
+doctrine:
+    orm:
+        resolve_target_entities:
+            \Webfactory\NewsletterRegistrationBundle\Entity\CategoryInterface: '\AppBundle\Entity\Category'
+```
