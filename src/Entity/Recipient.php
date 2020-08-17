@@ -9,10 +9,13 @@ use Ramsey\Uuid\Uuid;
 
 /**
  * @ ORM\Entity()
- * @ ORM\Table(name="wfd_newsletterRecipient", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="email_unique",columns={"email"}),
- *     @ORM\UniqueConstraint(name="uuid_unique",columns={"uuid"}),
- * })
+ * @ ORM\Table(
+ *     name="wfd_newsletterRecipient",
+ *     uniqueConstraints={
+ *         @ ORM\UniqueConstraint(name="email_unique",columns={"email"}),
+ *         @ ORM\UniqueConstraint(name="uuid_unique",columns={"uuid"}),
+ *     }
+ * )
  */
 abstract class Recipient implements RecipientInterface
 {
@@ -51,21 +54,21 @@ abstract class Recipient implements RecipientInterface
     protected $registrationDate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CategoryInterface")
+     * @ORM\ManyToMany(targetEntity="Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface")
      * @ORM\JoinTable(name="wfd_newsletterSubscription",
      *      joinColumns={@ORM\JoinColumn(name="recipient_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="category_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="newsletter_id", referencedColumnName="id")}
      * )
      *
-     * @var Collection of CategoryInterface
+     * @var Collection of NewsletterInterface
      */
-    protected $categories;
+    protected $newsletters;
 
-    public function __construct(?string $uuid, string $emailAdress, array $categories = [], ?\DateTime $registrationDate = null)
+    public function __construct(?string $uuid, string $emailAdress, array $newsletters = [], ?\DateTime $registrationDate = null)
     {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $this->normalize($emailAdress);
-        $this->categories = new ArrayCollection($categories);
+        $this->newsletters = new ArrayCollection($newsletters);
         $this->registrationDate = $registrationDate ?: new \DateTime();
     }
 
@@ -84,14 +87,14 @@ abstract class Recipient implements RecipientInterface
         return $this->registrationDate;
     }
 
-    public function getCategories(): array
+    public function getNewsletters(): array
     {
-        return $this->categories->toArray();
+        return $this->newsletters->toArray();
     }
 
-    public function setCategories(array $categories): void
+    public function setNewsletters(array $newsletters): void
     {
-        $this->categories = new ArrayCollection($categories);
+        $this->newsletters = new ArrayCollection($newsletters);
     }
 
     protected function normalize(string $string): string

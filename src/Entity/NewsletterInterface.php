@@ -2,7 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
-interface CategoryInterface
+interface NewsletterInterface
 {
     public function getName(): string;
 }

@@ -3,9 +3,9 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 
-class CategoryTest extends TestCase
+class NewsletterTest extends TestCase
 {
     /**
      * @test
@@ -13,6 +13,6 @@ class CategoryTest extends TestCase
      */
     public function can_be_constructed()
     {
-        new Category('category name');
+        new Newsletter(null, 'newsletter name');
     }
 }

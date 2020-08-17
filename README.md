@@ -69,10 +69,10 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="\AppBundle\Entity\CategoryRepository")
- * @ORM\Table("wfd_newsletterCategory")
+ * @ORM\Entity(repositoryClass="\AppBundle\Entity\NewsletterRepository")
+ * @ORM\Table("wfd_newsletterNewsletter")
  */
-class Category extends \Webfactory\NewsletterRegistrationBundle\Entity\Category
+class Newsletter extends \Webfactory\NewsletterRegistrationBundle\Entity\Newsletter
 {
 }
 ```
@@ -82,7 +82,7 @@ class Category extends \Webfactory\NewsletterRegistrationBundle\Entity\Category
 
 namespace AppBundle\Entity;
 
-class CategoryRepository extends \Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepository
+class NewsletterRepository extends \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepository
 {
 }
 ```
@@ -95,5 +95,5 @@ Configure Doctrine's interface mapping with your actual entity classes:
 doctrine:
     orm:
         resolve_target_entities:
-            \Webfactory\NewsletterRegistrationBundle\Entity\CategoryInterface: '\AppBundle\Entity\Category'
+            \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface: '\AppBundle\Entity\Newsletter'
 ```
