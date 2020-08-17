@@ -69,6 +69,21 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity(repositoryClass="\AppBundle\Entity\RecipientRepository")
+ */
+class RecipientRepository extends \Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepository
+{
+}
+```
+
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
  * @ORM\Entity(repositoryClass="\AppBundle\Entity\NewsletterRepository")
  * @ORM\Table("wfd_newsletterNewsletter")
  */
