@@ -2,11 +2,11 @@
 
 <p>
     We've received your newsletter registration, but for privacy and spam protection reasons, we won't send any
-    newsletters to {{ recipient.emailAddress }} until you've confirmed ownership of this email address.
+    newsletters to {{ pendingOptIn.emailAddress }} until you've confirmed ownership of this email address.
 </p>
 <p>
     To do so, please follow the link in the email with the subject "{{ optInEmail.getSubject() }}" that we've just sent
-    to {{ recipient.emailAddress }}. Then we'll activate your registration immediately.
+    to {{ pendingOptIn.emailAddress }}. Then we'll activate your registration immediately.
 </p>
 <p>
     If you don't receive our email in a couple of minutes, please have a look in your spam folder.

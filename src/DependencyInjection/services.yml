@@ -2,19 +2,28 @@ services:
     Webfactory\NewsletterRegistrationBundle\Form\RegisterType:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+            - '%secret%'
         tags: ['form.type']
 
-    Webfactory\NewsletterRegistrationBundle\Task\SendOptInEmail:
+    Webfactory\NewsletterRegistrationBundle\Task\StartRegistration:
         arguments:
-            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Symfony\Component\Mailer\MailerInterface'
             - '%webfactory.newsletter_registration.opt_in_sender_address%'
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
 
-    Webfactory\NewsletterRegistrationBundle\Task\SendOptInEmailInterface:
-        alias: Webfactory\NewsletterRegistrationBundle\Task\SendOptInEmail
+    Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface:
+        alias: Webfactory\NewsletterRegistrationBundle\Task\StartRegistration
+
+    Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory:
+        arguments:
+            - '%secret%'
+
+    Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
 
     Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory: ~
 

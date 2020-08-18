@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
@@ -32,14 +33,19 @@ class RegisterType extends AbstractType
     /** @var RecipientRepositoryInterface */
     private $recipientRepository;
 
+    /** @var string */
+    private $secret;
+
     public function __construct(
         NewsletterRepositoryInterface $newsletterRepository,
         PendingOptInRepositoryInterface $pendingOptInRepository,
-        RecipientRepositoryInterface $recipientRepository
+        RecipientRepositoryInterface $recipientRepository,
+        string $secret
     ) {
         $this->newsletterRepository = $newsletterRepository;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
+        $this->secret = $secret;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -100,11 +106,11 @@ class RegisterType extends AbstractType
                 return;
             }
 
-            if ($that->pendingOptInRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
+            if ($that->pendingOptInRepository->isEmailAddressHashAlreadyRegistered(PendingOptIn::hashEmailAddress($emailAddress, $this->secret))) {
                 $executionContext->addViolation(self::ERROR_EMAIL_ALREADY_REGISTERING);
             }
 
-            if ($that->recipientRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
+            if ($that->recipientRepository->isEmailAddressAlreadyRegistered(PendingOptIn::normalizeEmailAddress($emailAddress))) {
                 $executionContext->addViolation(self::ERROR_EMAIL_ALREADY_REGISTERED);
             }
         };

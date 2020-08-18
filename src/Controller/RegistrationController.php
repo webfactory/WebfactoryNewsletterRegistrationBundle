@@ -7,9 +7,9 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
-use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
-use Webfactory\NewsletterRegistrationBundle\Task\SendOptInEmailInterface;
+use Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface;
 
 abstract class RegistrationController
 {
@@ -19,22 +19,22 @@ abstract class RegistrationController
     /** @var Environment */
     protected $twig;
 
-    /** @var SendOptInEmailInterface */
-    protected $sendOptInEmailTask;
+    /** @var StartRegistrationInterface */
+    protected $startRegistrationTask;
 
-    /** @var RecipientFactoryInterface */
-    protected $recipientFactory;
+    /** @var PendingOptInFactoryInterface */
+    protected $pendingOptInFactory;
 
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
-        SendOptInEmailInterface $sendOptInEmailTask,
-        RecipientFactoryInterface $recipientFactory
+        StartRegistrationInterface $startRegistrationTask,
+        PendingOptInFactoryInterface $pendingOptInFactory
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
-        $this->sendOptInEmailTask = $sendOptInEmailTask;
-        $this->recipientFactory = $recipientFactory;
+        $this->startRegistrationTask = $startRegistrationTask;
+        $this->pendingOptInFactory = $pendingOptInFactory;
     }
 
     /**
@@ -50,14 +50,14 @@ abstract class RegistrationController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $recipient = $this->recipientFactory->fromRegistrationForm($form);
-            $optInEmail = $this->sendOptInEmailTask->sendOptInEmail($recipient);
+            $pendingOptIn = $this->pendingOptInFactory->fromRegistrationForm($form);
+            $optInEmail = $this->startRegistrationTask->startRegistration($pendingOptIn);
 
             return new Response(
                 $this->twig->render(
                     '@WebfactoryNewsletterRegistration/Register/opt-in-email-sent.html.twig',
                     [
-                        'recipient' => $recipient,
+                        'pendingOptIn' => $pendingOptIn,
                         'optInEmail' => $optInEmail,
                     ]
                 )
