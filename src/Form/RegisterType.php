@@ -18,6 +18,7 @@ class RegisterType extends AbstractType
 {
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
     public const ELEMENT_NEWSLETTERS = 'newsletters';
+    public const ELEMENT_HONEYPOT = 'url';
     public const ERROR_EMAIL_ADREADY_REGISTERED = 'This email address is already registered.';
 
     /** @var NewsletterRepositoryInterface */
@@ -74,7 +75,7 @@ class RegisterType extends AbstractType
 
         // fake field for spam protection
         $builder->add(
-            'url',
+            self::ELEMENT_HONEYPOT,
             HoneypotType::class,
             [
                 'required' => false,

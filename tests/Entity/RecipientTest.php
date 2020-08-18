@@ -3,6 +3,8 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
+use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
 class RecipientTest extends TestCase
@@ -38,5 +40,31 @@ class RecipientTest extends TestCase
             (new Recipient('uuid', 'webfactory@example.com'))->getRegistrationDate(),
             1
         );
+    }
+
+    /**
+     * @test
+     * @doesNotPerformAssertions
+     */
+    public function static_construction_with_newsletters()
+    {
+        Recipient::fromFormData([
+            RegisterType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.org',
+        ]);
+    }
+
+    /**
+     * @test
+     * @doesNotPerformAssertions
+     */
+    public function static_construction_without_newsletters()
+    {
+        Recipient::fromFormData([
+            RegisterType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.org',
+            RegisterType::ELEMENT_NEWSLETTERS => [
+                new Newsletter(null, 'First Newsletter'),
+                new Newsletter(null, 'Second Newsletter'),
+            ],
+        ]);
     }
 }
