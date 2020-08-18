@@ -6,13 +6,13 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 
-class SendOptInEmail implements SendOptInEmailInterface
+class StartRegistration implements StartRegistrationInterface
 {
-    /** @var RecipientRepositoryInterface */
-    protected $recipientRepo;
+    /** @var PendingOptInRepositoryInterface */
+    protected $pendingOptInRepo;
 
     /** @var MailerInterface */
     protected $mailer;
@@ -27,50 +27,60 @@ class SendOptInEmail implements SendOptInEmailInterface
     protected $urlGenerator;
 
     public function __construct(
-        RecipientRepositoryInterface $recipientRepo,
+        PendingOptInRepositoryInterface $pendingOptInRepo,
         MailerInterface $swiftMailer,
         string $senderEmailAddress,
         Environment $twig,
         UrlGeneratorInterface $urlGenerator
     ) {
-        $this->recipientRepo = $recipientRepo;
+        $this->pendingOptInRepo = $pendingOptInRepo;
         $this->mailer = $swiftMailer;
         $this->senderEmailAddress = $senderEmailAddress;
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function sendOptInEmail(RecipientInterface $recipient): Email
+    public function startRegistration(PendingOptInInterface $pendingOptIn): Email
+    {
+        $this->pendingOptInRepo->save($pendingOptIn);
+
+        return $this->sendOptInEmail($pendingOptIn);
+    }
+
+    protected function sendOptInEmail(PendingOptInInterface $pendingOptIn): Email
     {
         $email = (new Email())
             ->from($this->senderEmailAddress)
-            ->to($recipient->getEmailAddress())
-            ->subject($this->renderSubject($recipient))
-            ->text($this->renderBody($recipient));
+            ->to($pendingOptIn->getEmailAddress())
+            ->subject($this->renderSubject($pendingOptIn))
+            ->text($this->renderBody($pendingOptIn));
 
         $this->mailer->send($email);
 
         return $email;
     }
 
-    protected function renderSubject(RecipientInterface $recipient): string
+    protected function renderSubject(PendingOptInInterface $pendingOptIn): string
     {
         return trim(
             $this->twig->render(
                 '@WebfactoryNewsletterRegistration/Register/opt-in-email-subject.txt.twig',
-                ['recipient' => $recipient]
+                ['pendingOptIn' => $pendingOptIn]
             )
         );
     }
 
-    protected function renderBody(RecipientInterface $recipient): string
+    protected function renderBody(PendingOptInInterface $pendingOptIn): string
     {
         return trim(
             $this->twig->render(
                 '@WebfactoryNewsletterRegistration/Register/opt-in-email-body.txt.twig',
                 [
-                    'recipient' => $recipient,
-                    'urlForActivation' => $this->urlGenerator->generate('newsletter-registration-activate'),
+                    'pendingOptIn' => $pendingOptIn,
+                    'urlForConfirmation' => $this->urlGenerator->generate(
+                        'newsletter-registration-confirm',
+                        ['emailAddress' => $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()]
+                    ),
                     'urlForEditing' => $this->urlGenerator->generate('newsletter-registration-edit'),
                 ]
             )

@@ -8,16 +8,16 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Task\SendOptInEmail;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Task\StartRegistration;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
-class SendOptInEmailTest extends TestCase
+class StartRegistrationTest extends TestCase
 {
     protected const SENDER = 'sender@example.com';
 
-    /** @var RecipientRepositoryInterface|MockObject */
-    protected $recipientRepo;
+    /** @var PendingOptInRepositoryInterface|MockObject */
+    protected $pendingOptInRepo;
 
     /** @var MailerInterface|MockObject */
     protected $mailer;
@@ -28,18 +28,18 @@ class SendOptInEmailTest extends TestCase
     /** @var UrlGeneratorInterface|MockObject */
     protected $urlGenerator;
 
-    /** @var SendOptInEmail */
+    /** @var StartRegistration */
     private $task;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
+        $this->pendingOptInRepo = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->mailer = $this->createMock(MailerInterface::class);
         $this->twig = $this->createMock(Environment::class);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $this->task = new SendOptInEmail(
-            $this->recipientRepo,
+        $this->task = new StartRegistration(
+            $this->pendingOptInRepo,
             $this->mailer,
             self::SENDER,
             $this->twig,
@@ -50,9 +50,24 @@ class SendOptInEmailTest extends TestCase
     /**
      * @test
      */
+    public function saves_PendingOptIn()
+    {
+        $pendingOptIn = new PendingOptIn(null, 'receiver@example.com', 'secret');
+
+        $this->pendingOptInRepo
+            ->expects($this->once())
+            ->method('save')
+            ->with($pendingOptIn);
+
+        $this->task->startRegistration($pendingOptIn);
+    }
+
+    /**
+     * @test
+     */
     public function sends_opt_in_email()
     {
-        $recipient = new Recipient(null, 'receiver@example.com');
+        $pendingOptIn = new PendingOptIn(null, 'receiver@example.com', 'secret');
 
         $renderResult = 'render-result';
         $this->twig
@@ -63,14 +78,14 @@ class SendOptInEmailTest extends TestCase
             ->expects($this->once())
             ->method('send')
             ->with($this->callback(
-                function (Email $email) use ($recipient, $renderResult) {
+                function (Email $email) use ($pendingOptIn, $renderResult) {
                     return self::SENDER === $email->getFrom()[0]->getAddress()
-                        && $email->getTo()[0]->getAddress() === $recipient->getEmailAddress()
+                        && $email->getTo()[0]->getAddress() === $pendingOptIn->getEmailAddress()
                         && $email->getTextBody() === $renderResult
                         && $email->getTextBody() === $renderResult;
                 }
             ));
 
-        $this->task->sendOptInEmail($recipient);
+        $this->task->startRegistration($pendingOptIn);
     }
 }
