@@ -112,3 +112,12 @@ doctrine:
         resolve_target_entities:
             \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface: '\AppBundle\Entity\Newsletter'
 ```
+
+And update your database schema, e.g. with a migration.
+
+Configure the sender of opt in emails: 
+
+```config.yml
+parameters:
+  webfactory.newsletter_registration.opt_in_sender_address: 'optin@jugendfuereuropa.de
+```
