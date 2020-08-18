@@ -142,6 +142,16 @@ services:
   Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface:
     alias: 'AppBundle\Newsletter\Entity\NewsletterRepository'
 
+  AppBundle\Newsletter\Entity\PendingOptInRepository:
+    factory:
+      - '@doctrine.orm.entity_manager'
+      - 'getRepository'
+    arguments:
+      - 'AppBundle\Entity\PendingOptIn'
+
+  Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface:
+    alias: 'AppBundle\Newsletter\Entity\PendingOptInRepository'
+
   AppBundle\Newsletter\Entity\RecipientRepository:
     factory:
       - '@doctrine.orm.entity_manager'

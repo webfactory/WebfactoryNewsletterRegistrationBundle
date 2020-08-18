@@ -9,29 +9,18 @@ use Ramsey\Uuid\Uuid;
 use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
 
 /**
- * @ ORM\Entity()
+ * @ ORM\Entity(repositoryClass="PendingOptInRepository")
  * @ ORM\Table(
- *     name="wfd_newsletterRecipient",
  *     uniqueConstraints={
- *         @ ORM\UniqueConstraint(columns={"email"}),
+ *         @ ORM\UniqueConstraint(columns={"emailAddressHash"}),
  *         @ ORM\UniqueConstraint(columns={"uuid"}),
  *     }
  * )
  */
-abstract class Recipient implements RecipientInterface
+abstract class PendingOptIn implements PendingOptInInterface
 {
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", nullable=false)
-     *
-     * @var int|null
-     *
-     * This id is used for external webfactory purposes. You may remove it and declare uuid as your primary key.
-     */
-    protected $id;
-
-    /**
      * @ORM\Column(type="string", length=36, unique=true, nullable=false)
      *
      * @var string
@@ -39,13 +28,20 @@ abstract class Recipient implements RecipientInterface
     protected $uuid;
 
     /**
-     * @ORM\Column(type="string", name="email", nullable=false)
+     * @var string
+     *
+     * A non ORM-mapped field for a normalized email address.
+     */
+    protected $emailAddress;
+
+    /**
+     * @ORM\Column(type="string", nullable=false)
      *
      * @var string
      *
-     * Normalized email address.
+     * Hash of normalized email address.
      */
-    protected $emailAddress;
+    protected $emailAddressHash;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
@@ -57,7 +53,7 @@ abstract class Recipient implements RecipientInterface
     /**
      * @ORM\ManyToMany(targetEntity="Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface")
      * @ORM\JoinTable(
-     *     joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
+     *     joinColumns={@ORM\JoinColumn(referencedColumnName="uuid", onDelete="CASCADE")},
      *     inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
      * )
      *
@@ -65,19 +61,31 @@ abstract class Recipient implements RecipientInterface
      */
     protected $newsletters;
 
-    public static function fromFormData(array $formData): RecipientInterface
+    public static function fromRegistrationFormData(array $formData, string $secret): PendingOptInInterface
     {
         return new static(
             null,
             $formData[RegisterType::ELEMENT_EMAIL_ADDRESS],
+            $secret,
             \array_key_exists(RegisterType::ELEMENT_NEWSLETTERS, $formData) ? $formData[RegisterType::ELEMENT_NEWSLETTERS] : []
         );
     }
 
-    public function __construct(?string $uuid, string $emailAdress, array $newsletters = [], ?\DateTime $registrationDate = null)
+    public static function normalizeEmailAddress(string $string): string
+    {
+        return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
+    }
+
+    public static function hashEmailAddress(string $string, string $secret): string
+    {
+        return md5($secret.self::normalizeEmailAddress($string));
+    }
+
+    public function __construct(?string $uuid, string $emailAddress, string $secret, array $newsletters = [], ?\DateTime $registrationDate = null)
     {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
-        $this->emailAddress = $this->normalize($emailAdress);
+        $this->emailAddress = static::normalizeEmailAddress($emailAddress);
+        $this->emailAddressHash = static::hashEmailAddress($emailAddress, $secret);
         $this->newsletters = new ArrayCollection($newsletters);
         $this->registrationDate = $registrationDate ?: new \DateTime();
     }
@@ -90,20 +98,5 @@ abstract class Recipient implements RecipientInterface
     public function getEmailAddress(): string
     {
         return $this->emailAddress;
-    }
-
-    public function getRegistrationDate(): \DateTime
-    {
-        return $this->registrationDate;
-    }
-
-    public function getNewsletters(): array
-    {
-        return $this->newsletters->toArray();
-    }
-
-    public function setNewsletters(array $newsletters): void
-    {
-        $this->newsletters = new ArrayCollection($newsletters);
     }
 }
