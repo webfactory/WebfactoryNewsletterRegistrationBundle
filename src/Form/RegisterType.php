@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
 class RegisterType extends AbstractType
@@ -19,19 +20,25 @@ class RegisterType extends AbstractType
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
     public const ELEMENT_NEWSLETTERS = 'newsletters';
     public const ELEMENT_HONEYPOT = 'url';
-    public const ERROR_EMAIL_ADREADY_REGISTERED = 'This email address is already registered.';
+    public const ERROR_EMAIL_ALREADY_REGISTERING = 'This email address is already in the process of registering. Please see the email we\'ve send you for further details.';
+    public const ERROR_EMAIL_ALREADY_REGISTERED = 'This email address is already registered.';
 
     /** @var NewsletterRepositoryInterface */
     private $newsletterRepository;
+
+    /** @var PendingOptInRepositoryInterface */
+    private $pendingOptInRepository;
 
     /** @var RecipientRepositoryInterface */
     private $recipientRepository;
 
     public function __construct(
         NewsletterRepositoryInterface $newsletterRepository,
+        PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository
     ) {
         $this->newsletterRepository = $newsletterRepository;
+        $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
     }
 
@@ -93,8 +100,12 @@ class RegisterType extends AbstractType
                 return;
             }
 
+            if ($that->pendingOptInRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
+                $executionContext->addViolation(self::ERROR_EMAIL_ALREADY_REGISTERING);
+            }
+
             if ($that->recipientRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
-                $executionContext->addViolation(self::ERROR_EMAIL_ADREADY_REGISTERED);
+                $executionContext->addViolation(self::ERROR_EMAIL_ALREADY_REGISTERED);
             }
         };
     }

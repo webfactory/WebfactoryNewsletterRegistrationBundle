@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Form\HoneypotType;
 use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
@@ -19,6 +20,9 @@ final class RegisterTypeTest extends TypeTestCase
 {
     /** @var NewsletterRepositoryInterface|MockObject */
     private $newsletterRepository;
+
+    /** @var PendingOptInRepositoryInterface|MockObject */
+    private $pendingOptInRepository;
 
     /** @var RecipientRepositoryInterface|MockObject */
     private $recipientRepository;
@@ -32,6 +36,7 @@ final class RegisterTypeTest extends TypeTestCase
     public function setUp(): void
     {
         $this->newsletterRepository = $this->createMock(NewsletterRepositoryInterface::class);
+        $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         parent::setUp();
     }
@@ -144,6 +149,30 @@ final class RegisterTypeTest extends TypeTestCase
     /**
      * @test
      */
+    public function does_not_validate_with_already_registering_email_address()
+    {
+        $this->pendingOptInRepository->method('isEmailAddressAlreadyRegistered')
+            ->with('webfactory@example.com')
+            ->willReturn(true);
+
+        $form = $this->factory->create(RegisterType::class);
+        $form->submit([
+            'emailAddress' => 'webfactory@example.com',
+            'url' => '',
+        ]);
+
+        $this->assertTrue($form->isSynchronized());
+        $this->assertFalse($form->isValid());
+        $this->assertCount(1, $form->getErrors(true, true));
+        $this->assertEquals(
+            RegisterType::ERROR_EMAIL_ALREADY_REGISTERING,
+            $form->getErrors(true, true)->current()->getMessage()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function does_not_validate_with_already_registered_email_address()
     {
         $this->recipientRepository->method('isEmailAddressAlreadyRegistered')
@@ -160,7 +189,7 @@ final class RegisterTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getErrors(true, true));
         $this->assertEquals(
-            RegisterType::ERROR_EMAIL_ADREADY_REGISTERED,
+            RegisterType::ERROR_EMAIL_ALREADY_REGISTERED,
             $form->getErrors(true, true)->current()->getMessage()
         );
     }
@@ -231,7 +260,16 @@ final class RegisterTypeTest extends TypeTestCase
     protected function getExtensions(): array
     {
         return [
-            new PreloadedExtension([new RegisterType($this->newsletterRepository, $this->recipientRepository)], []),
+            new PreloadedExtension(
+                [
+                    new RegisterType(
+                        $this->newsletterRepository,
+                        $this->pendingOptInRepository,
+                        $this->recipientRepository
+                    ),
+                ],
+                []
+            ),
             new ValidatorExtension(Validation::createValidator()),
         ];
     }
