@@ -121,3 +121,34 @@ Configure the sender of opt in emails:
 parameters:
   webfactory.newsletter_registration.opt_in_sender_address: 'optin@jugendfuereuropa.de
 ```
+
+The abstract RegistrationController gets some Interfaces injected in its constructor. Configure your controller
+accordingly or if your use auto wiring, set aliases for the interface named services:  
+
+```yaml
+// src/services.yml
+
+services:
+  AppBundle\Newsletter\Controller:
+    tags: ['controller.service_arguments']
+
+  AppBundle\Newsletter\Entity\NewsletterRepository:
+    factory:
+      - '@doctrine.orm.entity_manager'
+      - 'getRepository'
+    arguments:
+      - 'AppBundle\Entity\Newsletter'
+
+  Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface:
+    alias: 'AppBundle\Newsletter\Entity\NewsletterRepository'
+
+  AppBundle\Newsletter\Entity\RecipientRepository:
+    factory:
+      - '@doctrine.orm.entity_manager'
+      - 'getRepository'
+    arguments:
+      - 'AppBundle\Entity\Recipient'
+
+  Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface:
+    alias: 'AppBundle\Newsletter\Entity\RecipientRepository'
+```

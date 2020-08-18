@@ -1,0 +1,15 @@
+<h1>Newsletter Registration</h1>
+
+{{ form_start(registrationForm) }}
+    {{ form_label(registrationForm.emailAddress) }}:
+    {{ form_widget(registrationForm.emailAddress) }}
+
+    {% if registrationForm.newsletters is defined %}
+        {{ form_label(registrationForm.newsletters) }}:
+        {{ form_widget(registrationForm.newsletters) }}
+    {% endif %}
+
+    {{ form_widget(registrationForm.url) }}
+
+    <input type="submit" value="register"/>
+{{ form_end(registrationForm) }}
