@@ -9,4 +9,6 @@ interface PendingOptInInterface
     public function getUuid(): string;
 
     public function getEmailAddress(): string;
+
+    public function emailAddressMatchesHash(string $email, string $secret): bool;
 }

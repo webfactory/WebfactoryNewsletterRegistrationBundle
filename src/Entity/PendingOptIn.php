@@ -99,4 +99,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     {
         return $this->emailAddress;
     }
+
+    public function emailAddressMatchesHash(string $email, string $secret): bool
+    {
+        return $this->emailAddressHash === static::hashEmailAddress($email, $secret);
+    }
 }
