@@ -10,6 +10,8 @@ use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInClassCouldNotB
  */
 class PendingOptInFactory implements PendingOptInFactoryInterface
 {
+    use DetermineAppsSubclassTrait;
+
     /** @var string */
     protected $secret;
 
@@ -20,23 +22,12 @@ class PendingOptInFactory implements PendingOptInFactoryInterface
 
     public function fromRegistrationForm(FormInterface $form): PendingOptInInterface
     {
-        $appsPendingOptInClass = $this->getAppsSubclassOf(PendingOptInInterface::class);
+        $appsPendingOptInClass = $this->getAppsSubclassOf(
+            PendingOptInInterface::class,
+            new PendingOptInClassCouldNotBeDeterminedException()
+        );
         $reflectionMethod = new \ReflectionMethod($appsPendingOptInClass, 'fromRegistrationFormData');
 
         return $reflectionMethod->invoke(null, $form->getData(), $this->secret);
-    }
-
-    protected function getAppsSubclassOf(string $parentClass): ?string
-    {
-        foreach (get_declared_classes() as $class) {
-            if (
-                is_subclass_of($class, $parentClass)
-                && 0 !== strpos($class, 'Webfactory\NewsletterRegistrationBundle')
-            ) {
-                return $class;
-            }
-        }
-
-        throw new PendingOptInClassCouldNotBeDeterminedException();
     }
 }
