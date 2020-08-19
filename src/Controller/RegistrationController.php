@@ -15,9 +15,11 @@ use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterfa
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
 use Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface;
+use Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface;
 
 abstract class RegistrationController
@@ -46,6 +48,9 @@ abstract class RegistrationController
     /** @var RecipientRepositoryInterface */
     protected $recipientRepository;
 
+    /** @var EditRegistrationInterface */
+    protected $editRegistrationTask;
+
     /** @var DeleteRegistrationInterface */
     protected $deleteRegistrationTask;
 
@@ -58,6 +63,7 @@ abstract class RegistrationController
         UrlGeneratorInterface $urlGenerator,
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository,
+        EditRegistrationInterface $editRegistrationTask,
         DeleteRegistrationInterface $deleteRegistrationTask
     ) {
         $this->formFactory = $formFactory;
@@ -69,6 +75,7 @@ abstract class RegistrationController
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
         $this->deleteRegistrationTask = $deleteRegistrationTask;
+        $this->editRegistrationTask = $editRegistrationTask;
     }
 
     /**
@@ -155,7 +162,7 @@ abstract class RegistrationController
      *
      * @return Response
      */
-    public function editRegistration(string $uuid): Response
+    public function editRegistration(string $uuid, Request $request): Response
     {
         $recipient = $this->recipientRepository->findByUuid($uuid);
         if (null === $recipient) {
@@ -163,6 +170,17 @@ abstract class RegistrationController
                 $this->twig->render('@WebfactoryNewsletterRegistration/Edit/uuid-not-found.html.twig'),
                 Response::HTTP_NOT_FOUND
             );
+        }
+
+        $editForm = $this->formFactory->createNamed(
+            '',
+            EditRegistrationType::class,
+            $recipient
+        );
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->editRegistrationTask->editRegistration($recipient);
         }
 
         $deleteForm = $this->formFactory->createNamed(
@@ -176,6 +194,7 @@ abstract class RegistrationController
             $this->twig->render(
                 '@WebfactoryNewsletterRegistration/Edit/forms.html.twig',
                 [
+                    'editForm' => $editForm->createView(),
                     'deleteForm' => $deleteForm->createView(),
                 ]
             )

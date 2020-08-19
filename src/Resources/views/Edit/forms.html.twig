@@ -8,6 +8,18 @@
 
 <h1>Your Newsletter Registration</h1>
 
+{% if editForm.newsletters is defined %}
+    <h2>Change the newsletters you're subscribed to</h2>
+
+    {{ form_start(editForm) }}
+        {{ form_errors(editForm.newsletters) }}
+        {{ form_label(editForm.newsletters) }}
+        {{ form_widget(editForm.newsletters) }}
+
+        <input type="submit" value="Change newsletters you're subscribed to" />
+    {{ form_end(editForm) }}
+{% endif %}
+
 <h2>Unsubscribe from all newsletters and delete your registration</h2>
 {{ form_start(deleteForm) }}
     <input type="submit" value="Unsubscribe from all newsletters and delete your registration" />

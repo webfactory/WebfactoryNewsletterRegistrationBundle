@@ -7,6 +7,11 @@ services:
             - '%secret%'
         tags: ['form.type']
 
+    Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
+        tags: ['form.type']
+
     Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType:
         arguments:
             - '@router'
@@ -45,6 +50,14 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface:
         alias: Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration
+
+    Webfactory\NewsletterRegistrationBundle\Task\EditRegistration:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+
+    Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface:
+        alias: Webfactory\NewsletterRegistrationBundle\Task\EditRegistration
 
     Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration:
         arguments:
