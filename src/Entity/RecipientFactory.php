@@ -2,7 +2,6 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
-use Symfony\Component\Form\FormInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\RecipientClassCouldNotBeDeterminedException;
 
 /**
@@ -10,25 +9,16 @@ use Webfactory\NewsletterRegistrationBundle\Exception\RecipientClassCouldNotBeDe
  */
 class RecipientFactory implements RecipientFactoryInterface
 {
-    public function fromRegistrationForm(FormInterface $form): RecipientInterface
+    use DetermineAppsSubclassTrait;
+
+    public function fromPendingOptIn(PendingOptInInterface $pendingOptIn, string $emailAddress): RecipientInterface
     {
-        $appsRecipientClass = $this->getAppsSubclassOf(RecipientInterface::class);
-        $reflectionMethod = new \ReflectionMethod($appsRecipientClass, 'fromFormData');
+        $appsRecipientClass = $this->getAppsSubclassOf(
+            RecipientInterface::class,
+            new RecipientClassCouldNotBeDeterminedException()
+        );
+        $reflectionMethod = new \ReflectionMethod($appsRecipientClass, 'fromPendingOptIn');
 
-        return $reflectionMethod->invoke(null, $form->getData());
-    }
-
-    protected function getAppsSubclassOf(string $parentClass): ?string
-    {
-        foreach (get_declared_classes() as $class) {
-            if (
-                is_subclass_of($class, $parentClass)
-                && 0 !== strpos($class, 'Webfactory\NewsletterRegistrationBundle')
-            ) {
-                return $class;
-            }
-        }
-
-        throw new RecipientClassCouldNotBeDeterminedException();
+        return $reflectionMethod->invoke(null, $pendingOptIn, $emailAddress);
     }
 }

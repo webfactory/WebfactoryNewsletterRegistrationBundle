@@ -18,5 +18,5 @@ interface RecipientInterface
      */
     public function setNewsletters(array $newsletters): void;
 
-    public static function fromFormData(array $formData): self;
+    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn, string $emailAddress): self;
 }

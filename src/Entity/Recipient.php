@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
 
 /**
  * @ ORM\Entity()
@@ -65,19 +64,24 @@ abstract class Recipient implements RecipientInterface
      */
     protected $newsletters;
 
-    public static function fromFormData(array $formData): RecipientInterface
+    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn, string $emailAddress): RecipientInterface
     {
         return new static(
-            null,
-            $formData[RegisterType::ELEMENT_EMAIL_ADDRESS],
-            \array_key_exists(RegisterType::ELEMENT_NEWSLETTERS, $formData) ? $formData[RegisterType::ELEMENT_NEWSLETTERS] : []
+            $pendingOptIn->getUuid(),
+            $emailAddress,
+            $pendingOptIn->getNewsletters()
         );
     }
 
-    public function __construct(?string $uuid, string $emailAdress, array $newsletters = [], ?\DateTime $registrationDate = null)
+    public static function normalizeEmailAddress(string $string): string
+    {
+        return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
+    }
+
+    public function __construct(?string $uuid, string $emailAddress, array $newsletters = [], ?\DateTime $registrationDate = null)
     {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
-        $this->emailAddress = $this->normalize($emailAdress);
+        $this->emailAddress = static::normalizeEmailAddress($emailAddress);
         $this->newsletters = new ArrayCollection($newsletters);
         $this->registrationDate = $registrationDate ?: new \DateTime();
     }

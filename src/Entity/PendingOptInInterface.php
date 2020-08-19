@@ -11,4 +11,9 @@ interface PendingOptInInterface
     public function getEmailAddress(): string;
 
     public function emailAddressMatchesHash(string $email, string $secret): bool;
+
+    /**
+     * @return NewsletterInterface[]
+     */
+    public function getNewsletters(): array;
 }

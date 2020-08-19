@@ -104,4 +104,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     {
         return $this->emailAddressHash === static::hashEmailAddress($email, $secret);
     }
+
+    public function getNewsletters(): array
+    {
+        return $this->newsletters->toArray();
+    }
 }
