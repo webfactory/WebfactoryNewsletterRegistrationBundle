@@ -2,9 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Form;
 
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
@@ -18,23 +16,22 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
 class RegisterType extends AbstractType
 {
+    use HasNewslettersElementTrait;
+
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
     public const ELEMENT_NEWSLETTERS = 'newsletters';
     public const ELEMENT_HONEYPOT = 'url';
     public const ERROR_EMAIL_ALREADY_REGISTERING = 'This email address is already in the process of registering. Please see the email we\'ve send you for further details.';
     public const ERROR_EMAIL_ALREADY_REGISTERED = 'This email address is already registered.';
 
-    /** @var NewsletterRepositoryInterface */
-    private $newsletterRepository;
-
     /** @var PendingOptInRepositoryInterface */
-    private $pendingOptInRepository;
+    protected $pendingOptInRepository;
 
     /** @var RecipientRepositoryInterface */
-    private $recipientRepository;
+    protected $recipientRepository;
 
     /** @var string */
-    private $secret;
+    protected $secret;
 
     public function __construct(
         NewsletterRepositoryInterface $newsletterRepository,
@@ -66,25 +63,7 @@ class RegisterType extends AbstractType
             ]
         );
 
-        // add newsletter choices, if there is more than one
-        $choices = $this->newsletterRepository->findVisible();
-        if (\count($choices) > 1) {
-            $builder->add(
-                self::ELEMENT_NEWSLETTERS,
-                ChoiceType::class,
-                [
-                    'label' => 'Newsletters',
-                    'multiple' => true,
-                    'expanded' => true,
-                    'choices' => $choices,
-                    'choice_value' => 'id',
-                    'choice_label' => 'name',
-                    'constraints' => [
-                        new Choice(['min' => 1, 'choices' => $choices, 'multiple' => true]),
-                    ],
-                ]
-            );
-        }
+        $this->addNewslettersElementToForm($builder);
 
         // fake field for spam protection
         $builder->add(
@@ -96,7 +75,7 @@ class RegisterType extends AbstractType
         );
     }
 
-    private function createEmailAddressIsNotAlreadyRegisteredCallback(): \Closure
+    protected function createEmailAddressIsNotAlreadyRegisteredCallback(): \Closure
     {
         $that = $this;
 
