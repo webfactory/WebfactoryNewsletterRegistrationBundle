@@ -17,4 +17,10 @@ class RecipientRepository extends EntityRepository implements RecipientRepositor
 
         return null !== $recipient;
     }
+
+    public function save(RecipientInterface $pendingOptIn): void
+    {
+        $this->getEntityManager()->persist($pendingOptIn);
+        $this->getEntityManager()->flush();
+    }
 }
