@@ -79,9 +79,14 @@ class StartRegistration implements StartRegistrationInterface
                     'pendingOptIn' => $pendingOptIn,
                     'urlForConfirmation' => $this->urlGenerator->generate(
                         'newsletter-registration-confirm',
-                        ['emailAddress' => $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()]
+                        ['emailAddress' => $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
                     ),
-                    'urlForEditing' => $this->urlGenerator->generate('newsletter-registration-edit'),
+                    'urlForEditing' => $this->urlGenerator->generate(
+                        'newsletter-registration-edit',
+                        ['uuid' => $pendingOptIn->getUuid()],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
                 ]
             )
         );

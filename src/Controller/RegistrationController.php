@@ -4,11 +4,18 @@ namespace Webfactory\NewsletterRegistrationBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
+use Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface;
 
 abstract class RegistrationController
@@ -25,16 +32,36 @@ abstract class RegistrationController
     /** @var PendingOptInFactoryInterface */
     protected $pendingOptInFactory;
 
+    /** @var ConfirmRegistrationInterface */
+    protected $confirmRegistrationTask;
+
+    /** @var UrlGeneratorInterface */
+    protected $urlGenerator;
+
+    /** @var PendingOptInRepositoryInterface */
+    protected $pendingOptInRepository;
+
+    /** @var RecipientRepositoryInterface */
+    protected $recipientRepository;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
         StartRegistrationInterface $startRegistrationTask,
-        PendingOptInFactoryInterface $pendingOptInFactory
+        PendingOptInFactoryInterface $pendingOptInFactory,
+        ConfirmRegistrationInterface $confirmRegistrationTask,
+        UrlGeneratorInterface $urlGenerator,
+        PendingOptInRepositoryInterface $pendingOptInRepository,
+        RecipientRepositoryInterface $recipientRepository
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
         $this->startRegistrationTask = $startRegistrationTask;
         $this->pendingOptInFactory = $pendingOptInFactory;
+        $this->confirmRegistrationTask = $confirmRegistrationTask;
+        $this->urlGenerator = $urlGenerator;
+        $this->pendingOptInRepository = $pendingOptInRepository;
+        $this->recipientRepository = $recipientRepository;
     }
 
     /**
@@ -85,25 +112,43 @@ abstract class RegistrationController
     }
 
     /**
-     * @Route("/activate/", name="newsletter-registration-activate")
+     * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
      *
-     * @param Request $request
+     * @param PendingOptInInterface|null $pendingOptIn
+     * @param string                     $emailAddress
      *
      * @return Response
      */
-    public function activateRegistration(Request $request): Response
+    public function confirmRegistration(string $uuid, string $emailAddress): Response
     {
-        return new Response();
+        $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);
+        if (null === $pendingOptIn) {
+            return new Response(
+                $this->twig->render('@WebfactoryNewsletterRegistration/Register/opt-in-failed-due-to-unknown-uuid.html.twig')
+            );
+        }
+
+        try {
+            $recipient = $this->confirmRegistrationTask->confirmRegistration($pendingOptIn, $emailAddress);
+        } catch (EmailAddressDoesNotMatchHashOfPendingOptInException $exception) {
+            return new Response(
+                $this->twig->render('@WebfactoryNewsletterRegistration/Register/opt-in-failed-due-to-email-address-not-matching.html.twig')
+            );
+        }
+
+        return new RedirectResponse(
+            $this->urlGenerator->generate('newsletter-registration-edit', ['uuid' => $recipient->getUuid()])
+        );
     }
 
     /**
-     * @Route("/edit/", name="newsletter-registration-edit")
+     * @Route("/{uuid}/", name="newsletter-registration-edit", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
      *
-     * @param Request $request
+     * @param string $uuid
      *
      * @return Response
      */
-    public function editRegistration(Request $request): Response
+    public function editRegistration(string $uuid): Response
     {
         return new Response();
     }

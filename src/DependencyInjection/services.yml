@@ -29,3 +29,13 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory'
+
+    Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration:
+        arguments:
+            - '%secret%'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
+
+    Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface:
+        alias: Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration

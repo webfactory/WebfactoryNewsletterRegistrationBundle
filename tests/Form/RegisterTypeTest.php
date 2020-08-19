@@ -151,8 +151,13 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function does_not_validate_with_already_registering_email_address()
     {
-        $this->pendingOptInRepository->method('isEmailAddressAlreadyRegistered')
-            ->with('webfactory@example.com')
+        $this->pendingOptInRepository
+            ->method('isEmailAddressHashAlreadyRegistered')
+            ->with($this->callback(
+                function (?string $emailAddressHash) {
+                    return !empty($emailAddressHash);
+                }
+            ))
             ->willReturn(true);
 
         $form = $this->factory->create(RegisterType::class);
@@ -175,7 +180,8 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function does_not_validate_with_already_registered_email_address()
     {
-        $this->recipientRepository->method('isEmailAddressAlreadyRegistered')
+        $this->recipientRepository
+            ->method('isEmailAddressAlreadyRegistered')
             ->with('webfactory@example.com')
             ->willReturn(true);
 
@@ -265,7 +271,8 @@ final class RegisterTypeTest extends TypeTestCase
                     new RegisterType(
                         $this->newsletterRepository,
                         $this->pendingOptInRepository,
-                        $this->recipientRepository
+                        $this->recipientRepository,
+                        'secret'
                     ),
                 ],
                 []

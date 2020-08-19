@@ -29,4 +29,9 @@ class PendingOptInRepository extends EntityRepository implements PendingOptInRep
         $this->getEntityManager()->remove($pendingOptIn);
         $this->getEntityManager()->flush();
     }
+
+    public function findByUuid(string $uuid): ?PendingOptInInterface
+    {
+        return $this->findOneBy(['uuid' => $uuid]);
+    }
 }
