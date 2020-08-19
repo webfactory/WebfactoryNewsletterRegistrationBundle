@@ -23,4 +23,10 @@ class PendingOptInRepository extends EntityRepository implements PendingOptInRep
         $this->getEntityManager()->persist($pendingOptIn);
         $this->getEntityManager()->flush();
     }
+
+    public function remove(PendingOptInInterface $pendingOptIn): void
+    {
+        $this->getEntityManager()->remove($pendingOptIn);
+        $this->getEntityManager()->flush();
+    }
 }
