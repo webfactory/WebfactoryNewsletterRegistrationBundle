@@ -29,4 +29,9 @@ class RecipientRepository extends EntityRepository implements RecipientRepositor
         $this->getEntityManager()->remove($recipient);
         $this->getEntityManager()->flush();
     }
+
+    public function findByUuid(string $uuid): ?RecipientInterface
+    {
+        return $this->findOneBy(['uuid' => $uuid]);
+    }
 }

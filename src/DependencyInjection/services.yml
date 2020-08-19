@@ -7,6 +7,11 @@ services:
             - '%secret%'
         tags: ['form.type']
 
+    Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType:
+        arguments:
+            - '@router'
+        tags: ['form.type']
+
     Webfactory\NewsletterRegistrationBundle\Task\StartRegistration:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
@@ -36,6 +41,15 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
+            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
     Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface:
         alias: Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration
+
+    Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+
+    Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface:
+        alias: Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration

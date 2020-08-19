@@ -1,3 +1,11 @@
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
 <h1>Newsletter Registration</h1>
 
 {{ form_start(registrationForm) }}

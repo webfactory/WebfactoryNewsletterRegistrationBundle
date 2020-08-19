@@ -14,8 +14,10 @@ use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
+use Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
 use Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface;
+use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface;
 
 abstract class RegistrationController
@@ -44,6 +46,9 @@ abstract class RegistrationController
     /** @var RecipientRepositoryInterface */
     protected $recipientRepository;
 
+    /** @var DeleteRegistrationInterface */
+    protected $deleteRegistrationTask;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
@@ -52,7 +57,8 @@ abstract class RegistrationController
         ConfirmRegistrationInterface $confirmRegistrationTask,
         UrlGeneratorInterface $urlGenerator,
         PendingOptInRepositoryInterface $pendingOptInRepository,
-        RecipientRepositoryInterface $recipientRepository
+        RecipientRepositoryInterface $recipientRepository,
+        DeleteRegistrationInterface $deleteRegistrationTask
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -62,6 +68,7 @@ abstract class RegistrationController
         $this->urlGenerator = $urlGenerator;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
+        $this->deleteRegistrationTask = $deleteRegistrationTask;
     }
 
     /**
@@ -112,7 +119,7 @@ abstract class RegistrationController
     }
 
     /**
-     * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
+     * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
      *
      * @param PendingOptInInterface|null $pendingOptIn
      * @param string                     $emailAddress
@@ -150,6 +157,48 @@ abstract class RegistrationController
      */
     public function editRegistration(string $uuid): Response
     {
-        return new Response();
+        $recipient = $this->recipientRepository->findByUuid($uuid);
+        if (null === $recipient) {
+            return new Response(
+                $this->twig->render('@WebfactoryNewsletterRegistration/Edit/uuid-not-found.html.twig'),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $deleteForm = $this->formFactory->createNamed(
+            '',
+            DeleteRegistrationType::class,
+            null,
+            ['recipient' => $recipient]
+        );
+
+        return new Response(
+            $this->twig->render(
+                '@WebfactoryNewsletterRegistration/Edit/forms.html.twig',
+                [
+                    'deleteForm' => $deleteForm->createView(),
+                ]
+            )
+        );
+    }
+
+    /**
+     * @Route("/{uuid}/delete/", name="newsletter-registration-delete", methods={"POST"}, requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
+     */
+    public function deleteRegistration(string $uuid)
+    {
+        $recipient = $this->recipientRepository->findByUuid($uuid);
+        if (null === $recipient) {
+            return new Response(
+                $this->twig->render('@WebfactoryNewsletterRegistration/Delete/uuid-not-found.html.twig'),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $this->deleteRegistrationTask->deleteRegistration($recipient);
+
+        return new RedirectResponse(
+            $this->urlGenerator->generate('newsletter-registration-start')
+        );
     }
 }

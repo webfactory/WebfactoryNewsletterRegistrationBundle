@@ -9,4 +9,6 @@ interface RecipientRepositoryInterface
     public function save(RecipientInterface $pendingOptIn): void;
 
     public function remove(RecipientInterface $recipient): void;
+
+    public function findByUuid(string $uuid): ?RecipientInterface;
 }

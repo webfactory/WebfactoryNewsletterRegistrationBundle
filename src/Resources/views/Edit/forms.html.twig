@@ -1,0 +1,14 @@
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<h1>Your Newsletter Registration</h1>
+
+<h2>Unsubscribe from all newsletters and delete your registration</h2>
+{{ form_start(deleteForm) }}
+    <input type="submit" value="Unsubscribe from all newsletters and delete your registration" />
+{{ form_end(deleteForm) }}
