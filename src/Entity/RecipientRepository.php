@@ -23,4 +23,10 @@ class RecipientRepository extends EntityRepository implements RecipientRepositor
         $this->getEntityManager()->persist($pendingOptIn);
         $this->getEntityManager()->flush();
     }
+
+    public function remove(RecipientInterface $recipient): void
+    {
+        $this->getEntityManager()->remove($recipient);
+        $this->getEntityManager()->flush();
+    }
 }
