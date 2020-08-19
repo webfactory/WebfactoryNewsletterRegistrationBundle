@@ -12,12 +12,17 @@ trait HasNewslettersElementTrait
     /** @var NewsletterRepositoryInterface */
     protected $newsletterRepository;
 
-    protected function addNewslettersElementToForm(FormBuilderInterface $builder)
+    protected function addNewslettersElementToForm(FormBuilderInterface $builder, bool $recipientHasToChooseAtLeastOne)
     {
         // add newsletter choices, if there is more than one
         $choices = $this->newsletterRepository->findVisible();
         if (\count($choices) < 2) {
             return;
+        }
+
+        $constraints = [];
+        if (true === $recipientHasToChooseAtLeastOne) {
+            $constraints[] = new Choice(['min' => 1, 'choices' => $choices, 'multiple' => true]);
         }
 
         $builder->add(
@@ -30,9 +35,7 @@ trait HasNewslettersElementTrait
                 'choices' => $choices,
                 'choice_value' => 'id',
                 'choice_label' => 'name',
-                'constraints' => [
-                    new Choice(['min' => 1, 'choices' => $choices, 'multiple' => true]),
-                ],
+                'constraints' => $constraints,
             ]
         );
     }

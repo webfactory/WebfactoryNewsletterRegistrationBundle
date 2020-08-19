@@ -63,7 +63,7 @@ class RegisterType extends AbstractType
             ]
         );
 
-        $this->addNewslettersElementToForm($builder);
+        $this->addNewslettersElementToForm($builder, true);
 
         // fake field for spam protection
         $builder->add(
