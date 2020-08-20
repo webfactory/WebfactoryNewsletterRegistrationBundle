@@ -61,36 +61,24 @@ abstract class PendingOptIn implements PendingOptInInterface
      */
     protected $newsletters;
 
-    public static function fromRegistrationFormData(array $formData, string $secret): PendingOptInInterface
+    public static function fromRegistrationFormData(array $formData): PendingOptInInterface
     {
         return new static(
             null,
             $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS],
-            $secret,
             $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] ?? []
         );
     }
 
-    public static function normalizeEmailAddress(string $string): string
-    {
-        return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
-    }
-
-    public static function hashEmailAddress(string $string, string $secret): string
-    {
-        return md5($secret.self::normalizeEmailAddress($string));
-    }
-
     public function __construct(
         ?string $uuid,
-        string $emailAddress,
-        string $secret,
+        EmailAddress $emailAddress,
         array $newsletters = [],
         ?\DateTime $registrationDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
-        $this->emailAddress = static::normalizeEmailAddress($emailAddress);
-        $this->emailAddressHash = static::hashEmailAddress($emailAddress, $secret);
+        $this->emailAddress = $emailAddress->getEmailAddress();
+        $this->emailAddressHash = $emailAddress->getHash();
         $this->newsletters = new ArrayCollection($newsletters);
         $this->registrationDate = $registrationDate ?: new \DateTime();
     }
@@ -105,9 +93,9 @@ abstract class PendingOptIn implements PendingOptInInterface
         return $this->emailAddress;
     }
 
-    public function emailAddressMatchesHash(string $email, string $secret): bool
+    public function matchesEmailAddress(EmailAddress $emailAddress): bool
     {
-        return $this->emailAddressHash === static::hashEmailAddress($email, $secret);
+        return $this->emailAddressHash === $emailAddress->getHash();
     }
 
     public function getNewsletters(): array

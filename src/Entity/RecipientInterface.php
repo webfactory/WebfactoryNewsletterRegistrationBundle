@@ -4,6 +4,8 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 interface RecipientInterface
 {
+    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn, EmailAddress $emailAddress): self;
+
     public function getUuid(): string;
 
     public function getEmailAddress(): string;
@@ -17,6 +19,4 @@ interface RecipientInterface
      * @param NewsletterInterface[] $newsletters
      */
     public function setNewsletters(array $newsletters): void;
-
-    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn, string $emailAddress): self;
 }

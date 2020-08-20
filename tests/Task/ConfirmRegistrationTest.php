@@ -5,6 +5,8 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Task;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
@@ -15,6 +17,9 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 class ConfirmRegistrationTest extends TestCase
 {
     protected const SECRET = 'secret';
+
+    /** @var EmailAddressFactoryInterface */
+    protected $emailAddressFactory;
 
     /** @var RecipientFactoryInterface|MockObject */
     protected $recipientFactory;
@@ -35,12 +40,13 @@ class ConfirmRegistrationTest extends TestCase
     {
         parent::setUp();
 
+        $this->emailAddressFactory = new EmailAddressFactory(self::SECRET);
         $this->recipientFactory = $this->createMock(RecipientFactoryInterface::class);
         $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
         $this->pendingOptInRepo = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->flashBag = $this->createMock(FlashBagInterface::class);
         $this->task = new ConfirmRegistration(
-            self::SECRET,
+            $this->emailAddressFactory,
             $this->recipientFactory,
             $this->recipientRepo,
             $this->pendingOptInRepo,
@@ -53,7 +59,7 @@ class ConfirmRegistrationTest extends TestCase
      */
     public function throws_exception_if_email_address_does_not_match_hash()
     {
-        $pendingOptIn = new PendingOptIn('uuid', 'webfactory@example.com', self::SECRET);
+        $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
         $this->expectException(EmailAddressDoesNotMatchHashOfPendingOptInException::class);
 
         $this->task->confirmRegistration($pendingOptIn, 'other@example.com');
@@ -65,7 +71,7 @@ class ConfirmRegistrationTest extends TestCase
     public function saves_recipient()
     {
         $this->recipientRepo->expects($this->once())->method('save');
-        $pendingOptIn = new PendingOptIn('uuid', 'webfactory@example.com', self::SECRET);
+        $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
 
         $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');
     }
@@ -75,7 +81,7 @@ class ConfirmRegistrationTest extends TestCase
      */
     public function removes_pending_opt_in()
     {
-        $pendingOptIn = new PendingOptIn('uuid', 'webfactory@example.com', self::SECRET);
+        $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
         $this->pendingOptInRepo->expects($this->once())->method('remove')->with($pendingOptIn);
 
         $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');
@@ -86,7 +92,7 @@ class ConfirmRegistrationTest extends TestCase
      */
     public function writes_success_flash()
     {
-        $pendingOptIn = new PendingOptIn('uuid', 'webfactory@example.com', self::SECRET);
+        $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
         $this->flashBag->expects($this->once())->method('add');
 
         $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');

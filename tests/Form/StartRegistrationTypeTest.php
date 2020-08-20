@@ -2,18 +2,22 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Form;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
+use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType;
 use Webfactory\NewsletterRegistrationBundle\Form\HoneypotType;
 use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
-use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Form\PreloadedExtension;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 
 final class StartRegistrationTypeTest extends TypeTestCase
@@ -27,6 +31,9 @@ final class StartRegistrationTypeTest extends TypeTestCase
     /** @var RecipientRepositoryInterface|MockObject */
     private $recipientRepository;
 
+    /** @var EmailAddressFactoryInterface */
+    private $emailAddressFactory;
+
     /** @var Newsletter|null */
     private $newsletter1;
 
@@ -38,6 +45,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->newsletterRepository = $this->createMock(NewsletterRepositoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
+        $this->emailAddressFactory = new EmailAddressFactory('secret');
         parent::setUp();
     }
 
@@ -152,10 +160,10 @@ final class StartRegistrationTypeTest extends TypeTestCase
     public function does_not_validate_with_already_registering_email_address()
     {
         $this->pendingOptInRepository
-            ->method('isEmailAddressHashAlreadyRegistered')
+            ->method('isEmailAddressAlreadyRegistered')
             ->with($this->callback(
-                function (?string $emailAddressHash) {
-                    return !empty($emailAddressHash);
+                function (?EmailAddress $emailAddress) {
+                    return !empty($emailAddress);
                 }
             ))
             ->willReturn(true);
@@ -170,7 +178,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getErrors(true, true));
         $this->assertEquals(
-            StartRegistrationType::ERROR_EMAIL_ALREADY_REGISTERING,
+            EmailAddressType::ERROR_EMAIL_ALREADY_REGISTERING,
             $form->getErrors(true, true)->current()->getMessage()
         );
     }
@@ -195,7 +203,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getErrors(true, true));
         $this->assertEquals(
-            StartRegistrationType::ERROR_EMAIL_ALREADY_REGISTERED,
+            EmailAddressType::ERROR_EMAIL_ALREADY_REGISTERED,
             $form->getErrors(true, true)->current()->getMessage()
         );
     }
@@ -268,11 +276,11 @@ final class StartRegistrationTypeTest extends TypeTestCase
         return [
             new PreloadedExtension(
                 [
-                    new StartRegistrationType(
-                        $this->newsletterRepository,
+                    new StartRegistrationType($this->newsletterRepository),
+                    new EmailAddressType(
                         $this->pendingOptInRepository,
                         $this->recipientRepository,
-                        'secret'
+                        $this->emailAddressFactory
                     ),
                 ],
                 []

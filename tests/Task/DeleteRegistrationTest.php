@@ -1,11 +1,13 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\Task;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
 class DeleteRegistrationTest extends TestCase
@@ -33,7 +35,7 @@ class DeleteRegistrationTest extends TestCase
      */
     public function removes_recipient()
     {
-        $recipient = new Recipient('uuid', 'webfactory@example.com');
+        $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));
         $this->recipientRepo->expects($this->once())->method('remove')->with($recipient);
 
         $this->task->deleteRegistration($recipient);
@@ -44,7 +46,7 @@ class DeleteRegistrationTest extends TestCase
      */
     public function writes_success_flash()
     {
-        $recipient = new Recipient('uuid', 'webfactory@example.com');
+        $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));
         $this->flashBag->expects($this->once())->method('add');
 
         $this->task->deleteRegistration($recipient);

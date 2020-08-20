@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
@@ -15,18 +16,7 @@ class RecipientTest extends TestCase
     public function uuid_is_added_if_omitted()
     {
         $this->assertNotEmpty(
-            (new Recipient(null, 'webfactory@example.com'))->getUuid()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function email_address_gets_normalized()
-    {
-        $this->assertEquals(
-            'webfactory@example.com',
-            (new Recipient('uuid', 'WEBFACTORY@EXAMPLE.COM'))->getEmailAddress()
+            (new Recipient(null, new EmailAddress('webfactory@example.com', null)))->getUuid()
         );
     }
 
@@ -37,7 +27,7 @@ class RecipientTest extends TestCase
     {
         $this->assertEqualsWithDelta(
             new \DateTime(),
-            (new Recipient('uuid', 'webfactory@example.com'))->getOptInDate(),
+            (new Recipient('uuid', new EmailAddress('webfactory@example.com', null)))->getOptInDate(),
             1
         );
     }
@@ -48,9 +38,9 @@ class RecipientTest extends TestCase
     public function static_construction_with_newsletters()
     {
         $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1'), new Newsletter(2, 'newsletter 2')];
-        $pendingOptIn = new PendingOptIn('uuid', 'no longer available', 'secret', $newslettersForPendingOptIn);
+        $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $newslettersForPendingOptIn);
 
-        $recipient = Recipient::fromPendingOptIn($pendingOptIn, 'webfactory@example.com');
+        $recipient = Recipient::fromPendingOptIn($pendingOptIn, new EmailAddress('webfactory@example.com', null));
 
         $this->assertEquals('uuid', $recipient->getUuid());
         $this->assertEquals('webfactory@example.com', $recipient->getEmailAddress());
@@ -63,8 +53,8 @@ class RecipientTest extends TestCase
      */
     public function static_construction_without_newsletters()
     {
-        $pendingOptIn = new PendingOptIn('uuid', 'no longer available', 'secret');
+        $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
-        Recipient::fromPendingOptIn($pendingOptIn, 'webfactory@example.com');
+        Recipient::fromPendingOptIn($pendingOptIn, new EmailAddress('webfactory@example.com', null));
     }
 }

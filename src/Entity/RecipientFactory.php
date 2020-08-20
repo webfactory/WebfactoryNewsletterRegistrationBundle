@@ -11,8 +11,10 @@ class RecipientFactory implements RecipientFactoryInterface
 {
     use DetermineAppsSubclassTrait;
 
-    public function fromPendingOptIn(PendingOptInInterface $pendingOptIn, string $emailAddress): RecipientInterface
-    {
+    public function fromPendingOptIn(
+        PendingOptInInterface $pendingOptIn,
+        EmailAddress $emailAddress
+    ): RecipientInterface {
         $appsRecipientClass = $this->getAppsSubclassOf(
             RecipientInterface::class,
             new RecipientClassCouldNotBeDeterminedException()

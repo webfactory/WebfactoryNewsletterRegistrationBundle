@@ -2,10 +2,21 @@ services:
     Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
+        tags: ['form.type']
+
+    Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType:
+        arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
-            - '%secret%'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
         tags: ['form.type']
+
+    Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory:
+        arguments:
+            - '%secret%'
+
+    Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface:
+        alias: Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory
 
     Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType:
         arguments:
@@ -37,7 +48,7 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration:
         arguments:
-            - '%secret%'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'

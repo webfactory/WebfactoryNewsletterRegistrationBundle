@@ -2,12 +2,13 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Task;
 
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\StartRegistration;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
@@ -52,7 +53,7 @@ class StartRegistrationTest extends TestCase
      */
     public function saves_PendingOptIn()
     {
-        $pendingOptIn = new PendingOptIn(null, 'receiver@example.com', 'secret');
+        $pendingOptIn = new PendingOptIn(null, new EmailAddress('receiver@example.com', 'secret'));
 
         $this->pendingOptInRepo
             ->expects($this->once())
@@ -67,7 +68,7 @@ class StartRegistrationTest extends TestCase
      */
     public function sends_opt_in_email()
     {
-        $pendingOptIn = new PendingOptIn(null, 'receiver@example.com', 'secret');
+        $pendingOptIn = new PendingOptIn(null, new EmailAddress('receiver@example.com', 'secret'));
 
         $renderResult = 'render-result';
         $this->twig

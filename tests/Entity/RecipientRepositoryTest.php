@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
+use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
@@ -27,7 +28,7 @@ class RecipientRepositoryTest extends TestCase
      */
     public function isEmailAddressAlreadyRegistered_returns_true_if_already_registered()
     {
-        $alreadyRegisteredEmailAddress = 'webfactory@example.com';
+        $alreadyRegisteredEmailAddress = new EmailAddress('webfactory@example.com', null);
         $this->infrastructure->import(new Recipient('uuid-1', $alreadyRegisteredEmailAddress));
 
         $this->assertTrue($this->repository->isEmailAddressAlreadyRegistered($alreadyRegisteredEmailAddress));
@@ -38,6 +39,8 @@ class RecipientRepositoryTest extends TestCase
      */
     public function isEmailAddressAlreadyRegistered_returns_false_if_not_already_registered()
     {
-        $this->assertFalse($this->repository->isEmailAddressAlreadyRegistered('webfactory@example.com'));
+        $this->assertFalse(
+            $this->repository->isEmailAddressAlreadyRegistered(new EmailAddress('webfactory@example.com', null))
+        );
     }
 }

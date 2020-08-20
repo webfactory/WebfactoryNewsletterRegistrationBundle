@@ -7,5 +7,8 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
 interface ConfirmRegistrationInterface
 {
-    public function confirmRegistration(PendingOptInInterface $pendingOptIn, string $emailAddress): RecipientInterface;
+    public function confirmRegistration(
+        PendingOptInInterface $pendingOptIn,
+        string $emailAddressString
+    ): RecipientInterface;
 }

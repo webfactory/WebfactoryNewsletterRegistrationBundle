@@ -6,12 +6,12 @@ use Doctrine\ORM\EntityRepository;
 
 class RecipientRepository extends EntityRepository implements RecipientRepositoryInterface
 {
-    public function isEmailAddressAlreadyRegistered(string $emailAddress): bool
+    public function isEmailAddressAlreadyRegistered(EmailAddress $emailAddress): bool
     {
         $recipient = $this->createQueryBuilder('recipient')
             ->select()
             ->where('recipient.emailAddress = :emailAddress')
-            ->setParameter('emailAddress', $emailAddress)
+            ->setParameter('emailAddress', $emailAddress->getEmailAddress())
             ->getQuery()
             ->getOneOrNullResult();
 

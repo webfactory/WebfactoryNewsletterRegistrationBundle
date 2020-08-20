@@ -4,7 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 interface PendingOptInRepositoryInterface
 {
-    public function isEmailAddressHashAlreadyRegistered(string $emailAddressHash): bool;
+    public function isEmailAddressAlreadyRegistered(EmailAddress $emailAddress): bool;
 
     public function save(PendingOptInInterface $pendingOptIn): void;
 

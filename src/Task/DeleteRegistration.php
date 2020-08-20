@@ -26,6 +26,9 @@ class DeleteRegistration implements DeleteRegistrationInterface
     {
         $this->recipientRepo->remove($recipient);
 
-        $this->flashBag->add('success', 'You are unsubscribed from all newsletters and your registration data has been deleted.');
+        $this->flashBag->add(
+            'success',
+            'You are unsubscribed from all newsletters and your registration data has been deleted.'
+        );
     }
 }
