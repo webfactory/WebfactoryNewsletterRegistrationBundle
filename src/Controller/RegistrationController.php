@@ -89,7 +89,7 @@ class RegistrationController
 
             return new Response(
                 $this->twig->render(
-                    '@WebfactoryNewsletterRegistration/Register/opt-in-email-sent.html.twig',
+                    '@WebfactoryNewsletterRegistration/StartRegistration/opt-in-email-sent.html.twig',
                     [
                         'pendingOptIn' => $pendingOptIn,
                         'optInEmail' => $optInEmail,
@@ -100,7 +100,7 @@ class RegistrationController
 
         return new Response(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/Register/form.html.twig',
+                '@WebfactoryNewsletterRegistration/StartRegistration/form.html.twig',
                 ['registrationForm' => $form->createView()]
             )
         );
@@ -112,7 +112,7 @@ class RegistrationController
 
         return new Response(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/Register/form-partial.html.twig',
+                '@WebfactoryNewsletterRegistration/StartRegistration/form-partial.html.twig',
                 ['registrationForm' => $form->createView()]
             )
         );
@@ -131,7 +131,7 @@ class RegistrationController
         $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);
         if (null === $pendingOptIn) {
             return new Response(
-                $this->twig->render('@WebfactoryNewsletterRegistration/Register/opt-in-failed-due-to-unknown-uuid.html.twig')
+                $this->twig->render('@WebfactoryNewsletterRegistration/StartRegistration/opt-in-failed-due-to-unknown-uuid.html.twig')
             );
         }
 
@@ -139,7 +139,7 @@ class RegistrationController
             $recipient = $this->confirmRegistrationTask->confirmRegistration($pendingOptIn, $emailAddress);
         } catch (EmailAddressDoesNotMatchHashOfPendingOptInException $exception) {
             return new Response(
-                $this->twig->render('@WebfactoryNewsletterRegistration/Register/opt-in-failed-due-to-email-address-not-matching.html.twig')
+                $this->twig->render('@WebfactoryNewsletterRegistration/StartRegistration/opt-in-failed-due-to-email-address-not-matching.html.twig')
             );
         }
 
@@ -161,7 +161,7 @@ class RegistrationController
         $recipient = $this->recipientRepository->findByUuid($uuid);
         if (null === $recipient) {
             return new Response(
-                $this->twig->render('@WebfactoryNewsletterRegistration/Edit/uuid-not-found.html.twig'),
+                $this->twig->render('@WebfactoryNewsletterRegistration/EditRegistration/uuid-not-found.html.twig'),
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -186,7 +186,7 @@ class RegistrationController
 
         return new Response(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/Edit/forms.html.twig',
+                '@WebfactoryNewsletterRegistration/EditRegistration/forms.html.twig',
                 [
                     'editForm' => $editForm->createView(),
                     'deleteForm' => $deleteForm->createView(),
@@ -207,7 +207,7 @@ class RegistrationController
         $recipient = $this->recipientRepository->findByUuid($uuid);
         if (null === $recipient) {
             return new Response(
-                $this->twig->render('@WebfactoryNewsletterRegistration/Delete/uuid-not-found.html.twig'),
+                $this->twig->render('@WebfactoryNewsletterRegistration/DeleteRegistration/uuid-not-found.html.twig'),
                 Response::HTTP_NOT_FOUND
             );
         }
