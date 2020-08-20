@@ -9,9 +9,9 @@ This Symfony bundle features a newsletter registration template with attention t
 protection and a smooth user journey:
 
 - Sign up with email address only
-- No data is saved until the newsletter recipient verifies their email address (double opt in)
+- No personal data is saved until the newsletter recipient verifies their email address (double opt in)
 - Additional user data can be provided after double opt in (planned)
-- Supports newsletter categories
+- Supports zero, one or many newsletters
 - Highly customizable due to small interfaces, Doctrine interface mapping (e.g. there are some webfactory specific names
   you might want to change) and service replacements.
 
@@ -32,79 +32,19 @@ return [
 ];
 ```
 
+Implement all `src/Entity/*Interface.php` in your project. The easiest way, if you don't mind the biased namespaces, is
+to copy the templates:
 
-Usage
------
+    mkdir src/AppBundle/Newsletter
+    cp vendor/webfactory/newsletter-registration-bundle/app-class-templates/* src/AppBundle/Newsletter/*
 
-Implement all `src/Entity/*Interface.php` in your project. The easiest way is to extend the corresponding abstract
-class, add class level Doctrine ORM annotations (find template for them in the abstract classes) and customize them to
-your liking.
+If you want to implement the interfaces by yourself, you could extend the corresponding abstract classes like in the
+templates above and add class level Doctrine ORM annotations (find template for them in the abstract classes). For
+customizing, see the "Customizing" section below.
 
-Example:
+In either case, configure Doctrine's interface mapping to deal with your custom entity class:
 
-```php
-<?php
-
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity()
- * @ORM\Table(name="wfd_newsletterRecipient", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="email_unique",columns={"email"}),
- *     @ORM\UniqueConstraint(name="uuid_unique",columns={"uuid"}),
- * })
- */
-class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipient
-{
-}
-```
-
-```php
-<?php
-
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity(repositoryClass="\AppBundle\Entity\RecipientRepository")
- */
-class RecipientRepository extends \Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepository
-{
-}
-```
-
-```php
-<?php
-
-namespace AppBundle\Entity;
-
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity(repositoryClass="\AppBundle\Entity\NewsletterRepository")
- * @ORM\Table("wfd_newsletterNewsletter")
- */
-class Newsletter extends \Webfactory\NewsletterRegistrationBundle\Entity\Newsletter
-{
-}
-```
-
-```php
-<?php
-
-namespace AppBundle\Entity;
-
-class NewsletterRepository extends \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepository
-{
-}
-```
-
-Configure Doctrine's interface mapping with your actual entity classes:
-
-```yml
+```yaml
 // config.yml
 
 doctrine:
@@ -113,25 +53,53 @@ doctrine:
             \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface: '\AppBundle\Entity\Newsletter'
 ```
 
-And update your database schema, e.g. with a migration.
+Side node: The templates and example above assume that you want to keep your Newsletter classes inside a Newsletter
+directory in your AppBundle. If you choose to do so, you might need to configure Doctrine to load the entities: 
+
+```yaml
+// config.yml
+
+doctrine:
+    orm:
+        entity_managers:
+            default:
+                mappings:
+                    NewsletterRegistrationBundle:
+                        type: annotation
+                        prefix: AppBundle\Newsletter\Entity\
+                        dir: "%kernel.root_dir%/AppBundle/Newsletter/Entity/"
+                        is_bundle: false
+```
+
+Update your database schema, e.g. with a migration.
 
 Configure the sender of opt in emails: 
 
-```config.yml
+```yaml
+// config.yml
+
 parameters:
-  webfactory.newsletter_registration.opt_in_sender_address: 'optin@jugendfuereuropa.de
+  webfactory.newsletter_registration.opt_in_sender_address: 'newsletter-registration@example.com'
 ```
 
-The abstract RegistrationController gets some Interfaces injected in its constructor. Configure your controller
-accordingly or if your use auto wiring, set aliases for the interface named services:  
+Include the RegistrationController in your routing:
+
+```yaml
+// routing.yml
+
+newsletter:
+    prefix: /newsletter
+    type: annotation
+    resource: '@WebfactoryNewsletterRegistrationBundle/Controller/RegistrationController.php'
+```
+ 
+The RegistrationController gets some Interfaces injected in its constructor. Alias these interfaces with your own
+implementations: 
 
 ```yaml
 // src/services.yml
 
 services:
-  AppBundle\Newsletter\Controller:
-    tags: ['controller.service_arguments']
-
   AppBundle\Newsletter\Entity\NewsletterRepository:
     factory:
       - '@doctrine.orm.entity_manager'
