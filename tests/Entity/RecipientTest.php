@@ -33,11 +33,11 @@ class RecipientTest extends TestCase
     /**
      * @test
      */
-    public function registrationDate_is_added_if_omitted()
+    public function optInDate_is_added_if_omitted()
     {
         $this->assertEqualsWithDelta(
             new \DateTime(),
-            (new Recipient('uuid', 'webfactory@example.com'))->getRegistrationDate(),
+            (new Recipient('uuid', 'webfactory@example.com'))->getOptInDate(),
             1
         );
     }

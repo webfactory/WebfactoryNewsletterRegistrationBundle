@@ -51,7 +51,7 @@ abstract class Recipient implements RecipientInterface
      *
      * @var \DateTime
      */
-    protected $registrationDate;
+    protected $optInDate;
 
     /**
      * @ORM\ManyToMany(targetEntity="Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface")
@@ -84,12 +84,12 @@ abstract class Recipient implements RecipientInterface
         ?string $uuid,
         string $emailAddress,
         array $newsletters = [],
-        ?\DateTime $registrationDate = null
+        ?\DateTime $optInDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = static::normalizeEmailAddress($emailAddress);
         $this->newsletters = new ArrayCollection($newsletters);
-        $this->registrationDate = $registrationDate ?: new \DateTime();
+        $this->optInDate = $optInDate ?: new \DateTime();
     }
 
     public function getUuid(): string
@@ -102,9 +102,9 @@ abstract class Recipient implements RecipientInterface
         return $this->emailAddress;
     }
 
-    public function getRegistrationDate(): \DateTime
+    public function getOptInDate(): \DateTime
     {
-        return $this->registrationDate;
+        return $this->optInDate;
     }
 
     public function getNewsletters(): array
