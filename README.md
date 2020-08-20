@@ -148,6 +148,12 @@ Customization
 
 Use [the regular symfony mechanism for overriding templates](https://symfony.com/doc/4.4/bundles/override.html#templates).
 
+Start with:
+
+    mkdir src/Resources/WebfactoryNewsletterRegistrationBundle -p
+    cp -r vendor/webfactory/newsletter-registration-bundle/src/Resources/views*app-class-templates/* src/Resources/WebfactoryNewsletterRegistrationBundle 
+    
+
 ### Adding fields
 
 - Extend the StartRegistration Type with a [Form Type Extension](https://symfony.com/doc/4.4/form/create_form_type_extension.html).
