@@ -27,7 +27,7 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory:
         arguments:
-            - '%secret%'
+            - '%webfactory.newsletter_registration.secret%'
 
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory'

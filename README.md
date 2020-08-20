@@ -73,13 +73,14 @@ doctrine:
 
 Update your database schema, e.g. with a migration.
 
-Configure the sender of opt in emails: 
+Configure the sender of opt in emails and a secret for hashing email addresses internally:
 
 ```yaml
 // config.yml
 
 parameters:
   webfactory.newsletter_registration.opt_in_sender_address: 'newsletter-registration@example.com'
+  webfactory.newsletter_registration.secret: 'your-secret' # do not use Symfony's %secret%!
 ```
 
 Include the RegistrationController in your routing:
