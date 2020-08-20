@@ -16,4 +16,6 @@ interface PendingOptInInterface
      * @return NewsletterInterface[]
      */
     public function getNewsletters(): array;
+
+    public function getRegistrationDate(): \DateTime;
 }

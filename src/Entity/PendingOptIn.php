@@ -114,4 +114,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     {
         return $this->newsletters->toArray();
     }
+
+    public function getRegistrationDate(): \DateTime
+    {
+        return $this->registrationDate;
+    }
 }
