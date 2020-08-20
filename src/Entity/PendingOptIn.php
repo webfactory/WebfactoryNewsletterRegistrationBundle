@@ -67,7 +67,7 @@ abstract class PendingOptIn implements PendingOptInInterface
             null,
             $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS],
             $secret,
-            \array_key_exists(StartRegistrationType::ELEMENT_NEWSLETTERS, $formData) ? $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] : []
+            $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] ?? []
         );
     }
 
@@ -81,8 +81,13 @@ abstract class PendingOptIn implements PendingOptInInterface
         return md5($secret.self::normalizeEmailAddress($string));
     }
 
-    public function __construct(?string $uuid, string $emailAddress, string $secret, array $newsletters = [], ?\DateTime $registrationDate = null)
-    {
+    public function __construct(
+        ?string $uuid,
+        string $emailAddress,
+        string $secret,
+        array $newsletters = [],
+        ?\DateTime $registrationDate = null
+    ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = static::normalizeEmailAddress($emailAddress);
         $this->emailAddressHash = static::hashEmailAddress($emailAddress, $secret);

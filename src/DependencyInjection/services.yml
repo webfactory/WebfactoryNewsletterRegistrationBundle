@@ -35,11 +35,6 @@ services:
     Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
 
-    Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory: ~
-
-    Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface:
-        alias: 'Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory'
-
     Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration:
         arguments:
             - '%secret%'
@@ -50,6 +45,11 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface:
         alias: Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration
+
+    Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory: ~
+
+    Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory'
 
     Webfactory\NewsletterRegistrationBundle\Task\EditRegistration:
         arguments:

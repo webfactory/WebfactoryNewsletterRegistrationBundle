@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
@@ -30,23 +29,14 @@ abstract class RegistrationController
     /** @var Environment */
     protected $twig;
 
-    /** @var StartRegistrationInterface */
-    protected $startRegistrationTask;
-
-    /** @var PendingOptInFactoryInterface */
-    protected $pendingOptInFactory;
-
-    /** @var ConfirmRegistrationInterface */
-    protected $confirmRegistrationTask;
-
     /** @var UrlGeneratorInterface */
     protected $urlGenerator;
 
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepository;
+    /** @var StartRegistrationInterface */
+    protected $startRegistrationTask;
 
-    /** @var RecipientRepositoryInterface */
-    protected $recipientRepository;
+    /** @var ConfirmRegistrationInterface */
+    protected $confirmRegistrationTask;
 
     /** @var EditRegistrationInterface */
     protected $editRegistrationTask;
@@ -54,28 +44,37 @@ abstract class RegistrationController
     /** @var DeleteRegistrationInterface */
     protected $deleteRegistrationTask;
 
+    /** @var PendingOptInFactoryInterface */
+    protected $pendingOptInFactory;
+
+    /** @var PendingOptInRepositoryInterface */
+    protected $pendingOptInRepository;
+
+    /** @var RecipientRepositoryInterface */
+    protected $recipientRepository;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         Environment $twig,
-        StartRegistrationInterface $startRegistrationTask,
-        PendingOptInFactoryInterface $pendingOptInFactory,
-        ConfirmRegistrationInterface $confirmRegistrationTask,
         UrlGeneratorInterface $urlGenerator,
-        PendingOptInRepositoryInterface $pendingOptInRepository,
-        RecipientRepositoryInterface $recipientRepository,
+        StartRegistrationInterface $startRegistrationTask,
+        ConfirmRegistrationInterface $confirmRegistrationTask,
         EditRegistrationInterface $editRegistrationTask,
-        DeleteRegistrationInterface $deleteRegistrationTask
+        DeleteRegistrationInterface $deleteRegistrationTask,
+        PendingOptInFactoryInterface $pendingOptInFactory,
+        PendingOptInRepositoryInterface $pendingOptInRepository,
+        RecipientRepositoryInterface $recipientRepository
     ) {
         $this->formFactory = $formFactory;
         $this->twig = $twig;
-        $this->startRegistrationTask = $startRegistrationTask;
-        $this->pendingOptInFactory = $pendingOptInFactory;
-        $this->confirmRegistrationTask = $confirmRegistrationTask;
         $this->urlGenerator = $urlGenerator;
+        $this->startRegistrationTask = $startRegistrationTask;
+        $this->confirmRegistrationTask = $confirmRegistrationTask;
+        $this->editRegistrationTask = $editRegistrationTask;
+        $this->deleteRegistrationTask = $deleteRegistrationTask;
+        $this->pendingOptInFactory = $pendingOptInFactory;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
-        $this->deleteRegistrationTask = $deleteRegistrationTask;
-        $this->editRegistrationTask = $editRegistrationTask;
     }
 
     /**
@@ -128,8 +127,8 @@ abstract class RegistrationController
     /**
      * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
      *
-     * @param PendingOptInInterface|null $pendingOptIn
-     * @param string                     $emailAddress
+     * @param string $uuid
+     * @param string $emailAddress
      *
      * @return Response
      */
@@ -158,7 +157,8 @@ abstract class RegistrationController
     /**
      * @Route("/{uuid}/", name="newsletter-registration-edit", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
      *
-     * @param string $uuid
+     * @param string  $uuid
+     * @param Request $request
      *
      * @return Response
      */
@@ -203,6 +203,10 @@ abstract class RegistrationController
 
     /**
      * @Route("/{uuid}/delete/", name="newsletter-registration-delete", methods={"POST"}, requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
+     *
+     * @param string $uuid
+     *
+     * @return RedirectResponse|Response
      */
     public function deleteRegistration(string $uuid)
     {

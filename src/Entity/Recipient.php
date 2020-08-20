@@ -64,8 +64,10 @@ abstract class Recipient implements RecipientInterface
      */
     protected $newsletters;
 
-    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn, string $emailAddress): RecipientInterface
-    {
+    public static function fromPendingOptIn(
+        PendingOptInInterface $pendingOptIn,
+        string $emailAddress
+    ): RecipientInterface {
         return new static(
             $pendingOptIn->getUuid(),
             $emailAddress,
@@ -78,8 +80,12 @@ abstract class Recipient implements RecipientInterface
         return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
     }
 
-    public function __construct(?string $uuid, string $emailAddress, array $newsletters = [], ?\DateTime $registrationDate = null)
-    {
+    public function __construct(
+        ?string $uuid,
+        string $emailAddress,
+        array $newsletters = [],
+        ?\DateTime $registrationDate = null
+    ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = static::normalizeEmailAddress($emailAddress);
         $this->newsletters = new ArrayCollection($newsletters);
