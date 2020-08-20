@@ -13,17 +13,22 @@ use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType;
 use Webfactory\NewsletterRegistrationBundle\Form\HoneypotType;
 use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 final class StartRegistrationTypeTest extends TypeTestCase
 {
     /** @var NewsletterRepositoryInterface|MockObject */
     private $newsletterRepository;
+
+    /** @var PendingOptInFactoryInterface|MockObject */
+    private $pendingOptInFactory;
 
     /** @var PendingOptInRepositoryInterface|MockObject */
     private $pendingOptInRepository;
@@ -43,6 +48,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
     public function setUp(): void
     {
         $this->newsletterRepository = $this->createMock(NewsletterRepositoryInterface::class);
+        $this->pendingOptInFactory = $this->createMock(PendingOptInFactoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         $this->emailAddressFactory = new EmailAddressFactory('secret');
@@ -55,7 +61,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
     public function view_has_no_newsletter_choices_element_if_there_are_no_choices(): void
     {
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $this->assertArrayNotHasKey('newsletters', $formView->vars['form']->children);
+        $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
     }
 
     /**
@@ -66,7 +72,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->setUpOneNewsletter();
 
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $this->assertArrayNotHasKey('newsletters', $formView->vars['form']->children);
+        $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
     }
 
     /**
@@ -77,7 +83,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->setUpTwoNewsletters();
 
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $newslettersVars = $formView->vars['form']->children['newsletters']->vars;
+        $newslettersVars = $formView->vars['form']->children[startRegistrationType::ELEMENT_NEWSLETTERS]->vars;
         $this->assertArrayHasKey('choices', $newslettersVars);
 
         $this->assertCount(2, $newslettersVars['choices']);
@@ -94,7 +100,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -112,8 +118,8 @@ final class StartRegistrationTypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
-            'url' => 'http://spam.com',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_HONEYPOT => 'http://spam.com',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -128,8 +134,8 @@ final class StartRegistrationTypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => '',
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => '',
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
         $this->assertTrue($form->isSynchronized());
         $this->assertFalse($form->isValid());
@@ -144,8 +150,8 @@ final class StartRegistrationTypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'this is no valid email address',
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'this is no valid email address',
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -170,8 +176,8 @@ final class StartRegistrationTypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -195,8 +201,8 @@ final class StartRegistrationTypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -217,9 +223,9 @@ final class StartRegistrationTypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
-            'newsletters' => [],
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_NEWSLETTERS => [],
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -234,41 +240,70 @@ final class StartRegistrationTypeTest extends TypeTestCase
     /**
      * @test
      */
-    public function provides_data_if_submitted_with_valid_data_without_newsletter_choices()
+    public function provides_PendingOptIn_if_submitted_with_valid_data_without_newsletter_choices()
     {
+        $pendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
+        $this->pendingOptInFactory
+            ->method('fromRegistrationFormData')
+            ->with(
+                $this->callback(
+                    function (array $formData) {
+                        return \array_key_exists(StartRegistrationType::ELEMENT_EMAIL_ADDRESS, $formData)
+                            && $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS] instanceof EmailAddress
+                            && 'webfactory@example.com' === $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress();
+                    }
+                )
+            )
+            ->willReturn($pendingOptIn);
+
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
-        $this->assertTrue($form->isSynchronized());
-
-        $data = $form->getData();
-        $this->assertEquals('webfactory@example.com', $data['emailAddress']);
+        $this->assertEquals($pendingOptIn, $form->getData());
     }
 
     /**
      * @test
      */
-    public function provides_data_if_submitted_with_valid_data_and_newsletter_choices()
+    public function provides_PendingOptIn_if_submitted_with_valid_data_and_newsletter_choices()
     {
         $this->setUpTwoNewsletters();
 
+        $pendingOptIn = new PendingOptIn(
+            null,
+            new EmailAddress('webfactory@example.com', 'secret'),
+            [$this->newsletter1, $this->newsletter2]
+        );
+        $this->pendingOptInFactory
+            ->method('fromRegistrationFormData')
+            ->with(
+                $this->callback(
+                    function (array $formData) {
+                        return \array_key_exists(StartRegistrationType::ELEMENT_EMAIL_ADDRESS, $formData)
+                            && $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS] instanceof EmailAddress
+                            && 'webfactory@example.com' === $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress()
+                            && \array_key_exists(StartRegistrationType::ELEMENT_NEWSLETTERS, $formData)
+                            && $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] === [$this->newsletter1, $this->newsletter2];
+                    }
+                )
+            )
+            ->willReturn($pendingOptIn);
+
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            'emailAddress' => 'webfactory@example.com',
-            'newsletters' => [$this->newsletter1->getId(), $this->newsletter2->getId()],
-            'url' => '',
+            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            startRegistrationType::ELEMENT_NEWSLETTERS => [$this->newsletter1->getId(), $this->newsletter2->getId()],
+            startRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
         $this->assertTrue($form->isSynchronized());
 
-        $data = $form->getData();
-        $this->assertEquals('webfactory@example.com', $data['emailAddress']);
-        $this->assertEquals([$this->newsletter1, $this->newsletter2], $data['newsletters']);
+        $this->assertEquals($pendingOptIn, $form->getData());
     }
 
     protected function getExtensions(): array
@@ -276,7 +311,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         return [
             new PreloadedExtension(
                 [
-                    new StartRegistrationType($this->newsletterRepository),
+                    new StartRegistrationType($this->newsletterRepository, $this->pendingOptInFactory),
                     new EmailAddressType(
                         $this->pendingOptInRepository,
                         $this->recipientRepository,

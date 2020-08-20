@@ -2,6 +2,7 @@ services:
     Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
         tags: ['form.type']
 
     Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType:
@@ -16,7 +17,7 @@ services:
             - '%secret%'
 
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface:
-        alias: Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory
+        alias: 'Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory'
 
     Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType:
         arguments:
@@ -37,11 +38,9 @@ services:
             - '@Symfony\Component\Routing\RouterInterface'
 
     Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface:
-        alias: Webfactory\NewsletterRegistrationBundle\Task\StartRegistration
+        alias: 'Webfactory\NewsletterRegistrationBundle\Task\StartRegistration'
 
-    Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory:
-        arguments:
-            - '%secret%'
+    Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory: ~
 
     Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
@@ -55,7 +54,7 @@ services:
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
     Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface:
-        alias: Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration
+        alias: 'Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration'
 
     Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory: ~
 
@@ -68,7 +67,7 @@ services:
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
     Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface:
-        alias: Webfactory\NewsletterRegistrationBundle\Task\EditRegistration
+        alias: 'Webfactory\NewsletterRegistrationBundle\Task\EditRegistration'
 
     Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration:
         arguments:
@@ -76,4 +75,4 @@ services:
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
     Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface:
-        alias: Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration
+        alias: 'Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration'

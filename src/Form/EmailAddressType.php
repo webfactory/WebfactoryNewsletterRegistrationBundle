@@ -5,7 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\DataMapperInterface;
-use Symfony\Component\Form\Exception;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -116,7 +116,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
         }
 
         if (!$viewData instanceof EmailAddress) {
-            throw new Exception\UnexpectedTypeException($viewData, EmailAddress::class);
+            throw new UnexpectedTypeException($viewData, EmailAddress::class);
         }
 
         $forms = iterator_to_array($forms);

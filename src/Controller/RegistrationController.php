@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
@@ -44,9 +43,6 @@ abstract class RegistrationController
     /** @var DeleteRegistrationInterface */
     protected $deleteRegistrationTask;
 
-    /** @var PendingOptInFactoryInterface */
-    protected $pendingOptInFactory;
-
     /** @var PendingOptInRepositoryInterface */
     protected $pendingOptInRepository;
 
@@ -61,7 +57,6 @@ abstract class RegistrationController
         ConfirmRegistrationInterface $confirmRegistrationTask,
         EditRegistrationInterface $editRegistrationTask,
         DeleteRegistrationInterface $deleteRegistrationTask,
-        PendingOptInFactoryInterface $pendingOptInFactory,
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository
     ) {
@@ -72,7 +67,6 @@ abstract class RegistrationController
         $this->confirmRegistrationTask = $confirmRegistrationTask;
         $this->editRegistrationTask = $editRegistrationTask;
         $this->deleteRegistrationTask = $deleteRegistrationTask;
-        $this->pendingOptInFactory = $pendingOptInFactory;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
     }
@@ -90,7 +84,7 @@ abstract class RegistrationController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $pendingOptIn = $this->pendingOptInFactory->fromRegistrationForm($form);
+            $pendingOptIn = $form->getData();
             $optInEmail = $this->startRegistrationTask->startRegistration($pendingOptIn);
 
             return new Response(

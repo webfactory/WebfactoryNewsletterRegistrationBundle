@@ -2,7 +2,6 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
-use Symfony\Component\Form\FormInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInClassCouldNotBeDeterminedException;
 
 /**
@@ -12,15 +11,7 @@ class PendingOptInFactory implements PendingOptInFactoryInterface
 {
     use DetermineAppsSubclassTrait;
 
-    /** @var string */
-    protected $secret;
-
-    public function __construct(string $secret)
-    {
-        $this->secret = $secret;
-    }
-
-    public function fromRegistrationForm(FormInterface $form): PendingOptInInterface
+    public function fromRegistrationFormData(array $formData): PendingOptInInterface
     {
         $appsPendingOptInClass = $this->getAppsSubclassOf(
             PendingOptInInterface::class,
@@ -28,6 +19,6 @@ class PendingOptInFactory implements PendingOptInFactoryInterface
         );
         $reflectionMethod = new \ReflectionMethod($appsPendingOptInClass, 'fromRegistrationFormData');
 
-        return $reflectionMethod->invoke(null, $form->getData(), $this->secret);
+        return $reflectionMethod->invoke(null, $formData);
     }
 }
