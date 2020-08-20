@@ -16,7 +16,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
+use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface;
@@ -87,7 +87,7 @@ abstract class RegistrationController
      */
     public function startRegistration(Request $request): Response
     {
-        $form = $this->formFactory->createNamed('', RegisterType::class);
+        $form = $this->formFactory->createNamed('', StartRegistrationType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -115,7 +115,7 @@ abstract class RegistrationController
 
     public function startRegistrationPartial(): Response
     {
-        $form = $this->formFactory->createNamed('', RegisterType::class);
+        $form = $this->formFactory->createNamed('', StartRegistrationType::class);
 
         return new Response(
             $this->twig->render(

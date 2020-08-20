@@ -14,7 +14,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
-class RegisterType extends AbstractType
+class StartRegistrationType extends AbstractType
 {
     use HasNewslettersElementTrait;
 

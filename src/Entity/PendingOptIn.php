@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
+use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
 
 /**
  * @ ORM\Entity(repositoryClass="PendingOptInRepository")
@@ -65,9 +65,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     {
         return new static(
             null,
-            $formData[RegisterType::ELEMENT_EMAIL_ADDRESS],
+            $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS],
             $secret,
-            \array_key_exists(RegisterType::ELEMENT_NEWSLETTERS, $formData) ? $formData[RegisterType::ELEMENT_NEWSLETTERS] : []
+            \array_key_exists(StartRegistrationType::ELEMENT_NEWSLETTERS, $formData) ? $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] : []
         );
     }
 

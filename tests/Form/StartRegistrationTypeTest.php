@@ -11,12 +11,12 @@ use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Form\HoneypotType;
-use Webfactory\NewsletterRegistrationBundle\Form\RegisterType;
+use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\PreloadedExtension;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 
-final class RegisterTypeTest extends TypeTestCase
+final class StartRegistrationTypeTest extends TypeTestCase
 {
     /** @var NewsletterRepositoryInterface|MockObject */
     private $newsletterRepository;
@@ -46,7 +46,7 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function view_has_no_newsletter_choices_element_if_there_are_no_choices(): void
     {
-        $formView = $this->factory->create(RegisterType::class)->createView();
+        $formView = $this->factory->create(StartRegistrationType::class)->createView();
         $this->assertArrayNotHasKey('newsletters', $formView->vars['form']->children);
     }
 
@@ -57,7 +57,7 @@ final class RegisterTypeTest extends TypeTestCase
     {
         $this->setUpOneNewsletter();
 
-        $formView = $this->factory->create(RegisterType::class)->createView();
+        $formView = $this->factory->create(StartRegistrationType::class)->createView();
         $this->assertArrayNotHasKey('newsletters', $formView->vars['form']->children);
     }
 
@@ -68,7 +68,7 @@ final class RegisterTypeTest extends TypeTestCase
     {
         $this->setUpTwoNewsletters();
 
-        $formView = $this->factory->create(RegisterType::class)->createView();
+        $formView = $this->factory->create(StartRegistrationType::class)->createView();
         $newslettersVars = $formView->vars['form']->children['newsletters']->vars;
         $this->assertArrayHasKey('choices', $newslettersVars);
 
@@ -84,7 +84,7 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function does_not_validate_without_honeypot()
     {
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
         ]);
@@ -102,7 +102,7 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function does_not_validate_with_filled_honeypot()
     {
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
             'url' => 'http://spam.com',
@@ -118,7 +118,7 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function does_not_validate_without_email_address()
     {
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => '',
             'url' => '',
@@ -134,7 +134,7 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function does_not_validate_with_invalid_email_address()
     {
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'this is no valid email address',
             'url' => '',
@@ -160,7 +160,7 @@ final class RegisterTypeTest extends TypeTestCase
             ))
             ->willReturn(true);
 
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
             'url' => '',
@@ -170,7 +170,7 @@ final class RegisterTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getErrors(true, true));
         $this->assertEquals(
-            RegisterType::ERROR_EMAIL_ALREADY_REGISTERING,
+            StartRegistrationType::ERROR_EMAIL_ALREADY_REGISTERING,
             $form->getErrors(true, true)->current()->getMessage()
         );
     }
@@ -185,7 +185,7 @@ final class RegisterTypeTest extends TypeTestCase
             ->with('webfactory@example.com')
             ->willReturn(true);
 
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
             'url' => '',
@@ -195,7 +195,7 @@ final class RegisterTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getErrors(true, true));
         $this->assertEquals(
-            RegisterType::ERROR_EMAIL_ALREADY_REGISTERED,
+            StartRegistrationType::ERROR_EMAIL_ALREADY_REGISTERED,
             $form->getErrors(true, true)->current()->getMessage()
         );
     }
@@ -207,7 +207,7 @@ final class RegisterTypeTest extends TypeTestCase
     {
         $this->setUpTwoNewsletters();
 
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
             'newsletters' => [],
@@ -228,7 +228,7 @@ final class RegisterTypeTest extends TypeTestCase
      */
     public function provides_data_if_submitted_with_valid_data_without_newsletter_choices()
     {
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
             'url' => '',
@@ -248,7 +248,7 @@ final class RegisterTypeTest extends TypeTestCase
     {
         $this->setUpTwoNewsletters();
 
-        $form = $this->factory->create(RegisterType::class);
+        $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
             'emailAddress' => 'webfactory@example.com',
             'newsletters' => [$this->newsletter1->getId(), $this->newsletter2->getId()],
@@ -268,7 +268,7 @@ final class RegisterTypeTest extends TypeTestCase
         return [
             new PreloadedExtension(
                 [
-                    new RegisterType(
+                    new StartRegistrationType(
                         $this->newsletterRepository,
                         $this->pendingOptInRepository,
                         $this->recipientRepository,

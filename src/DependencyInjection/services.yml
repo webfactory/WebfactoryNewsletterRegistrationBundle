@@ -1,5 +1,5 @@
 services:
-    Webfactory\NewsletterRegistrationBundle\Form\RegisterType:
+    Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
