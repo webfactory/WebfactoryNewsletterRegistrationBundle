@@ -5,18 +5,19 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\ConfirmRegistration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
-use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task;
+use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInIsOutdatedException;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 class TaskTest extends TestCase
 {
-    protected const SECRET = 'secret';
+    protected const TIME_LIMIT_FOR_OPT_IN_IN_HOURS = 1;
 
     /** @var EmailAddressFactoryInterface */
     protected $emailAddressFactory;
@@ -40,18 +41,35 @@ class TaskTest extends TestCase
     {
         parent::setUp();
 
-        $this->emailAddressFactory = new EmailAddressFactory(self::SECRET);
+        $this->emailAddressFactory = new EmailAddressFactory('secret');
         $this->recipientFactory = $this->createMock(RecipientFactoryInterface::class);
         $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
         $this->pendingOptInRepo = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->flashBag = $this->createMock(FlashBagInterface::class);
         $this->task = new Task(
+            $this->pendingOptInRepo,
+            self::TIME_LIMIT_FOR_OPT_IN_IN_HOURS,
             $this->emailAddressFactory,
             $this->recipientFactory,
             $this->recipientRepo,
-            $this->pendingOptInRepo,
             $this->flashBag
         );
+    }
+
+    /**
+     * @test
+     */
+    public function throws_exception_if_PendingOptIn_is_outdated()
+    {
+        $pendingOptIn = new PendingOptIn(
+            'uuid',
+            $this->emailAddressFactory->fromString('webfactory@example.com'),
+            [],
+            new\DateTime('2000-01-01')
+        );
+        $this->expectException(PendingOptInIsOutdatedException::class);
+
+        $this->task->confirmRegistration($pendingOptIn, 'other@example.com');
     }
 
     /**

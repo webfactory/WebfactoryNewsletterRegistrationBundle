@@ -107,4 +107,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     {
         return $this->registrationDate;
     }
+
+    public function isOutdated(\DateTime $threshold): bool
+    {
+        return $this->getRegistrationDate() < $threshold;
+    }
 }

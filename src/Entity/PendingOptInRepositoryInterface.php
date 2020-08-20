@@ -11,4 +11,11 @@ interface PendingOptInRepositoryInterface
     public function remove(PendingOptInInterface $pendingOptIn): void;
 
     public function findByUuid(string $uuid): ?PendingOptInInterface;
+
+    /**
+     * @param \DateTime $tresholdDate
+     *
+     * @return int Number of deleted PendingOptIns
+     */
+    public function removeOutdated(\DateTime $tresholdDate): int;
 }

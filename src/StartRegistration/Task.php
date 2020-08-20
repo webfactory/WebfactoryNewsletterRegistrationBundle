@@ -26,18 +26,23 @@ class Task implements TaskInterface
     /** @var UrlGeneratorInterface */
     protected $urlGenerator;
 
+    /** @var int */
+    protected $timeLimitForOpInInHours;
+
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepo,
         MailerInterface $swiftMailer,
         string $senderEmailAddress,
         Environment $twig,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        int $timeLimitForOpInInHours
     ) {
         $this->pendingOptInRepo = $pendingOptInRepo;
         $this->mailer = $swiftMailer;
         $this->senderEmailAddress = $senderEmailAddress;
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
+        $this->timeLimitForOpInInHours = $timeLimitForOpInInHours;
     }
 
     public function startRegistration(PendingOptInInterface $pendingOptIn): Email
@@ -82,6 +87,7 @@ class Task implements TaskInterface
                         ['emailAddress' => $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
+                    'dateUrlForConfirmationIsValidUntil' => new \DateTime('+'.$this->timeLimitForOpInInHours.' hour'),
                     'urlForEditing' => $this->urlGenerator->generate(
                         'newsletter-registration-edit',
                         ['uuid' => $pendingOptIn->getUuid()],

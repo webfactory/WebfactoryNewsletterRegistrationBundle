@@ -14,6 +14,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type as DeleteRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\EditRegistration\Type as EditRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInIsOutdatedException;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface as ConfirmRegistrationTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface as DeleteRegistrationTaskInterface;
@@ -137,6 +138,10 @@ class Controller
 
         try {
             $recipient = $this->confirmRegistrationTask->confirmRegistration($pendingOptIn, $emailAddress);
+        } catch (PendingOptInIsOutdatedException $exception) {
+            return new Response(
+                $this->twig->render('@WebfactoryNewsletterRegistration/StartRegistration/opt-in-failed-due-to-unknown-uuid.html.twig')
+            );
         } catch (EmailAddressDoesNotMatchHashOfPendingOptInException $exception) {
             return new Response(
                 $this->twig->render('@WebfactoryNewsletterRegistration/StartRegistration/opt-in-failed-due-to-email-address-not-matching.html.twig')

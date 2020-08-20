@@ -34,4 +34,14 @@ class PendingOptInRepository extends EntityRepository implements PendingOptInRep
     {
         return $this->findOneBy(['uuid' => $uuid]);
     }
+
+    public function removeOutdated(\DateTime $tresholdDate): int
+    {
+        return $this->createQueryBuilder('pendingOptIn')
+            ->delete()
+            ->where('pendingOptIn.registrationDate < :tresholdDate')
+            ->setParameter('tresholdDate', $tresholdDate)
+            ->getQuery()
+            ->execute();
+    }
 }

@@ -18,4 +18,6 @@ interface PendingOptInInterface
     public function getNewsletters(): array;
 
     public function getRegistrationDate(): \DateTime;
+
+    public function isOutdated(\DateTime $threshold): bool;
 }

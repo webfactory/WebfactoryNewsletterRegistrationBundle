@@ -10,9 +10,16 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
+use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInIsOutdatedException;
 
 class Task implements TaskInterface
 {
+    /** @var PendingOptInRepositoryInterface */
+    protected $pendingOptInRepo;
+
+    /** @var int */
+    protected $timeLimitForOptInInHours;
+
     /** @var EmailAddressFactoryInterface */
     protected $emailAddressFactory;
 
@@ -22,30 +29,43 @@ class Task implements TaskInterface
     /** @var RecipientRepositoryInterface */
     protected $recipientRepo;
 
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepo;
-
     /** @var FlashBagInterface */
     protected $flashBag;
 
     public function __construct(
+        PendingOptInRepositoryInterface $pendingOptInRepo,
+        int $timeLimitForOptInInHours,
         EmailAddressFactoryInterface $emailAddressFactory,
         RecipientFactoryInterface $recipientFactory,
         RecipientRepositoryInterface $recipientRepo,
-        PendingOptInRepositoryInterface $pendingOptInRepo,
         FlashBagInterface $flashBag
     ) {
+        $this->pendingOptInRepo = $pendingOptInRepo;
+        $this->timeLimitForOptInInHours = $timeLimitForOptInInHours;
         $this->emailAddressFactory = $emailAddressFactory;
         $this->recipientFactory = $recipientFactory;
         $this->recipientRepo = $recipientRepo;
-        $this->pendingOptInRepo = $pendingOptInRepo;
         $this->flashBag = $flashBag;
     }
 
+    /**
+     * @param PendingOptInInterface $pendingOptIn
+     * @param string                $emailAddressStringString
+     *
+     * @return RecipientInterface
+     *
+     * @throws EmailAddressDoesNotMatchHashOfPendingOptInException
+     * @throws PendingOptInIsOutdatedException
+     */
     public function confirmRegistration(
         PendingOptInInterface $pendingOptIn,
         string $emailAddressStringString
     ): RecipientInterface {
+        $thresholdDate = new \DateTime('-'.$this->timeLimitForOptInInHours.' hour');
+        if ($pendingOptIn->isOutdated($thresholdDate)) {
+            throw new PendingOptInIsOutdatedException($pendingOptIn);
+        }
+
         $emailAddress = $this->emailAddressFactory->fromString($emailAddressStringString);
         if (false === $pendingOptIn->matchesEmailAddress($emailAddress)) {
             throw new EmailAddressDoesNotMatchHashOfPendingOptInException($emailAddress, $pendingOptIn);

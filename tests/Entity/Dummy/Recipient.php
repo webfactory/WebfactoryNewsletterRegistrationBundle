@@ -12,6 +12,10 @@ class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipien
 {
     /**
      * @ORM\ManyToMany(targetEntity="Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter")
+     * @ORM\JoinTable(
+     *     joinColumns={@ORM\JoinColumn(referencedColumnName="uuid", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
+     * )
      *
      * @var Collection of Newsletter
      */

@@ -49,6 +49,7 @@ services:
             - '%webfactory.newsletter_registration.opt_in_sender_address%'
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
+            - '%webfactory.newsletter_registration.time_limit_for_opt_in_in_hours%'
 
     Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\Task'
@@ -60,10 +61,11 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task:
         arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
+            - '%webfactory.newsletter_registration.time_limit_for_opt_in_in_hours%'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
     Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface:
@@ -89,3 +91,20 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Task'
+
+    Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\Command:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\TaskInterface'
+        tags: ['console.command']
+
+    Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\Task:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
+            - '%webfactory.newsletter_registration.time_limit_for_opt_in_in_hours%'
+            - '@logger'
+
+    Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\TaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\Task'
+
+parameters:
+    webfactory.newsletter_registration.time_limit_for_opt_in_in_hours: 72

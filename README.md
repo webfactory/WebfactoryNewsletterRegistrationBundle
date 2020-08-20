@@ -6,10 +6,11 @@ WebfactoryNewsletterRegistrationBundle
 ![](https://github.com/webfactory/WebfactoryNewsletterRegistrationBundle/workflows/Coding%20Standards/badge.svg)
 
 This Symfony bundle features a newsletter registration template with attention to data avoidance for privacy
-protection and a smooth user journey:
+protection, and a smooth user journey:
 
 - Sign up with email address only
 - No personal data is saved until the newsletter recipient verifies their email address (double opt in)
+- Command for deleting outdated pending opt in processes
 - Additional user data can be provided after double opt in (planned)
 - Supports zero, one or many newsletters
 - Highly customizable due to small interfaces, Doctrine interface mapping (e.g. there are some webfactory specific names
@@ -73,7 +74,7 @@ doctrine:
 
 Update your database schema, e.g. with a migration.
 
-Configure the sender of opt in emails and a secret for hashing email addresses internally:
+Configure the bundle:
 
 ```yaml
 // config.yml
@@ -81,6 +82,7 @@ Configure the sender of opt in emails and a secret for hashing email addresses i
 parameters:
   webfactory.newsletter_registration.opt_in_sender_address: 'newsletter-registration@example.com'
   webfactory.newsletter_registration.secret: 'your-secret' # do not use Symfony's %secret%!
+  webfactory.newsletter_registration.time_limit_for_opt_in_in_hours: 72 # 72 is the default value
 ```
 
 Include the RegistrationController in your routing:
@@ -131,6 +133,13 @@ services:
   Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface:
     alias: 'AppBundle\Newsletter\Entity\RecipientRepository'
 ```
+
+
+Delete outdated pending Opt In Processes
+----------------------------------------
+
+    bin/console newsletter-registration:delete-outdated-pending-opt-ins
+
 
 Customization
 -------------

@@ -13,7 +13,7 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
-    public function uuid_is_added_if_omitted()
+    public function uuid_is_added_if_omitted(): void
     {
         $this->assertNotEmpty(
             (new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret')))->getUuid()
@@ -23,7 +23,7 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
-    public function registrationDate_is_added_if_omitted()
+    public function registrationDate_is_added_if_omitted(): void
     {
         $this->assertEqualsWithDelta(
             new \DateTime(),
@@ -36,7 +36,7 @@ class PendingOptInTest extends TestCase
      * @test
      * @doesNotPerformAssertions
      */
-    public function static_construction_with_newsletters()
+    public function static_construction_with_newsletters(): void
     {
         PendingOptIn::fromRegistrationFormData(
             [
@@ -53,7 +53,7 @@ class PendingOptInTest extends TestCase
      * @test
      * @doesNotPerformAssertions
      */
-    public function static_construction_without_newsletters()
+    public function static_construction_without_newsletters(): void
     {
         PendingOptIn::fromRegistrationFormData(
             [
@@ -65,7 +65,7 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
-    public function emailAddressMatchesHash_returns_true_if_matches()
+    public function emailAddressMatchesHash_returns_true_if_matches(): void
     {
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
@@ -77,7 +77,7 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
-    public function emailAddressMatchesHash_returns_false_if_email_address_does_not_match()
+    public function emailAddressMatchesHash_returns_false_if_email_address_does_not_match(): void
     {
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
@@ -89,12 +89,46 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
-    public function emailAddressMatchesHash_returns_false_if_secret_does_not_match()
+    public function emailAddressMatchesHash_returns_false_if_secret_does_not_match(): void
     {
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
         $this->assertFalse(
             $pendingOptIn->matchesEmailAddress(new EmailAddress('webfactory@example.com', 'other-secret'))
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isOutdated_returns_true_if_outdated(): void
+    {
+        $pendingOptIn = new PendingOptIn(
+            null,
+            new EmailAddress('webfactory@example.com', 'secret'),
+            [],
+            new \DateTime('2000-01-01')
+        );
+
+        $this->assertTrue(
+            $pendingOptIn->isOutdated(new \DateTime())
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isOutdated_returns_false_if_not_outdated(): void
+    {
+        $pendingOptIn = new PendingOptIn(
+            null,
+            new EmailAddress('webfactory@example.com', 'secret'),
+            [],
+            new \DateTime()
+        );
+
+        $this->assertFalse(
+            $pendingOptIn->isOutdated(new \DateTime('2000-01-01'))
         );
     }
 }
