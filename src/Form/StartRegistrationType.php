@@ -68,10 +68,7 @@ class StartRegistrationType extends AbstractType
         // fake field for spam protection
         $builder->add(
             self::ELEMENT_HONEYPOT,
-            HoneypotType::class,
-            [
-                'required' => false,
-            ]
+            HoneypotType::class
         );
     }
 

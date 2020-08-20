@@ -65,7 +65,10 @@ class HoneypotType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults(['mapped' => false]);
+        $resolver->setDefaults([
+            'mapped' => false,
+            'required' => false,
+        ]);
     }
 
     /**
