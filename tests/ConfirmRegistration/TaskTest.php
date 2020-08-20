@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Tests\Task;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\ConfirmRegistration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -11,10 +11,10 @@ use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterfa
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
-use Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration;
+use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
-class ConfirmRegistrationTest extends TestCase
+class TaskTest extends TestCase
 {
     protected const SECRET = 'secret';
 
@@ -33,7 +33,7 @@ class ConfirmRegistrationTest extends TestCase
     /** @var FlashBagInterface|MockObject */
     protected $flashBag;
 
-    /** @var ConfirmRegistration */
+    /** @var Task */
     protected $task;
 
     protected function setUp(): void
@@ -45,7 +45,7 @@ class ConfirmRegistrationTest extends TestCase
         $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
         $this->pendingOptInRepo = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->flashBag = $this->createMock(FlashBagInterface::class);
-        $this->task = new ConfirmRegistration(
+        $this->task = new Task(
             $this->emailAddressFactory,
             $this->recipientFactory,
             $this->recipientRepo,

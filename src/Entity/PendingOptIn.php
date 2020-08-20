@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
-use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 
 /**
  * @ ORM\Entity(repositoryClass="PendingOptInRepository")

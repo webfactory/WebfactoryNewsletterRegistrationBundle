@@ -1,12 +1,12 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
-class EditRegistration implements EditRegistrationInterface
+class Task implements TaskInterface
 {
     /** @var RecipientRepositoryInterface */
     protected $recipientRepo;

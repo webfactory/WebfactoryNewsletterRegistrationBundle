@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\ConfirmRegistration;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -11,7 +11,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 
-class ConfirmRegistration implements ConfirmRegistrationInterface
+class Task implements TaskInterface
 {
     /** @var EmailAddressFactoryInterface */
     protected $emailAddressFactory;

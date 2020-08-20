@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Form;
+namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;

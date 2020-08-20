@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Form;
+namespace Webfactory\NewsletterRegistrationBundle\DeleteRegistration;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -8,7 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
-class DeleteRegistrationType extends AbstractType
+class Type extends AbstractType
 {
     /** @var UrlGeneratorInterface */
     protected $urlGenerator;

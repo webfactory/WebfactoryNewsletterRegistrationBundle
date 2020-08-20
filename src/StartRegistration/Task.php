@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -9,7 +9,7 @@ use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 
-class StartRegistration implements StartRegistrationInterface
+class Task implements TaskInterface
 {
     /** @var PendingOptInRepositoryInterface */
     protected $pendingOptInRepo;
@@ -64,7 +64,7 @@ class StartRegistration implements StartRegistrationInterface
     {
         return trim(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/Register/opt-in-email-subject.txt.twig',
+                '@WebfactoryNewsletterRegistration/StartRegistration/opt-in-email-subject.txt.twig',
                 ['pendingOptIn' => $pendingOptIn]
             )
         );
@@ -74,7 +74,7 @@ class StartRegistration implements StartRegistrationInterface
     {
         return trim(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/Register/opt-in-email-body.txt.twig',
+                '@WebfactoryNewsletterRegistration/StartRegistration/opt-in-email-body.txt.twig',
                 [
                     'pendingOptIn' => $pendingOptIn,
                     'urlForConfirmation' => $this->urlGenerator->generate(

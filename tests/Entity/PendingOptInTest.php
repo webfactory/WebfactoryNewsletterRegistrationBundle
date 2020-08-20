@@ -4,7 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
-use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 

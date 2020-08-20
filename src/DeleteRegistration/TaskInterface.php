@@ -1,10 +1,10 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\DeleteRegistration;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
-interface DeleteRegistrationInterface
+interface TaskInterface
 {
     public function deleteRegistration(RecipientInterface $recipient): void;
 }

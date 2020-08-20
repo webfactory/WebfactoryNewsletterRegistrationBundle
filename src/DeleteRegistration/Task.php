@@ -1,12 +1,12 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\DeleteRegistration;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
-class DeleteRegistration implements DeleteRegistrationInterface
+class Task implements TaskInterface
 {
     /** @var RecipientRepositoryInterface */
     protected $recipientRepo;

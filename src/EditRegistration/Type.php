@@ -1,15 +1,15 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Form;
+namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
 
-class EditRegistrationType extends AbstractType
+class Type extends AbstractType
 {
-    use HasNewslettersElementTrait;
+    use TypeHasNewslettersElementTrait;
 
     public const ELEMENT_NEWSLETTERS = 'newsletters';
 

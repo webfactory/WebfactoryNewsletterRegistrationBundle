@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Form;
+namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;

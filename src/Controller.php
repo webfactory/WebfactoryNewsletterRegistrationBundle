@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Controller;
+namespace Webfactory\NewsletterRegistrationBundle;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -12,15 +12,15 @@ use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
-use Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface;
-use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface;
-use Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface;
-use Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface;
+use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type as DeleteRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\Type as EditRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface as ConfirmRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface as DeleteRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface as EditRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface as StartRegistrationTaskInterface;
 
-class RegistrationController
+class Controller
 {
     /** @var FormFactoryInterface */
     protected $formFactory;
@@ -31,16 +31,16 @@ class RegistrationController
     /** @var UrlGeneratorInterface */
     protected $urlGenerator;
 
-    /** @var StartRegistrationInterface */
+    /** @var StartRegistrationTaskInterface */
     protected $startRegistrationTask;
 
-    /** @var ConfirmRegistrationInterface */
+    /** @var ConfirmRegistrationTaskInterface */
     protected $confirmRegistrationTask;
 
-    /** @var EditRegistrationInterface */
+    /** @var EditRegistrationTaskInterface */
     protected $editRegistrationTask;
 
-    /** @var DeleteRegistrationInterface */
+    /** @var DeleteRegistrationTaskInterface */
     protected $deleteRegistrationTask;
 
     /** @var PendingOptInRepositoryInterface */
@@ -53,10 +53,10 @@ class RegistrationController
         FormFactoryInterface $formFactory,
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
-        StartRegistrationInterface $startRegistrationTask,
-        ConfirmRegistrationInterface $confirmRegistrationTask,
-        EditRegistrationInterface $editRegistrationTask,
-        DeleteRegistrationInterface $deleteRegistrationTask,
+        StartRegistrationTaskInterface $startRegistrationTask,
+        ConfirmRegistrationTaskInterface $confirmRegistrationTask,
+        EditRegistrationTaskInterface $editRegistrationTask,
+        DeleteRegistrationTaskInterface $deleteRegistrationTask,
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository
     ) {

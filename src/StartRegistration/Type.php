@@ -1,17 +1,18 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Form;
+namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\TypeHasNewslettersElementTrait;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 
-class StartRegistrationType extends AbstractType
+class Type extends AbstractType
 {
-    use HasNewslettersElementTrait;
+    use TypeHasNewslettersElementTrait;
 
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
     public const ELEMENT_NEWSLETTERS = 'newsletters';

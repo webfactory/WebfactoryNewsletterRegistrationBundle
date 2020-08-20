@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Tests\Task;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -10,10 +10,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Task\StartRegistration;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Task;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
-class StartRegistrationTest extends TestCase
+class TaskTest extends TestCase
 {
     protected const SENDER = 'sender@example.com';
 
@@ -29,7 +29,7 @@ class StartRegistrationTest extends TestCase
     /** @var UrlGeneratorInterface|MockObject */
     protected $urlGenerator;
 
-    /** @var StartRegistration */
+    /** @var Task */
     private $task;
 
     protected function setUp(): void
@@ -39,7 +39,7 @@ class StartRegistrationTest extends TestCase
         $this->mailer = $this->createMock(MailerInterface::class);
         $this->twig = $this->createMock(Environment::class);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $this->task = new StartRegistration(
+        $this->task = new Task(
             $this->pendingOptInRepo,
             $this->mailer,
             self::SENDER,

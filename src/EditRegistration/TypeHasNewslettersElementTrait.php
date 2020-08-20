@@ -1,13 +1,13 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Form;
+namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
 
-trait HasNewslettersElementTrait
+trait TypeHasNewslettersElementTrait
 {
     /** @var NewsletterRepositoryInterface */
     protected $newsletterRepository;

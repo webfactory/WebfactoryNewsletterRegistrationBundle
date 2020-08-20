@@ -166,7 +166,7 @@ For greater flexibility, you can replace the RegistrationController with your ow
 
 namespace AppBundle\Newsletter;
 
-class Controller extends \Webfactory\NewsletterRegistrationBundle\Controller\RegistrationController
+class Controller extends \Webfactory\NewsletterRegistrationBundle\Controller\Controller
 {
     // ...
 }

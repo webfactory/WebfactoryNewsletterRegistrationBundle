@@ -1,10 +1,10 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Tests\Form;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Test\TypeTestCase;
-use Webfactory\NewsletterRegistrationBundle\Form\HoneypotType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\HoneypotType;
 
 final class HoneypotTypeTest extends TypeTestCase
 {

@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory;
-use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 
 class PendingOptInFactoryTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Tests\Form;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -15,7 +15,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType;
 
 final class EmailAddressTypeTest extends TypeTestCase
 {

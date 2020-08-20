@@ -1,11 +1,11 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Task;
+namespace Webfactory\NewsletterRegistrationBundle\ConfirmRegistration;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
-interface ConfirmRegistrationInterface
+interface TaskInterface
 {
     public function confirmRegistration(
         PendingOptInInterface $pendingOptIn,

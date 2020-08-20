@@ -16,9 +16,9 @@ use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType;
-use Webfactory\NewsletterRegistrationBundle\Form\HoneypotType;
-use Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\HoneypotType;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 

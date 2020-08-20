@@ -1,16 +1,16 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Tests\Task;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\EditRegistration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\Task;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
-class DeleteRegistrationTest extends TestCase
+class TaskTest extends TestCase
 {
     /** @var RecipientRepositoryInterface|MockObject */
     protected $recipientRepo;
@@ -18,7 +18,7 @@ class DeleteRegistrationTest extends TestCase
     /** @var FlashBagInterface|MockObject */
     protected $flashBag;
 
-    /** @var DeleteRegistration */
+    /** @var Task */
     protected $task;
 
     protected function setUp(): void
@@ -27,18 +27,18 @@ class DeleteRegistrationTest extends TestCase
 
         $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
         $this->flashBag = $this->createMock(FlashBagInterface::class);
-        $this->task = new DeleteRegistration($this->recipientRepo, $this->flashBag);
+        $this->task = new Task($this->recipientRepo, $this->flashBag);
     }
 
     /**
      * @test
      */
-    public function removes_recipient()
+    public function saves_recipient()
     {
         $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));
-        $this->recipientRepo->expects($this->once())->method('remove')->with($recipient);
+        $this->recipientRepo->expects($this->once())->method('save')->with($recipient);
 
-        $this->task->deleteRegistration($recipient);
+        $this->task->editRegistration($recipient);
     }
 
     /**
@@ -49,6 +49,6 @@ class DeleteRegistrationTest extends TestCase
         $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));
         $this->flashBag->expects($this->once())->method('add');
 
-        $this->task->deleteRegistration($recipient);
+        $this->task->editRegistration($recipient);
     }
 }

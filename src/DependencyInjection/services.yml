@@ -1,24 +1,24 @@
 services:
-    Webfactory\NewsletterRegistrationBundle\Controller\RegistrationController:
+    Webfactory\NewsletterRegistrationBundle\Controller:
         arguments:
             - '@Symfony\Component\Form\FormFactoryInterface'
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
         tags: ['controller.service_arguments']
 
-    Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType:
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\Type:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
         tags: ['form.type']
 
-    Webfactory\NewsletterRegistrationBundle\Form\EmailAddressType:
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
@@ -32,17 +32,17 @@ services:
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory'
 
-    Webfactory\NewsletterRegistrationBundle\Form\EditRegistrationType:
+    Webfactory\NewsletterRegistrationBundle\EditRegistration\Type:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
         tags: ['form.type']
 
-    Webfactory\NewsletterRegistrationBundle\Form\DeleteRegistrationType:
+    Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type:
         arguments:
             - '@router'
         tags: ['form.type']
 
-    Webfactory\NewsletterRegistrationBundle\Task\StartRegistration:
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\Task:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Symfony\Component\Mailer\MailerInterface'
@@ -50,15 +50,15 @@ services:
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
 
-    Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface:
-        alias: 'Webfactory\NewsletterRegistrationBundle\Task\StartRegistration'
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\Task'
 
     Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory: ~
 
     Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
 
-    Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration:
+    Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
@@ -66,26 +66,26 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
-    Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface:
-        alias: 'Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistration'
+    Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task'
 
     Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory: ~
 
     Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory'
 
-    Webfactory\NewsletterRegistrationBundle\Task\EditRegistration:
+    Webfactory\NewsletterRegistrationBundle\EditRegistration\Task:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
-    Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface:
-        alias: 'Webfactory\NewsletterRegistrationBundle\Task\EditRegistration'
+    Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\EditRegistration\Task'
 
-    Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration:
+    Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Task:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
 
-    Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface:
-        alias: 'Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistration'
+    Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Task'
