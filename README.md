@@ -130,3 +130,46 @@ services:
   Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface:
     alias: 'AppBundle\Newsletter\Entity\RecipientRepository'
 ```
+
+Customization
+-------------
+
+### Views
+
+Use [the regular symfony mechanism for overriding templates](https://symfony.com/doc/4.4/bundles/override.html#templates).
+
+### Adding fields
+
+- Extend the StartRegistration Type with a [Form Type Extension](https://symfony.com/doc/4.4/form/create_form_type_extension.html).
+- Add the new fields to your entities (`AppBundle\Entity\PendingOptIn` and `AppBundle\Entity\Recipient` in the example
+  above). Maybe you want to extends their respective Repositories, too.
+- Implement `Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface` and `Webfactory\NewsletterRegistrationBundle\Entity\RecpientFactoryInterface`,
+  as they are responsible for creating your entities from the corresponding form data. Alias the interfaces to your
+  implementations, e.g.
+  ```yaml
+  // services.yml
+  services:
+    Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface:
+        alias: 'App\Newsletter\Entity\PendingOptInFactory'
+  ```
+
+### Logic
+
+If you can pin down your modifications to the `StartRegistration`, `ConfirmRegistration`, `EditRegistration` or
+`DeleteRegistration` tasks, you are probably better off implementing your own versions of the respective interface
+(maybe extending the task class) and aliasing the interface service to them.
+
+For greater flexibility, you can replace the RegistrationController with your own, e.g.:
+
+```php
+<?php
+
+namespace AppBundle\Newsletter;
+
+class Controller extends \Webfactory\NewsletterRegistrationBundle\Controller\RegistrationController
+{
+    // ...
+}
+```
+
+Don't forget to configure your routing and services accordingly.
