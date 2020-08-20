@@ -1,4 +1,17 @@
 services:
+    Webfactory\NewsletterRegistrationBundle\Controller\RegistrationController:
+        arguments:
+            - '@Symfony\Component\Form\FormFactoryInterface'
+            - '@Twig\Environment'
+            - '@Symfony\Component\Routing\RouterInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Task\ConfirmRegistrationInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+        tags: ['controller.service_arguments']
+
     Webfactory\NewsletterRegistrationBundle\Form\StartRegistrationType:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'

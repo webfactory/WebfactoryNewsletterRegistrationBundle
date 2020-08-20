@@ -20,7 +20,7 @@ use Webfactory\NewsletterRegistrationBundle\Task\DeleteRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\EditRegistrationInterface;
 use Webfactory\NewsletterRegistrationBundle\Task\StartRegistrationInterface;
 
-abstract class RegistrationController
+class RegistrationController
 {
     /** @var FormFactoryInterface */
     protected $formFactory;
