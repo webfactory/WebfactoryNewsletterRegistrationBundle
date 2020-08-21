@@ -17,12 +17,12 @@ interface PendingOptInInterface
      */
     public function getNewsletters(): array;
 
-    public function getRegistrationDate(): \DateTime;
+    public function getRegistrationDate(): \DateTimeImmutable;
 
-    public function isOutdated(\DateTime $threshold): bool;
+    public function isOutdated(\DateTimeImmutable $threshold): bool;
 
     public function isAllowedToReceiveAnotherOptInEmail(
         \DateInterval $minimalIntervalBetweenOptInEmailsInHours,
-        ?\DateTime $now = null
+        ?\DateTimeImmutable $now = null
     ): bool;
 }

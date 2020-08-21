@@ -92,7 +92,7 @@ class Task implements TaskInterface
                         ['emailAddress' => (string) $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
-                    'dateUrlForConfirmationIsValidUntil' => new \DateTime('+'.$this->timeLimitForOpInInHours.' hour'),
+                    'dateUrlForConfirmationIsValidUntil' => new \DateTimeImmutable('+'.$this->timeLimitForOpInInHours.' hour'),
                     'urlForEditing' => $this->urlGenerator->generate(
                         'newsletter-registration-edit',
                         ['uuid' => $pendingOptIn->getUuid()],

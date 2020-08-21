@@ -65,7 +65,7 @@ class TaskTest extends TestCase
             'uuid',
             $this->emailAddressFactory->fromString('webfactory@example.com'),
             [],
-            new\DateTime('2000-01-01')
+            new \DateTimeImmutable('2000-01-01')
         );
         $this->expectException(PendingOptInIsOutdatedException::class);
 

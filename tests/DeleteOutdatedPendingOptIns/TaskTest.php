@@ -27,9 +27,9 @@ class TaskTest extends TestCase
 
     public function deleteOutdatedPendingOptIns(?\DateTime $now = null): void
     {
-        $now = $now ?: new \DateTime();
-        $tresholdDate = $now->sub(new \DateInterval('PT'.$this->timeLimitForOptInInHours.'H'));
-        $numberOfDeletedOutdatedPendingOptIns = $this->repository->removeOutdated($tresholdDate);
+        $now = $now ?: new \DateTimeImmutable();
+        $thresholdDate = $now->sub(new \DateInterval('PT'.$this->timeLimitForOptInInHours.'H'));
+        $numberOfDeletedOutdatedPendingOptIns = $this->repository->removeOutdated($thresholdDate);
         $this->logger->info(
             'Deleted [numberOfDeletedOutdatedPendingOptIns] outdated PendingOpIns',
             ['numberOfDeletedOutdatedPendingOptIns' => $numberOfDeletedOutdatedPendingOptIns]
@@ -51,16 +51,16 @@ class TaskTest extends TestCase
     /**
      * @test
      */
-    public function sets_treshold_date_from_now_if_called_without_one(): void
+    public function sets_threshold_date_from_now_if_called_without_one(): void
     {
-        $expected = new \DateTime('-'.self::TIME_LIMIT_FOR_OPT_IN_IN_HOURS.' hour');
+        $expected = new \DateTimeImmutable('-'.self::TIME_LIMIT_FOR_OPT_IN_IN_HOURS.' hour');
         $allowedDeltaInSeconds = 10;
 
         $this->repository
             ->expects($this->once())
             ->method('removeOutdated')
             ->with($this->callback(
-                function (\DateTime $calculdatedThresholdDate) use ($expected, $allowedDeltaInSeconds) {
+                function (\DateTimeImmutable $calculdatedThresholdDate) use ($expected, $allowedDeltaInSeconds) {
                     $delta = $calculdatedThresholdDate->diff($expected, true);
 
                     return 0 === $delta->y

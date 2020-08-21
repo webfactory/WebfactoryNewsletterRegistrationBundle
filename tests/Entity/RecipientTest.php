@@ -26,7 +26,7 @@ class RecipientTest extends TestCase
     public function optInDate_is_added_if_omitted()
     {
         $this->assertEqualsWithDelta(
-            new \DateTime(),
+            new \DateTimeImmutable(),
             (new Recipient('uuid', new EmailAddress('webfactory@example.com', null)))->getOptInDate(),
             1
         );

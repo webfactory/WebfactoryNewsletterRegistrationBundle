@@ -13,9 +13,9 @@ interface PendingOptInRepositoryInterface
     public function findByUuid(string $uuid): ?PendingOptInInterface;
 
     /**
-     * @param \DateTime $tresholdDate
+     * @param \DateTimeImmutable $thresholdDate
      *
      * @return int Number of deleted PendingOptIns
      */
-    public function removeOutdated(\DateTime $tresholdDate): int;
+    public function removeOutdated(\DateTimeImmutable $thresholdDate): int;
 }

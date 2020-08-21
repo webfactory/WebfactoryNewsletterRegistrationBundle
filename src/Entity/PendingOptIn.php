@@ -44,9 +44,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     protected $emailAddressHash;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime_immutable", nullable=false)
      *
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $registrationDate;
 
@@ -74,13 +74,13 @@ abstract class PendingOptIn implements PendingOptInInterface
         ?string $uuid,
         EmailAddress $emailAddress,
         array $newsletters = [],
-        ?\DateTime $registrationDate = null
+        ?\DateTimeImmutable $registrationDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $emailAddress;
         $this->emailAddressHash = $emailAddress->getHash();
         $this->newsletters = new ArrayCollection($newsletters);
-        $this->registrationDate = $registrationDate ?: new \DateTime();
+        $this->registrationDate = $registrationDate ?: new \DateTimeImmutable();
     }
 
     public function getUuid(): string
@@ -103,21 +103,21 @@ abstract class PendingOptIn implements PendingOptInInterface
         return $this->newsletters->toArray();
     }
 
-    public function getRegistrationDate(): \DateTime
+    public function getRegistrationDate(): \DateTimeImmutable
     {
         return $this->registrationDate;
     }
 
-    public function isOutdated(\DateTime $threshold): bool
+    public function isOutdated(\DateTimeImmutable $threshold): bool
     {
         return $this->getRegistrationDate() < $threshold;
     }
 
     public function isAllowedToReceiveAnotherOptInEmail(
         \DateInterval $minimalIntervalBetweenOptInEmailsInHours,
-        ?\DateTime $now = null
+        ?\DateTimeImmutable $now = null
     ): bool {
-        $now = $now ?? new \DateTime();
+        $now = $now ?? new \DateTimeImmutable();
 
         return $this->getRegistrationDate()->add($minimalIntervalBetweenOptInEmailsInHours) < $now;
     }

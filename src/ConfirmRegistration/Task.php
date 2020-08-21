@@ -61,7 +61,7 @@ class Task implements TaskInterface
         PendingOptInInterface $pendingOptIn,
         string $emailAddressStringString
     ): RecipientInterface {
-        $thresholdDate = new \DateTime('-'.$this->timeLimitForOptInInHours.' hour');
+        $thresholdDate = new \DateTimeImmutable('-'.$this->timeLimitForOptInInHours.' hour');
         if ($pendingOptIn->isOutdated($thresholdDate)) {
             throw new PendingOptInIsOutdatedException($pendingOptIn);
         }

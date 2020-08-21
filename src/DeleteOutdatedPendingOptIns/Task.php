@@ -27,13 +27,13 @@ class Task implements TaskInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    public function deleteOutdatedPendingOptIns(?\DateTime $now = null): void
+    public function deleteOutdatedPendingOptIns(?\DateTimeImmutable $now = null): void
     {
         $this->logger->info('Starting '.static::class);
 
-        $now = $now ?: new \DateTime();
-        $tresholdDate = $now->sub(new \DateInterval('PT'.$this->timeLimitForOptInInHours.'H'));
-        $numberOfDeletedOutdatedPendingOptIns = $this->repository->removeOutdated($tresholdDate);
+        $now = $now ?: new \DateTimeImmutable();
+        $thresholdDate = $now->sub(new \DateInterval('PT'.$this->timeLimitForOptInInHours.'H'));
+        $numberOfDeletedOutdatedPendingOptIns = $this->repository->removeOutdated($thresholdDate);
         $this->logger->info(
             'Deleted [numberOfDeletedOutdatedPendingOptIns] outdated PendingOpIns',
             ['numberOfDeletedOutdatedPendingOptIns' => $numberOfDeletedOutdatedPendingOptIns]

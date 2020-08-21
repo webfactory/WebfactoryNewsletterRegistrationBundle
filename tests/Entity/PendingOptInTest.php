@@ -26,7 +26,7 @@ class PendingOptInTest extends TestCase
     public function registrationDate_is_added_if_omitted(): void
     {
         $this->assertEqualsWithDelta(
-            new \DateTime(),
+            new \DateTimeImmutable(),
             (new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret')))->getRegistrationDate(),
             1
         );
@@ -107,11 +107,11 @@ class PendingOptInTest extends TestCase
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
             [],
-            new \DateTime('2000-01-01')
+            new \DateTimeImmutable('2000-01-01')
         );
 
         $this->assertTrue(
-            $pendingOptIn->isOutdated(new \DateTime())
+            $pendingOptIn->isOutdated(new \DateTimeImmutable())
         );
     }
 
@@ -124,11 +124,11 @@ class PendingOptInTest extends TestCase
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
             [],
-            new \DateTime()
+            new \DateTimeImmutable()
         );
 
         $this->assertFalse(
-            $pendingOptIn->isOutdated(new \DateTime('2000-01-01'))
+            $pendingOptIn->isOutdated(new \DateTimeImmutable('2000-01-01'))
         );
     }
 
@@ -141,11 +141,11 @@ class PendingOptInTest extends TestCase
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
             [],
-            new \DateTime('2000-01-01')
+            new \DateTimeImmutable('2000-01-01')
         );
 
         $this->assertTrue(
-            $pendingOptIn->isAllowedToReceiveAnotherOptInEmail(new \DateInterval('PT1H'), new \DateTime())
+            $pendingOptIn->isAllowedToReceiveAnotherOptInEmail(new \DateInterval('PT1H'), new \DateTimeImmutable())
         );
     }
 
@@ -158,11 +158,11 @@ class PendingOptInTest extends TestCase
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
             [],
-            new \DateTime()
+            new \DateTimeImmutable()
         );
 
         $this->assertFalse(
-            $pendingOptIn->isAllowedToReceiveAnotherOptInEmail(new \DateInterval('PT1H'), new \DateTime())
+            $pendingOptIn->isAllowedToReceiveAnotherOptInEmail(new \DateInterval('PT1H'), new \DateTimeImmutable())
         );
     }
 }

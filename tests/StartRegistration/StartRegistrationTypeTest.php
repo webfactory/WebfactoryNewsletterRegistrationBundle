@@ -198,7 +198,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
             [],
-            new \DateTime('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
+            new \DateTimeImmutable('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
         );
         $this->pendingOptInRepository
             ->method('findByEmailAddress')

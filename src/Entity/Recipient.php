@@ -47,9 +47,9 @@ abstract class Recipient implements RecipientInterface
     protected $emailAddress;
 
     /**
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime_immutable", nullable=false)
      *
-     * @var \DateTime
+     * @var \DateTimeImmutable
      */
     protected $optInDate;
 
@@ -77,12 +77,12 @@ abstract class Recipient implements RecipientInterface
         ?string $uuid,
         EmailAddress $emailAddress,
         array $newsletters = [],
-        ?\DateTime $optInDate = null
+        ?\DateTimeImmutable $optInDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $emailAddress->getEmailAddress();
         $this->newsletters = new ArrayCollection($newsletters);
-        $this->optInDate = $optInDate ?: new \DateTime();
+        $this->optInDate = $optInDate ?: new \DateTimeImmutable();
     }
 
     public function getUuid(): string
@@ -95,7 +95,7 @@ abstract class Recipient implements RecipientInterface
         return $this->emailAddress;
     }
 
-    public function getOptInDate(): \DateTime
+    public function getOptInDate(): \DateTimeImmutable
     {
         return $this->optInDate;
     }
