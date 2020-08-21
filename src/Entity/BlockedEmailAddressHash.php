@@ -5,7 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ ORM\Entity
+ * @ORM\Entity(repositoryClass="\Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepository")
  */
 class BlockedEmailAddressHash implements BlockedEmailAddressHashInterface
 {
