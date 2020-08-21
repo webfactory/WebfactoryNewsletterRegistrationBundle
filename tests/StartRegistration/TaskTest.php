@@ -45,7 +45,8 @@ class TaskTest extends TestCase
             self::SENDER,
             $this->twig,
             $this->urlGenerator,
-            1
+            1,
+            30
         );
     }
 

@@ -29,13 +29,17 @@ class Task implements TaskInterface
     /** @var int */
     protected $timeLimitForOpInInHours;
 
+    /** @var int */
+    protected $blockEmailsDurationInDays;
+
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepo,
         MailerInterface $swiftMailer,
         string $senderEmailAddress,
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
-        int $timeLimitForOpInInHours
+        int $timeLimitForOpInInHours,
+        int $blockEmailsDurationInDays
     ) {
         $this->pendingOptInRepo = $pendingOptInRepo;
         $this->mailer = $swiftMailer;
@@ -43,6 +47,7 @@ class Task implements TaskInterface
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
         $this->timeLimitForOpInInHours = $timeLimitForOpInInHours;
+        $this->blockEmailsDurationInDays = $blockEmailsDurationInDays;
     }
 
     public function startRegistration(PendingOptInInterface $pendingOptIn): Email
@@ -93,6 +98,15 @@ class Task implements TaskInterface
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
                     'dateUrlForConfirmationIsValidUntil' => new \DateTimeImmutable('+'.$this->timeLimitForOpInInHours.' hour'),
+                    'urlForBlockingEmails' => $this->urlGenerator->generate(
+                        'newsletter-registration-block-emails',
+                        [
+                            'uuid' => $pendingOptIn->getUuid(),
+                            'emailAddress' => (string) $pendingOptIn->getEmailAddress(),
+                        ],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                    'blockEmailsDurationInDays' => $this->blockEmailsDurationInDays,
                     'urlForEditing' => $this->urlGenerator->generate(
                         'newsletter-registration-edit',
                         ['uuid' => $pendingOptIn->getUuid()],
