@@ -88,6 +88,9 @@ class Controller
             $pendingOptIn = $form->getData();
             $optInEmail = $this->startRegistrationTask->startRegistration($pendingOptIn);
 
+            // Usually, we would send a redirect here to prevent double posts. But we want to provide personal data
+            // to the upcoming view - personal data that we do not want to save before the user confirmed their
+            // registration. Hence, the downsides of double posts are dealt with in the form itself.
             return new Response(
                 $this->twig->render(
                     '@WebfactoryNewsletterRegistration/StartRegistration/opt-in-email-sent.html.twig',
