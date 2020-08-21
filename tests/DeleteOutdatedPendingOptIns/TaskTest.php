@@ -25,17 +25,6 @@ class TaskTest extends TestCase
         $this->task = new Task($this->repository, self::TIME_LIMIT_FOR_OPT_IN_IN_HOURS);
     }
 
-    public function deleteOutdatedPendingOptIns(?\DateTime $now = null): void
-    {
-        $now = $now ?: new \DateTimeImmutable();
-        $thresholdDate = $now->sub(new \DateInterval('PT'.$this->timeLimitForOptInInHours.'H'));
-        $numberOfDeletedOutdatedPendingOptIns = $this->repository->removeOutdated($thresholdDate);
-        $this->logger->info(
-            'Deleted [numberOfDeletedOutdatedPendingOptIns] outdated PendingOpIns',
-            ['numberOfDeletedOutdatedPendingOptIns' => $numberOfDeletedOutdatedPendingOptIns]
-        );
-    }
-
     /**
      * @test
      */

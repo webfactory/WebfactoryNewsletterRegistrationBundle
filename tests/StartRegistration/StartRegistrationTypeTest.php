@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\Tests\Form;
+namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
