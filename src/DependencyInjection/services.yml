@@ -23,6 +23,7 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
+            - '%webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours%'
         tags: ['form.type']
 
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory:
@@ -108,3 +109,4 @@ services:
 
 parameters:
     webfactory.newsletter_registration.time_limit_for_opt_in_in_hours: 72
+    webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours: 1

@@ -112,4 +112,13 @@ abstract class PendingOptIn implements PendingOptInInterface
     {
         return $this->getRegistrationDate() < $threshold;
     }
+
+    public function isAllowedToReceiveAnotherOptInEmail(
+        \DateInterval $minimalIntervalBetweenOptInEmailsInHours,
+        ?\DateTime $now = null
+    ): bool {
+        $now = $now ?? new \DateTime();
+
+        return $this->getRegistrationDate()->add($minimalIntervalBetweenOptInEmailsInHours) < $now;
+    }
 }

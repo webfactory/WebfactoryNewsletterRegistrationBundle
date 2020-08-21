@@ -20,4 +20,9 @@ interface PendingOptInInterface
     public function getRegistrationDate(): \DateTime;
 
     public function isOutdated(\DateTime $threshold): bool;
+
+    public function isAllowedToReceiveAnotherOptInEmail(
+        \DateInterval $minimalIntervalBetweenOptInEmailsInHours,
+        ?\DateTime $now = null
+    ): bool;
 }

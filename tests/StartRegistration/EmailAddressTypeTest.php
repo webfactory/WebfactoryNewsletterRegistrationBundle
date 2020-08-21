@@ -16,9 +16,12 @@ use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 final class EmailAddressTypeTest extends TypeTestCase
 {
+    protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
+
     /** @var PendingOptInRepositoryInterface|MockObject */
     private $pendingOptInRepository;
 
@@ -72,16 +75,12 @@ final class EmailAddressTypeTest extends TypeTestCase
     /**
      * @test
      */
-    public function does_not_validate_with_already_registering_email_address()
+    public function does_not_validate_with_already_registering_email_address_if_not_enough_time_has_passed()
     {
+        $veryRecentPendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
         $this->pendingOptInRepository
-            ->method('isEmailAddressAlreadyRegistered')
-            ->with($this->callback(
-                function (?EmailAddress $emailAddress) {
-                    return !empty($emailAddress);
-                }
-            ))
-            ->willReturn(true);
+            ->method('findByEmailAddress')
+            ->willReturn($veryRecentPendingOptIn);
 
         $this->form->submit([
             'emailAddress' => 'webfactory@example.com',
@@ -89,10 +88,38 @@ final class EmailAddressTypeTest extends TypeTestCase
 
         $this->assertFalse($this->form->isValid());
         $this->assertCount(1, $this->form->getErrors(true, true));
+
+        // The error message is customized with a time variable, so we compare only the static text at the beginning
         $this->assertEquals(
-            EmailAddressType::ERROR_EMAIL_ALREADY_REGISTERING,
-            $this->form->getErrors(true, true)->current()->getMessage()
+            substr(EmailAddressType::ERROR_OPT_IN_EMAIL_LIMIT_REACHED, 0, 100),
+            substr($this->form->getErrors(true, true)->current()->getMessage(), 0, 100)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function does_validate_with_already_registering_email_address_if_enough_time_has_passed()
+    {
+        $oldPendingOptIn = new PendingOptIn(
+            null,
+            new EmailAddress('webfactory@example.com', 'secret'),
+            [],
+            new \DateTime('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
+        );
+        $this->pendingOptInRepository
+            ->method('findByEmailAddress')
+            ->willReturn($oldPendingOptIn);
+
+        $this->form->submit([
+            'emailAddress' => 'webfactory@example.com',
+        ]);
+
+        $this->assertTrue($this->form->isValid());
+        $data = $this->form->getData();
+        $emailAddress = $data['emailAddress'];
+        $this->assertInstanceOf(EmailAddress::class, $emailAddress);
+        $this->assertEquals('webfactory@example.com', $emailAddress->getEmailAddress());
     }
 
     /**
@@ -140,7 +167,8 @@ final class EmailAddressTypeTest extends TypeTestCase
                 [
                     new EmailAddressType($this->pendingOptInRepository,
                         $this->recipientRepository,
-                        $this->emailAddressFactory
+                        $this->emailAddressFactory,
+                        self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS
                     ),
                 ],
                 []

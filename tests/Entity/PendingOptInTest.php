@@ -131,4 +131,38 @@ class PendingOptInTest extends TestCase
             $pendingOptIn->isOutdated(new \DateTime('2000-01-01'))
         );
     }
+
+    /**
+     * @test
+     */
+    public function isAllowedToReceiveAnotherOptInEmail_returns_true_if_enough_time_passed_since_registration(): void
+    {
+        $pendingOptIn = new PendingOptIn(
+            null,
+            new EmailAddress('webfactory@example.com', 'secret'),
+            [],
+            new \DateTime('2000-01-01')
+        );
+
+        $this->assertTrue(
+            $pendingOptIn->isAllowedToReceiveAnotherOptInEmail(new \DateInterval('PT1H'), new \DateTime())
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function isAllowedToReceiveAnotherOptInEmail_returns_false_if_too_little_time_passed_since_registration(): void
+    {
+        $pendingOptIn = new PendingOptIn(
+            null,
+            new EmailAddress('webfactory@example.com', 'secret'),
+            [],
+            new \DateTime()
+        );
+
+        $this->assertFalse(
+            $pendingOptIn->isAllowedToReceiveAnotherOptInEmail(new \DateInterval('PT1H'), new \DateTime())
+        );
+    }
 }

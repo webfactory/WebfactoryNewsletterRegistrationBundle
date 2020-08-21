@@ -6,16 +6,14 @@ use Doctrine\ORM\EntityRepository;
 
 class PendingOptInRepository extends EntityRepository implements PendingOptInRepositoryInterface
 {
-    public function isEmailAddressAlreadyRegistered(EmailAddress $emailAddress): bool
+    public function findByEmailAddress(EmailAddress $emailAddress): ?PendingOptInInterface
     {
-        $recipient = $this->createQueryBuilder('recipient')
+        return $this->createQueryBuilder('recipient')
             ->select()
             ->where('recipient.emailAddressHash = :emailAddressHash')
             ->setParameter('emailAddressHash', $emailAddress->getHash())
             ->getQuery()
             ->getOneOrNullResult();
-
-        return null !== $recipient;
     }
 
     public function save(PendingOptInInterface $pendingOptIn): void

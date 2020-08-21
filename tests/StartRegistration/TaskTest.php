@@ -44,7 +44,8 @@ class TaskTest extends TestCase
             $this->mailer,
             self::SENDER,
             $this->twig,
-            $this->urlGenerator
+            $this->urlGenerator,
+            1
         );
     }
 
@@ -53,6 +54,30 @@ class TaskTest extends TestCase
      */
     public function saves_PendingOptIn()
     {
+        $pendingOptIn = new PendingOptIn(null, new EmailAddress('receiver@example.com', 'secret'));
+
+        $this->pendingOptInRepo
+            ->expects($this->once())
+            ->method('save')
+            ->with($pendingOptIn);
+
+        $this->task->startRegistration($pendingOptIn);
+    }
+
+    /**
+     * @test
+     */
+    public function removes_outdated_PendingOptIn_if_it_exists_and_saves_new_one()
+    {
+        $outdatedPendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
+        $this->pendingOptInRepo
+            ->method('findByEmailAddress')
+            ->willReturn($outdatedPendingOptIn);
+        $this->pendingOptInRepo
+            ->expects($this->once())
+            ->method('remove')
+            ->with($outdatedPendingOptIn);
+
         $pendingOptIn = new PendingOptIn(null, new EmailAddress('receiver@example.com', 'secret'));
 
         $this->pendingOptInRepo

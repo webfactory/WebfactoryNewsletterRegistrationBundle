@@ -26,21 +26,24 @@ class PendingOptInRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function isEmailAddressAlreadyRegistered_returns_true_if_already_registered(): void
+    public function findByEmailAddress_returns_PendingOptIn_if_it_exists(): void
     {
         $alreadyRegisteredEmailAddress = new EmailAddress('webfactory@example.com', 'secret');
-        $this->infrastructure->import(new PendingOptIn('uuid-1', $alreadyRegisteredEmailAddress));
+        $pendingOptInFixture = new PendingOptIn('uuid-1', $alreadyRegisteredEmailAddress);
+        $this->infrastructure->import($pendingOptInFixture);
 
-        $this->assertTrue($this->repository->isEmailAddressAlreadyRegistered($alreadyRegisteredEmailAddress));
+        $result = $this->repository->findByEmailAddress($alreadyRegisteredEmailAddress);
+        $this->assertNotEmpty($result);
+        $this->assertEquals($pendingOptInFixture->getUuid(), $result->getUuid());
     }
 
     /**
      * @test
      */
-    public function isEmailAddressAlreadyRegistered_returns_false_if_not_already_registered(): void
+    public function findByEmailAddress_returns_null_if_no_matching_PendingOptIn_exists(): void
     {
-        $this->assertFalse(
-            $this->repository->isEmailAddressAlreadyRegistered(new EmailAddress('webfactory@example.com', 'secret'))
+        $this->assertNull(
+            $this->repository->findByEmailAddress(new EmailAddress('not-registered@example.com', 'secret'))
         );
     }
 

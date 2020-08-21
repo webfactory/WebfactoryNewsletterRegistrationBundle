@@ -23,7 +23,9 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
 {
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
 
-    public const ERROR_EMAIL_ALREADY_REGISTERING = 'This email address is already in the process of registering. Please see the email we\'ve send you for further details.';
+    public const ERROR_OPT_IN_EMAIL_LIMIT_REACHED = 'This email address is already in the process of registering and '
+        .'an email containing a confirmation link has been sent to it. Please follow that link to continue. For spam '
+        .'protection, the next confirmation email cannot be send until %s.';
     public const ERROR_EMAIL_ALREADY_REGISTERED = 'This email address is already registered.';
 
     /** @var PendingOptInRepositoryInterface */
@@ -35,14 +37,19 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
     /** @var EmailAddressFactoryInterface */
     protected $emailAddressFactory;
 
+    /** @var int */
+    protected $minimalIntervalBetweenOptInEmailsInHours;
+
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository,
-        EmailAddressFactoryInterface $emailAddressFactory
+        EmailAddressFactoryInterface $emailAddressFactory,
+        int $minimalIntervalBetweenOptInEmailsInHours
     ) {
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
         $this->emailAddressFactory = $emailAddressFactory;
+        $this->minimalIntervalBetweenOptInEmailsInHours = $minimalIntervalBetweenOptInEmailsInHours;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -78,13 +85,13 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
                 new NotBlank(),
                 new Email(),
                 new Callback([
-                    'callback' => $this->createEmailAddressIsNotAlreadyRegisteredCallback(),
+                    'callback' => $this->createEmailAddressIsAllowedToReceiveOptInEmailsConstraint(),
                 ]),
             ],
         ]);
     }
 
-    protected function createEmailAddressIsNotAlreadyRegisteredCallback(): \Closure
+    protected function createEmailAddressIsAllowedToReceiveOptInEmailsConstraint(): \Closure
     {
         $that = $this;
 
@@ -94,9 +101,16 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
             }
 
             $emailAddress = $that->emailAddressFactory->fromString($emailAddressString);
+            $pendingOptIn = $that->pendingOptInRepository->findByEmailAddress($emailAddress);
 
-            if ($that->pendingOptInRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
-                $executionContext->addViolation(self::ERROR_EMAIL_ALREADY_REGISTERING);
+            $dateInterval = new \DateInterval('PT'.$that->minimalIntervalBetweenOptInEmailsInHours.'H');
+            if (null !== $pendingOptIn && false === $pendingOptIn->isAllowedToReceiveAnotherOptInEmail($dateInterval)) {
+                $executionContext->addViolation(
+                    sprintf(
+                        self::ERROR_OPT_IN_EMAIL_LIMIT_REACHED,
+                        $pendingOptIn->getRegistrationDate()->add($dateInterval)->format('H:i')
+                    )
+                );
             }
 
             if ($that->recipientRepository->isEmailAddressAlreadyRegistered($emailAddress)) {

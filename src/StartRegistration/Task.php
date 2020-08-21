@@ -47,6 +47,11 @@ class Task implements TaskInterface
 
     public function startRegistration(PendingOptInInterface $pendingOptIn): Email
     {
+        $olderPendingOptIn = $this->pendingOptInRepo->findByEmailAddress($pendingOptIn->getEmailAddress());
+        if ($olderPendingOptIn) {
+            $this->pendingOptInRepo->remove($olderPendingOptIn);
+        }
+
         $this->pendingOptInRepo->save($pendingOptIn);
 
         return $this->sendOptInEmail($pendingOptIn);
