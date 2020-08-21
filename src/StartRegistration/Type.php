@@ -44,7 +44,7 @@ class Type extends AbstractType
                 }
 
                 return [
-                    static::ELEMENT_EMAIL_ADDRESS => $pendingOptIn->getEmailAddress(),
+                    static::ELEMENT_EMAIL_ADDRESS => (string) $pendingOptIn->getEmailAddress(),
                     static::ELEMENT_NEWSLETTERS => $pendingOptIn->getNewsletters(),
                 ];
             },

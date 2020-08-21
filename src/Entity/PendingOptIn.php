@@ -28,9 +28,9 @@ abstract class PendingOptIn implements PendingOptInInterface
     protected $uuid;
 
     /**
-     * @var string
+     * @var EmailAddress
      *
-     * A non ORM-mapped field for a normalized email address.
+     * Not ORM-mapped since we don't want to store personal data before confirmation.
      */
     protected $emailAddress;
 
@@ -77,7 +77,7 @@ abstract class PendingOptIn implements PendingOptInInterface
         ?\DateTime $registrationDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
-        $this->emailAddress = $emailAddress->getEmailAddress();
+        $this->emailAddress = $emailAddress;
         $this->emailAddressHash = $emailAddress->getHash();
         $this->newsletters = new ArrayCollection($newsletters);
         $this->registrationDate = $registrationDate ?: new \DateTime();
@@ -88,7 +88,7 @@ abstract class PendingOptIn implements PendingOptInInterface
         return $this->uuid;
     }
 
-    public function getEmailAddress(): string
+    public function getEmailAddress(): EmailAddress
     {
         return $this->emailAddress;
     }

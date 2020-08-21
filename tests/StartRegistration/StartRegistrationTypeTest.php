@@ -274,7 +274,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
                     function (array $formData) {
                         return \array_key_exists(StartRegistrationType::ELEMENT_EMAIL_ADDRESS, $formData)
                             && $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS] instanceof EmailAddress
-                            && 'webfactory@example.com' === $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress();
+                            && 'webfactory@example.com' === (string) $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress();
                     }
                 )
             )
@@ -309,7 +309,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
                     function (array $formData) {
                         return \array_key_exists(StartRegistrationType::ELEMENT_EMAIL_ADDRESS, $formData)
                             && $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS] instanceof EmailAddress
-                            && 'webfactory@example.com' === $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress()
+                            && 'webfactory@example.com' === (string) $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress()
                             && \array_key_exists(StartRegistrationType::ELEMENT_NEWSLETTERS, $formData)
                             && $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] === [$this->newsletter1, $this->newsletter2];
                     }

@@ -35,7 +35,7 @@ class PendingOptInFactoryTest extends TestCase
             StartRegistrationType::ELEMENT_EMAIL_ADDRESS => new EmailAddress('webfactory@example.com', 'secret'),
         ]);
 
-        $this->assertEquals('webfactory@example.com', $pendingOptIn->getEmailAddress());
+        $this->assertEquals('webfactory@example.com', (string) $pendingOptIn->getEmailAddress());
     }
 
     /**
@@ -54,7 +54,7 @@ class PendingOptInFactoryTest extends TestCase
             StartRegistrationType::ELEMENT_NEWSLETTERS => $newslettersForPendingOptIn,
         ]);
 
-        $this->assertEquals('webfactory@example.com', $pendingOptIn->getEmailAddress());
+        $this->assertEquals('webfactory@example.com', (string) $pendingOptIn->getEmailAddress());
         $this->assertEquals($newslettersForPendingOptIn, $pendingOptIn->getNewsletters());
     }
 }

@@ -106,7 +106,7 @@ class TaskTest extends TestCase
             ->with($this->callback(
                 function (Email $email) use ($pendingOptIn, $renderResult) {
                     return self::SENDER === $email->getFrom()[0]->getAddress()
-                        && $email->getTo()[0]->getAddress() === $pendingOptIn->getEmailAddress()
+                        && $email->getTo()[0]->getAddress() === (string) $pendingOptIn->getEmailAddress()
                         && $email->getTextBody() === $renderResult
                         && $email->getTextBody() === $renderResult;
                 }

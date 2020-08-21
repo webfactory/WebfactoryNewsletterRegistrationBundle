@@ -61,7 +61,7 @@ class Task implements TaskInterface
     {
         $email = (new Email())
             ->from($this->senderEmailAddress)
-            ->to($pendingOptIn->getEmailAddress())
+            ->to((string) $pendingOptIn->getEmailAddress())
             ->subject($this->renderSubject($pendingOptIn))
             ->text($this->renderBody($pendingOptIn));
 
@@ -89,7 +89,7 @@ class Task implements TaskInterface
                     'pendingOptIn' => $pendingOptIn,
                     'urlForConfirmation' => $this->urlGenerator->generate(
                         'newsletter-registration-confirm',
-                        ['emailAddress' => $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()],
+                        ['emailAddress' => (string) $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
                     'dateUrlForConfirmationIsValidUntil' => new \DateTime('+'.$this->timeLimitForOpInInHours.' hour'),

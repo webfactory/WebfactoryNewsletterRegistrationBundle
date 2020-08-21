@@ -8,7 +8,7 @@ interface PendingOptInInterface
 
     public function getUuid(): string;
 
-    public function getEmailAddress(): string;
+    public function getEmailAddress(): EmailAddress;
 
     public function matchesEmailAddress(EmailAddress $email): bool;
 
