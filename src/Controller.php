@@ -9,17 +9,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Webfactory\NewsletterRegistrationBundle\BlockEmails\TaskInterface as BlockEmailsTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface as ConfirmRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface as DeleteRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type as DeleteRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface as EditRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\Type as EditRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
-use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type as DeleteRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\EditRegistration\Type as EditRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInIsOutdatedException;
-use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface as ConfirmRegistrationTaskInterface;
-use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface as DeleteRegistrationTaskInterface;
-use Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface as EditRegistrationTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface as StartRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 
 class Controller
 {
@@ -44,6 +45,9 @@ class Controller
     /** @var DeleteRegistrationTaskInterface */
     protected $deleteRegistrationTask;
 
+    /** @var BlockEmailsTaskInterface */
+    protected $blockEmailsTask;
+
     /** @var PendingOptInRepositoryInterface */
     protected $pendingOptInRepository;
 
@@ -58,6 +62,7 @@ class Controller
         ConfirmRegistrationTaskInterface $confirmRegistrationTask,
         EditRegistrationTaskInterface $editRegistrationTask,
         DeleteRegistrationTaskInterface $deleteRegistrationTask,
+        BlockEmailsTaskInterface $blockEmailsTask,
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository
     ) {
@@ -68,6 +73,7 @@ class Controller
         $this->confirmRegistrationTask = $confirmRegistrationTask;
         $this->editRegistrationTask = $editRegistrationTask;
         $this->deleteRegistrationTask = $deleteRegistrationTask;
+        $this->blockEmailsTask = $blockEmailsTask;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
     }
@@ -123,7 +129,7 @@ class Controller
     }
 
     /**
-     * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
+     * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@((?!\/).)*"})
      *
      * @param string $uuid
      * @param string $emailAddress
@@ -210,7 +216,7 @@ class Controller
      *
      * @return RedirectResponse|Response
      */
-    public function deleteRegistration(string $uuid)
+    public function deleteRegistration(string $uuid): Response
     {
         $recipient = $this->recipientRepository->findByUuid($uuid);
         if (null === $recipient) {
@@ -224,6 +230,44 @@ class Controller
 
         return new RedirectResponse(
             $this->urlGenerator->generate('newsletter-registration-start')
+        );
+    }
+
+    /**
+     * @Route("/{uuid}/{emailAddress}/block/", name="newsletter-registration-block-emails", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
+     *
+     * @param string $uuid
+     * @param string $emailAddress
+     *
+     * @return RedirectResponse|Response
+     */
+    public function blockEmails(string $uuid, string $emailAddress): Response
+    {
+        $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);
+        if (null === $pendingOptIn) {
+            return new Response(
+                $this->twig->render(
+                    '@WebfactoryNewsletterRegistration/BlockEmails/block-failed-due-to-unknown-uuid.html.twig',
+                    ['timeLimitForOptInInHours' => $this->confirmRegistrationTask->getTimeLimitForOptInInHours()]
+                )
+            );
+        }
+
+        try {
+            $this->blockEmailsTask->blockEmailsFor($pendingOptIn, $emailAddress);
+        } catch (EmailAddressDoesNotMatchHashOfPendingOptInException $exception) {
+            return new Response(
+                $this->twig->render(
+                    '@WebfactoryNewsletterRegistration/BlockEmails/block-failed-due-to-email-address-not-matching.html.twig'
+                )
+            );
+        }
+
+        return new Response(
+            $this->twig->render(
+                '@WebfactoryNewsletterRegistration/BlockEmails/emails-blocked.html.twig',
+                ['blockDurationInDays' => $this->blockEmailsTask->getBlockDurationInDays()]
+            )
         );
     }
 }

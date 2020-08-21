@@ -50,7 +50,7 @@ class Task implements TaskInterface
 
     /**
      * @param PendingOptInInterface $pendingOptIn
-     * @param string                $emailAddressStringString
+     * @param string                $emailAddressString
      *
      * @return RecipientInterface
      *
@@ -59,14 +59,14 @@ class Task implements TaskInterface
      */
     public function confirmRegistration(
         PendingOptInInterface $pendingOptIn,
-        string $emailAddressStringString
+        string $emailAddressString
     ): RecipientInterface {
         $thresholdDate = new \DateTimeImmutable('-'.$this->timeLimitForOptInInHours.' hour');
         if ($pendingOptIn->isOutdated($thresholdDate)) {
             throw new PendingOptInIsOutdatedException($pendingOptIn);
         }
 
-        $emailAddress = $this->emailAddressFactory->fromString($emailAddressStringString);
+        $emailAddress = $this->emailAddressFactory->fromString($emailAddressString);
         if (false === $pendingOptIn->matchesEmailAddress($emailAddress)) {
             throw new EmailAddressDoesNotMatchHashOfPendingOptInException($emailAddress, $pendingOptIn);
         }
@@ -78,5 +78,10 @@ class Task implements TaskInterface
         $this->flashBag->add('success', 'Your newsletter registration is now active.');
 
         return $recipient;
+    }
+
+    public function getTimeLimitForOptInInHours(): int
+    {
+        return $this->timeLimitForOptInInHours;
     }
 }

@@ -8,6 +8,7 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\BlockEmails\TaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
         tags: ['controller.service_arguments']

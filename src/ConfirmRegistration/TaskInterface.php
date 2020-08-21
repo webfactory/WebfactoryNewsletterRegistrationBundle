@@ -11,4 +11,6 @@ interface TaskInterface
         PendingOptInInterface $pendingOptIn,
         string $emailAddressString
     ): RecipientInterface;
+
+    public function getTimeLimitForOptInInHours(): int;
 }
