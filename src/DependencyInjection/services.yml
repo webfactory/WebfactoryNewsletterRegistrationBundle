@@ -53,7 +53,7 @@ services:
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
             - '%webfactory.newsletter_registration.time_limit_for_opt_in_in_hours%'
-            - '%webfactory.newsletter_registration.block_emails_duration_in_days%'
+            - '%webfactory.newsletter_registration.block_email_address_duration_in_days%'
 
     Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\Task'
@@ -98,7 +98,7 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\BlockEmails\Task:
         arguments:
-            - '%webfactory.newsletter_registration.block_emails_duration_in_days%'
+            - '%webfactory.newsletter_registration.block_email_address_duration_in_days%'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface'
 
@@ -132,4 +132,4 @@ services:
 parameters:
     webfactory.newsletter_registration.time_limit_for_opt_in_in_hours: 72
     webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours: 1
-    webfactory.newsletter_registration.block_emails_duration_in_days: 30
+    webfactory.newsletter_registration.block_email_address_duration_in_days: 30
