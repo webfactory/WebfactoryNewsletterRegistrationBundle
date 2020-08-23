@@ -46,4 +46,40 @@ class BlockedEmailAddressHashRepositoryTest extends TestCase
             $this->repository->findByEmailAddress(new EmailAddress('webfactory@example.com', 'secret'))
         );
     }
+
+    /**
+     * @test
+     */
+    public function removeOutdated_removes_outdated_ones(): void
+    {
+        $this->infrastructure->import(
+            BlockedEmailAddressHash::fromEmailAddress(
+                new EmailAddress('webfactory@example.com', 'secret'),
+                new \DateTimeImmutable('2000-01-01')
+            )
+        );
+
+        $numberOfDeletedOnes = $this->repository->removeOutdated(new \DateTimeImmutable());
+
+        $this->assertEquals(1, $numberOfDeletedOnes);
+        $this->assertCount(0, $this->repository->findAll());
+    }
+
+    /**
+     * @test
+     */
+    public function removeOutdated_does_not_remove_current_ones(): void
+    {
+        $this->infrastructure->import(
+            BlockedEmailAddressHash::fromEmailAddress(
+                new EmailAddress('webfactory@example.com', 'secret'),
+                new \DateTimeImmutable('-1d')
+            )
+        );
+
+        $numberOfDeletedOnes = $this->repository->removeOutdated(new \DateTimeImmutable('-30d'));
+
+        $this->assertEquals(0, $numberOfDeletedOnes);
+        $this->assertCount(1, $this->repository->findAll());
+    }
 }

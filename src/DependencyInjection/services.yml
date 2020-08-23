@@ -129,6 +129,20 @@ services:
     Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\Task'
 
+    Webfactory\NewsletterRegistrationBundle\DeleteOutdatedBlockedEmailAddresses\Command:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\DeleteOutdatedBlockedEmailAddresses\TaskInterface'
+        tags: ['console.command']
+
+    Webfactory\NewsletterRegistrationBundle\DeleteOutdatedBlockedEmailAddresses\Task:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface'
+            - '%webfactory.newsletter_registration.block_email_address_duration_in_days%'
+            - '@logger'
+
+    Webfactory\NewsletterRegistrationBundle\DeleteOutdatedBlockedEmailAddresses\TaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\DeleteOutdatedBlockedEmailAddresses\Task'
+
 parameters:
     webfactory.newsletter_registration.time_limit_for_opt_in_in_hours: 72
     webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours: 1

@@ -137,10 +137,11 @@ services:
 ```
 
 
-Delete outdated pending Opt In Processes
-----------------------------------------
+Delete outdated data
+--------------------
 
     bin/console newsletter-registration:delete-outdated-pending-opt-ins
+    bin/console newsletter-registration:delete-outdated-blocked-email-addresses
 
 
 Customization

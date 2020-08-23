@@ -22,4 +22,14 @@ class BlockedEmailAddressHashRepository extends EntityRepository implements Bloc
         $this->getEntityManager()->remove($blockedEmailAddressHash);
         $this->getEntityManager()->flush();
     }
+
+    public function removeOutdated(\DateTimeImmutable $thresholdDate): int
+    {
+        return $this->createQueryBuilder('blockedEmailAddressHash')
+            ->delete()
+            ->where('blockedEmailAddressHash.blockDate < :thresholdDate')
+            ->setParameter('thresholdDate', $thresholdDate)
+            ->getQuery()
+            ->execute();
+    }
 }
