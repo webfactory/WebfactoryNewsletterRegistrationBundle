@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
@@ -23,10 +24,14 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
 {
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
 
+    public const ERROR_EMAIL_ADDRESS_BLOCKED = 'This email address has been blocked.';
     public const ERROR_OPT_IN_EMAIL_LIMIT_REACHED = 'This email address is already in the process of registering and '
         .'an email containing a confirmation link has been sent to it. Please follow that link to continue. For spam '
         .'protection, the next confirmation email cannot be send until %s.';
     public const ERROR_EMAIL_ALREADY_REGISTERED = 'This email address is already registered.';
+
+    /** @var BlockedEmailAddressHashRepositoryInterface */
+    protected $blockedEmailAddressHashesRepository;
 
     /** @var PendingOptInRepositoryInterface */
     protected $pendingOptInRepository;
@@ -41,11 +46,13 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
     protected $minimalIntervalBetweenOptInEmailsInHours;
 
     public function __construct(
+        BlockedEmailAddressHashRepositoryInterface $blockedEmailAddressHashesRepository,
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository,
         EmailAddressFactoryInterface $emailAddressFactory,
         int $minimalIntervalBetweenOptInEmailsInHours
     ) {
+        $this->blockedEmailAddressHashesRepository = $blockedEmailAddressHashesRepository;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
         $this->emailAddressFactory = $emailAddressFactory;
@@ -101,6 +108,10 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
             }
 
             $emailAddress = $that->emailAddressFactory->fromString($emailAddressString);
+            if (null !== $this->blockedEmailAddressHashesRepository->findByEmailAddress($emailAddress)) {
+                $executionContext->addViolation(self::ERROR_EMAIL_ADDRESS_BLOCKED);
+            }
+
             $pendingOptIn = $that->pendingOptInRepository->findByEmailAddress($emailAddress);
 
             $dateInterval = new \DateInterval('PT'.$that->minimalIntervalBetweenOptInEmailsInHours.'H');

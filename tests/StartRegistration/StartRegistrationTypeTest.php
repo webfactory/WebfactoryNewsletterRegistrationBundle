@@ -9,6 +9,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
+use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -32,6 +33,9 @@ final class StartRegistrationTypeTest extends TypeTestCase
     /** @var PendingOptInFactoryInterface|MockObject */
     private $pendingOptInFactory;
 
+    /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
+    private $blockedEmailAddressHashRepository;
+
     /** @var PendingOptInRepositoryInterface|MockObject */
     private $pendingOptInRepository;
 
@@ -51,6 +55,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
     {
         $this->newsletterRepository = $this->createMock(NewsletterRepositoryInterface::class);
         $this->pendingOptInFactory = $this->createMock(PendingOptInFactoryInterface::class);
+        $this->blockedEmailAddressHashRepository = $this->createMock(BlockedEmailAddressHashRepositoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         $this->emailAddressFactory = new EmailAddressFactory('secret');
@@ -337,6 +342,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
                 [
                     new StartRegistrationType($this->newsletterRepository, $this->pendingOptInFactory),
                     new EmailAddressType(
+                        $this->blockedEmailAddressHashRepository,
                         $this->pendingOptInRepository,
                         $this->recipientRepository,
                         $this->emailAddressFactory,

@@ -10,6 +10,8 @@ use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
+use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHash;
+use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -21,6 +23,9 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 final class EmailAddressTypeTest extends TypeTestCase
 {
     protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
+
+    /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
+    private $blockedEmailAddressHashRepository;
 
     /** @var PendingOptInRepositoryInterface|MockObject */
     private $pendingOptInRepository;
@@ -36,6 +41,7 @@ final class EmailAddressTypeTest extends TypeTestCase
 
     public function setUp(): void
     {
+        $this->blockedEmailAddressHashRepository = $this->createMock(BlockedEmailAddressHashRepositoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         $this->emailAddressFactory = new EmailAddressFactory('secret');
@@ -75,9 +81,35 @@ final class EmailAddressTypeTest extends TypeTestCase
     /**
      * @test
      */
+    public function does_not_validate_with_blocked_email_address()
+    {
+        $emailAddress = $this->emailAddressFactory->fromString('webfactory@example.com');
+        $blockedEmailAddress = BlockedEmailAddressHash::fromEmailAddress($emailAddress);
+
+        $this->blockedEmailAddressHashRepository
+            ->expects($this->once())
+            ->method('findByEmailAddress')
+            ->willReturn($blockedEmailAddress);
+
+        $this->form->submit([
+            'emailAddress' => $emailAddress->getEmailAddress(),
+        ]);
+
+        $this->assertFalse($this->form->isValid());
+        $this->assertCount(1, $this->form->getErrors(true, true));
+
+        $this->assertEquals(
+            EmailAddressType::ERROR_EMAIL_ADDRESS_BLOCKED,
+            $this->form->getErrors(true, true)->current()->getMessage()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function does_not_validate_with_already_registering_email_address_if_not_enough_time_has_passed()
     {
-        $veryRecentPendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
+        $veryRecentPendingOptIn = new PendingOptIn(null, $this->emailAddressFactory->fromString('webfactory@example.com'));
         $this->pendingOptInRepository
             ->method('findByEmailAddress')
             ->willReturn($veryRecentPendingOptIn);
@@ -103,7 +135,7 @@ final class EmailAddressTypeTest extends TypeTestCase
     {
         $oldPendingOptIn = new PendingOptIn(
             null,
-            new EmailAddress('webfactory@example.com', 'secret'),
+            $this->emailAddressFactory->fromString('webfactory@example.com'),
             [],
             new \DateTimeImmutable('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
         );
@@ -165,7 +197,9 @@ final class EmailAddressTypeTest extends TypeTestCase
         return [
             new PreloadedExtension(
                 [
-                    new EmailAddressType($this->pendingOptInRepository,
+                    new EmailAddressType(
+                        $this->blockedEmailAddressHashRepository,
+                        $this->pendingOptInRepository,
                         $this->recipientRepository,
                         $this->emailAddressFactory,
                         self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS
