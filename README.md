@@ -9,12 +9,22 @@ This Symfony bundle features a newsletter registration template with attention t
 protection, and a smooth user journey:
 
 - Sign up with email address only
-- No personal data is saved until the newsletter recipient verifies their email address (double opt in)
-- Command for deleting outdated pending opt in processes
-- Additional user data can be provided after double opt in (planned)
-- Supports zero, one or many newsletters
-- Highly customizable due to small interfaces, Doctrine interface mapping (e.g. there are some webfactory specific names
-  you might want to change) and service replacements.
+- No personal data (like the email address) is saved until the newsletter recipient verifies their email address (double opt in)
+- Pending opt in processes get deleted after a configurable amount of time (default: 72 hours)
+
+To reduce the amount of unwanted emails, the following ideas are implemented:
+
+- The registration form has a simple honeypot field
+- Opt in emails contain no data entered in the registration form to make them unattractive for spammers
+- Opt in emails can be sent only once in a configurable time interval (default: 1 hour)
+- Opt in emails contain a "block this email address" link (default: for 30 days)
+
+Finally, the bundle tries to be developer friendly:
+
+- Registration can be embedded as a page on it's own as well as a partial view
+- Depending on the number of different newsletters, the registration and edit forms feature a newsletter selection or
+  no disturbing element (a checkbox for a single newsletter would be silly) 
+- It's highly customizable due to small interfaces, Doctrine interface mapping and service replacements
 
 
 Installation
