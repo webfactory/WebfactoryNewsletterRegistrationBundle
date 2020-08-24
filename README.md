@@ -164,7 +164,7 @@ Use [the regular symfony mechanism for overriding templates](https://symfony.com
 Start with:
 
     mkdir src/Resources/WebfactoryNewsletterRegistrationBundle -p
-    cp -r vendor/webfactory/newsletter-registration-bundle/Resources/app-class-templates/* src/Resources/WebfactoryNewsletterRegistrationBundle 
+    cp -r vendor/webfactory/newsletter-registration-bundle/src/Resources/views/* src/Resources/WebfactoryNewsletterRegistrationBundle 
 
 
 ### Translations
