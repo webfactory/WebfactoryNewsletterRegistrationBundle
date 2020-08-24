@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\ConfirmRegistration;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
@@ -32,13 +33,17 @@ class Task implements TaskInterface
     /** @var FlashBagInterface */
     protected $flashBag;
 
+    /** @var TranslatorInterface */
+    protected $translator;
+
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepo,
         int $timeLimitForOptInInHours,
         EmailAddressFactoryInterface $emailAddressFactory,
         RecipientFactoryInterface $recipientFactory,
         RecipientRepositoryInterface $recipientRepo,
-        FlashBagInterface $flashBag
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator
     ) {
         $this->pendingOptInRepo = $pendingOptInRepo;
         $this->timeLimitForOptInInHours = $timeLimitForOptInInHours;
@@ -46,6 +51,7 @@ class Task implements TaskInterface
         $this->recipientFactory = $recipientFactory;
         $this->recipientRepo = $recipientRepo;
         $this->flashBag = $flashBag;
+        $this->translator = $translator;
     }
 
     /**
@@ -75,7 +81,10 @@ class Task implements TaskInterface
         $this->recipientRepo->save($recipient);
         $this->pendingOptInRepo->remove($pendingOptIn);
 
-        $this->flashBag->add('success', 'Your newsletter registration is now active.');
+        $this->flashBag->add(
+            'success',
+            $this->translator->trans('confirm.registration.complete', [], 'webfactory-newsletter-registration')
+        );
 
         return $recipient;
     }

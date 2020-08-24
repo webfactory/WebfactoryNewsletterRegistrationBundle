@@ -37,6 +37,10 @@
         <source>delete.registration.success</source>
         <target>Ihre Newsletter-Abos und Registrierungsdaten wurden gelöscht.</target>
       </trans-unit>
+      <trans-unit id="NqkUDeb" resname="confirm.registration.complete">
+        <source>confirm.registration.complete</source>
+        <target>Ihr Newsletter-Abo ist nun aktiv.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

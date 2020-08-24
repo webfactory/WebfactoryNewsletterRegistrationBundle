@@ -37,6 +37,10 @@
         <source>delete.registration.success</source>
         <target>You are unsubscribed from all newsletters and your registration data has been deleted.</target>
       </trans-unit>
+      <trans-unit id="NqkUDeb" resname="confirm.registration.complete">
+        <source>confirm.registration.complete</source>
+        <target>Your newsletter registration is now active.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
