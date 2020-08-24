@@ -5,6 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\ConfirmRegistration;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -34,6 +35,9 @@ class TaskTest extends TestCase
     /** @var FlashBagInterface|MockObject */
     protected $flashBag;
 
+    /** @var TranslatorInterface|MockObject */
+    protected $translator;
+
     /** @var Task */
     protected $task;
 
@@ -46,13 +50,15 @@ class TaskTest extends TestCase
         $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
         $this->pendingOptInRepo = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->flashBag = $this->createMock(FlashBagInterface::class);
+        $this->translator = $this->createMock(TranslatorInterface::class);
         $this->task = new Task(
             $this->pendingOptInRepo,
             self::TIME_LIMIT_FOR_OPT_IN_IN_HOURS,
             $this->emailAddressFactory,
             $this->recipientFactory,
             $this->recipientRepo,
-            $this->flashBag
+            $this->flashBag,
+            $this->translator
         );
     }
 

@@ -78,6 +78,7 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+            - '@Symfony\Contracts\Translation\TranslatorInterface'
 
     Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task'
