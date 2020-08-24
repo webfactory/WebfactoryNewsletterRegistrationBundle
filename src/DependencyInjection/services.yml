@@ -26,6 +26,7 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '%webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours%'
+            - '@Symfony\Contracts\Translation\TranslatorInterface'
         tags: ['form.type']
 
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory:
@@ -34,6 +35,12 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory'
+
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\HoneypotType:
+        arguments:
+            - '@Symfony\Contracts\Translation\TranslatorInterface'
+            - '@logger'
+        tags: ['form.type']
 
     Webfactory\NewsletterRegistrationBundle\EditRegistration\Type:
         arguments:
@@ -84,6 +91,7 @@ services:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+            - '@Symfony\Contracts\Translation\TranslatorInterface'
 
     Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\EditRegistration\Task'
@@ -92,6 +100,7 @@ services:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+            - '@Symfony\Contracts\Translation\TranslatorInterface'
 
     Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Task'

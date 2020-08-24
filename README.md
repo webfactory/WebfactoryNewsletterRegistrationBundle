@@ -167,6 +167,13 @@ Start with:
     cp -r vendor/webfactory/newsletter-registration-bundle/Resources/app-class-templates/* src/Resources/WebfactoryNewsletterRegistrationBundle 
 
 
+### Translations
+
+Use the [translation component's overwrite mechanism](https://symfony.com/doc/4.4/translation.html#translation-resource-file-names-and-locations).
+
+If you add new languages or fix mistakes, please consider contributing via pull request. 
+
+
 ### Adding fields
 
 - Extend the StartRegistration Type with a [Form Type Extension](https://symfony.com/doc/4.4/form/create_form_type_extension.html).

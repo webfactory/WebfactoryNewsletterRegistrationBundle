@@ -9,6 +9,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
@@ -45,6 +46,9 @@ final class StartRegistrationTypeTest extends TypeTestCase
     /** @var EmailAddressFactoryInterface */
     private $emailAddressFactory;
 
+    /** @var TranslatorInterface|MockObject */
+    private $translator;
+
     /** @var Newsletter|null */
     private $newsletter1;
 
@@ -59,6 +63,9 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         $this->emailAddressFactory = new EmailAddressFactory('secret');
+        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->translator->method('trans')->willReturnArgument(0);
+
         parent::setUp();
     }
 
@@ -238,7 +245,7 @@ final class StartRegistrationTypeTest extends TypeTestCase
         $this->assertFalse($form->isValid());
         $this->assertCount(1, $form->getErrors(true, true));
         $this->assertEquals(
-            EmailAddressType::ERROR_EMAIL_ALREADY_REGISTERED,
+            EmailAddressType::ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED,
             $form->getErrors(true, true)->current()->getMessage()
         );
     }
@@ -346,8 +353,10 @@ final class StartRegistrationTypeTest extends TypeTestCase
                         $this->pendingOptInRepository,
                         $this->recipientRepository,
                         $this->emailAddressFactory,
-                        self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS
+                        self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS,
+                        $this->translator
                     ),
+                    new HoneypotType($this->translator),
                 ],
                 []
             ),

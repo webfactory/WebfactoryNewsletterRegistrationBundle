@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="de" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="Q1Ld0qy" resname="start.registration.email.address.blocked">
+        <source>start.registration.email.address.blocked</source>
+        <target>Diese Email-Adresse wurde gesperrt.</target>
+      </trans-unit>
+      <trans-unit id="QUJEZDo" resname="start.registration.opt.in.email.limit.reached">
+        <source>start.registration.opt.in.email.limit.reached</source>
+        <target>Diese Email-Adresse wird bereits registriert und eine Email mit Bestätigungslink wurde versand. Bitte folgen Sie diesem Link um die Registrierung abzuschließen. zum Spamschutz kann die nächste Bestätigungs-Email erst um {time} Uhr angefordert werden.</target>
+      </trans-unit>
+      <trans-unit id="pM8scZF" resname="start.registration.email.address.already.registered">
+        <source>start.registration.email.address.already.registered</source>
+        <target>Diese Email-Adresse ist bereits registriert.</target>
+      </trans-unit>
+      <trans-unit id="IxI29VV" resname="start.registration.honeypot.not.submitted">
+        <source>start.registration.honeypot.not.submitted</source>
+        <target>Das Spamschutz-Feld wurde nicht übermittelt. Bitte versuchen Sie die Registrierung erneut und übermitteln Sie es dieses mal.</target>
+      </trans-unit>
+      <trans-unit id="N0ePDtY" resname="start.registration.honeypot.filled">
+        <source>start.registration.honeypot.filled</source>
+        <target>Das Spamschutz-Feld wurde ausgefüllt. Bitte versuchen Sie die Registrierung erneut und lassen Sie es dieses Mal frei.</target>
+      </trans-unit>
+      <trans-unit id="TKXZX6l" resname="edit.registration.updated">
+        <source>edit.registration.updated</source>
+        <target>Ihre Registrierung wurde aktualisiert.</target>
+      </trans-unit>
+      <trans-unit id="AGtLjHG" resname="edit.registration.updated.no.newsletters.chosen">
+        <source>edit.registration.updated.no.newsletters.chosen</source>
+        <target>Ihre Newsletter-Abos wurden gelöscht, aber Ihre Registrierungsdaten sind (wie Ihre Email-Adresse) sind weitertin in unserer Datenbank gespeichert. Wenn Sie diese auch löschen möchten, nutzen Sie bitte den untenstehende Knopf.</target>
+      </trans-unit>
+      <trans-unit id="T83i0qx" resname="delete.registration.success">
+        <source>delete.registration.success</source>
+        <target>Ihre Newsletter-Abos und Registrierungsdaten wurden gelöscht.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

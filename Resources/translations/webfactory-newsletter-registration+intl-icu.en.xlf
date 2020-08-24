@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="Q1Ld0qy" resname="start.registration.email.address.blocked">
+        <source>start.registration.email.address.blocked</source>
+        <target>This email address has been blocked.</target>
+      </trans-unit>
+      <trans-unit id="QUJEZDo" resname="start.registration.opt.in.email.limit.reached">
+        <source>start.registration.opt.in.email.limit.reached</source>
+        <target>This email address is already in the process of registering and an email containing a confirmation link has been sent to it. Please follow that link to continue. For spam protection, the next confirmation email cannot be send until {time}.</target>
+      </trans-unit>
+      <trans-unit id="pM8scZF" resname="start.registration.email.address.already.registered">
+        <source>start.registration.email.address.already.registered</source>
+        <target>This email address is already registered.</target>
+      </trans-unit>
+      <trans-unit id="IxI29VV" resname="start.registration.honeypot.not.submitted">
+        <source>start.registration.honeypot.not.submitted</source>
+        <target>You haven't submitted our spam protection field. Please try again, including it empty this time.</target>
+      </trans-unit>
+      <trans-unit id="N0ePDtY" resname="start.registration.honeypot.filled">
+        <source>start.registration.honeypot.filled</source>
+        <target>You've filled in our spam protection field. Please try again, leaving it empty this time.</target>
+      </trans-unit>
+      <trans-unit id="TKXZX6l" resname="edit.registration.updated">
+        <source>edit.registration.updated</source>
+        <target>Your newsletter registration was updated.</target>
+      </trans-unit>
+      <trans-unit id="AGtLjHG" resname="edit.registration.updated.no.newsletters.chosen">
+        <source>edit.registration.updated.no.newsletters.chosen</source>
+        <target>All your newsletter subscriptions have been deleted, but your registration data (like your email address) is still saved in our database. If you would like to delete that data too, please delete your registration with the button below.</target>
+      </trans-unit>
+      <trans-unit id="T83i0qx" resname="delete.registration.success">
+        <source>delete.registration.success</source>
+        <target>You are unsubscribed from all newsletters and your registration data has been deleted.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

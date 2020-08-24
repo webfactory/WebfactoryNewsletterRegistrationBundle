@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -24,11 +25,9 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
 {
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
 
-    public const ERROR_EMAIL_ADDRESS_BLOCKED = 'This email address has been blocked.';
-    public const ERROR_OPT_IN_EMAIL_LIMIT_REACHED = 'This email address is already in the process of registering and '
-        .'an email containing a confirmation link has been sent to it. Please follow that link to continue. For spam '
-        .'protection, the next confirmation email cannot be send until %s.';
-    public const ERROR_EMAIL_ALREADY_REGISTERED = 'This email address is already registered.';
+    public const ERROR_EMAIL_ADDRESS_BLOCKED = 'start.registration.email.address.blocked';
+    public const ERROR_OPT_IN_EMAIL_LIMIT_REACHED = 'start.registration.opt.in.email.limit.reached';
+    public const ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED = 'start.registration.email.address.already.registered';
 
     /** @var BlockedEmailAddressHashRepositoryInterface */
     protected $blockedEmailAddressHashesRepository;
@@ -45,18 +44,23 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
     /** @var int */
     protected $minimalIntervalBetweenOptInEmailsInHours;
 
+    /** @var TranslatorInterface */
+    protected $translator;
+
     public function __construct(
         BlockedEmailAddressHashRepositoryInterface $blockedEmailAddressHashesRepository,
         PendingOptInRepositoryInterface $pendingOptInRepository,
         RecipientRepositoryInterface $recipientRepository,
         EmailAddressFactoryInterface $emailAddressFactory,
-        int $minimalIntervalBetweenOptInEmailsInHours
+        int $minimalIntervalBetweenOptInEmailsInHours,
+        TranslatorInterface $translator
     ) {
         $this->blockedEmailAddressHashesRepository = $blockedEmailAddressHashesRepository;
         $this->pendingOptInRepository = $pendingOptInRepository;
         $this->recipientRepository = $recipientRepository;
         $this->emailAddressFactory = $emailAddressFactory;
         $this->minimalIntervalBetweenOptInEmailsInHours = $minimalIntervalBetweenOptInEmailsInHours;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -109,7 +113,13 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
 
             $emailAddress = $that->emailAddressFactory->fromString($emailAddressString);
             if (null !== $this->blockedEmailAddressHashesRepository->findByEmailAddress($emailAddress)) {
-                $executionContext->addViolation(self::ERROR_EMAIL_ADDRESS_BLOCKED);
+                $executionContext->addViolation(
+                    $this->translator->trans(
+                        self::ERROR_EMAIL_ADDRESS_BLOCKED,
+                        [],
+                        'webfactory-newsletter-registration'
+                    )
+                );
             }
 
             $pendingOptIn = $that->pendingOptInRepository->findByEmailAddress($emailAddress);
@@ -117,15 +127,22 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
             $dateInterval = new \DateInterval('PT'.$that->minimalIntervalBetweenOptInEmailsInHours.'H');
             if (null !== $pendingOptIn && false === $pendingOptIn->isAllowedToReceiveAnotherOptInEmail($dateInterval)) {
                 $executionContext->addViolation(
-                    sprintf(
+                    $this->translator->trans(
                         self::ERROR_OPT_IN_EMAIL_LIMIT_REACHED,
-                        $pendingOptIn->getRegistrationDate()->add($dateInterval)->format('H:i')
+                        ['time' => $pendingOptIn->getRegistrationDate()->add($dateInterval)->format('H:i')],
+                        'webfactory-newsletter-registration'
                     )
                 );
             }
 
             if ($that->recipientRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
-                $executionContext->addViolation(self::ERROR_EMAIL_ALREADY_REGISTERED);
+                $executionContext->addViolation(
+                    $this->translator->trans(
+                        self::ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED,
+                        [],
+                        'webfactory-newsletter-registration'
+                    )
+                );
             }
         };
     }

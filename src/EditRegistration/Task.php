@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
@@ -14,25 +15,29 @@ class Task implements TaskInterface
     /** @var FlashBagInterface */
     protected $flashBag;
 
+    /** @var TranslatorInterface */
+    protected $translator;
+
     public function __construct(
         RecipientRepositoryInterface $recipientRepo,
-        FlashBagInterface $flashBag
+        FlashBagInterface $flashBag,
+        TranslatorInterface $translator
     ) {
         $this->recipientRepo = $recipientRepo;
         $this->flashBag = $flashBag;
+        $this->translator = $translator;
     }
 
     public function editRegistration(RecipientInterface $recipient): void
     {
         $this->recipientRepo->save($recipient);
 
-        if (\count($recipient->getNewsletters()) > 0) {
-            $message = 'Your newsletter registration was updated.';
-        } else {
-            $message = 'All your newsletter subscriptions have been deleted, but your registration data (like your '
-                .'email address) is still saved in our database. If you would like to delete that data too, please '
-                .'delete your registration with the button below.';
-        }
-        $this->flashBag->add('success', $message);
+        $messageKey = \count($recipient->getNewsletters()) > 0
+            ? 'edit.registration.updated'
+            : 'edit.registration.updated.no.newsletters.chosen';
+        $this->flashBag->add(
+            'success',
+            $this->translator->trans($messageKey, [], 'webfactory-newsletter-registration')
+        );
     }
 }
