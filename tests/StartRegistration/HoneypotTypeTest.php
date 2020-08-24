@@ -9,13 +9,13 @@ use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\HoneypotType;
 
-final class HoneypotTypeTest extends TypeTestCase
+class HoneypotTypeTest extends TypeTestCase
 {
     /** @var FormInterface */
-    private $form;
+    protected $form;
 
     /** @var TranslatorInterface|MockObject */
-    private $translator;
+    protected $translator;
 
     protected function setUp(): void
     {

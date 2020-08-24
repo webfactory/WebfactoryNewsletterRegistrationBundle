@@ -21,27 +21,27 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
-final class EmailAddressTypeTest extends TypeTestCase
+class EmailAddressTypeTest extends TypeTestCase
 {
     protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
 
     /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
-    private $blockedEmailAddressHashRepository;
+    protected $blockedEmailAddressHashRepository;
 
     /** @var PendingOptInRepositoryInterface|MockObject */
-    private $pendingOptInRepository;
+    protected $pendingOptInRepository;
 
     /** @var RecipientRepositoryInterface|MockObject */
-    private $recipientRepository;
+    protected $recipientRepository;
 
     /** @var EmailAddressFactoryInterface */
-    private $emailAddressFactory;
+    protected $emailAddressFactory;
 
     /** @var TranslatorInterface|MockObject */
-    private $translator;
+    protected $translator;
 
     /** @var FormInterface */
-    private $form;
+    protected $form;
 
     public function setUp(): void
     {

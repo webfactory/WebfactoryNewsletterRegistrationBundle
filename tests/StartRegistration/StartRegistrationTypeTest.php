@@ -24,36 +24,36 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegis
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
-final class StartRegistrationTypeTest extends TypeTestCase
+class StartRegistrationTypeTest extends TypeTestCase
 {
     protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
 
     /** @var NewsletterRepositoryInterface|MockObject */
-    private $newsletterRepository;
+    protected $newsletterRepository;
 
     /** @var PendingOptInFactoryInterface|MockObject */
-    private $pendingOptInFactory;
+    protected $pendingOptInFactory;
 
     /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
-    private $blockedEmailAddressHashRepository;
+    protected $blockedEmailAddressHashRepository;
 
     /** @var PendingOptInRepositoryInterface|MockObject */
-    private $pendingOptInRepository;
+    protected $pendingOptInRepository;
 
     /** @var RecipientRepositoryInterface|MockObject */
-    private $recipientRepository;
+    protected $recipientRepository;
 
     /** @var EmailAddressFactoryInterface */
-    private $emailAddressFactory;
+    protected $emailAddressFactory;
 
     /** @var TranslatorInterface|MockObject */
-    private $translator;
+    protected $translator;
 
     /** @var Newsletter|null */
-    private $newsletter1;
+    protected $newsletter1;
 
     /** @var Newsletter|null */
-    private $newsletter2;
+    protected $newsletter2;
 
     public function setUp(): void
     {
@@ -364,13 +364,13 @@ final class StartRegistrationTypeTest extends TypeTestCase
         ];
     }
 
-    private function setUpOneNewsletter(): void
+    protected function setUpOneNewsletter(): void
     {
         $this->newsletter1 = new Newsletter(1, 'Newsletter 1');
         $this->newsletterRepository->method('findVisible')->willReturn([$this->newsletter1]);
     }
 
-    private function setUpTwoNewsletters(): void
+    protected function setUpTwoNewsletters(): void
     {
         $this->newsletter1 = new Newsletter(1, 'Newsletter 1');
         $this->newsletter2 = new Newsletter(2, 'Newsletter 2');
