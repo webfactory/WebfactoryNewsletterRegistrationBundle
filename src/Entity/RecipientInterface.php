@@ -8,7 +8,7 @@ interface RecipientInterface
 
     public function getUuid(): string;
 
-    public function getEmailAddress(): string;
+    public function getEmailAddress(): EmailAddress;
 
     /**
      * @return NewsletterInterface[]

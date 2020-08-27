@@ -90,9 +90,9 @@ abstract class Recipient implements RecipientInterface
         return $this->uuid;
     }
 
-    public function getEmailAddress(): string
+    public function getEmailAddress(): EmailAddress
     {
-        return $this->emailAddress;
+        return new EmailAddress($this->emailAddress, null);
     }
 
     public function getOptInDate(): \DateTimeImmutable

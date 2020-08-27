@@ -28,7 +28,7 @@ class RecipientFactoryTest extends TestCase
         );
 
         $this->assertEquals('uuid', $recipient->getUuid());
-        $this->assertEquals('webfactory@example.com', $recipient->getEmailAddress());
+        $this->assertEquals('webfactory@example.com', (string) $recipient->getEmailAddress());
         $this->assertEquals($newslettersForPendingOptIn, $recipient->getNewsletters());
     }
 }

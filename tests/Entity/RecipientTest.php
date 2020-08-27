@@ -43,7 +43,7 @@ class RecipientTest extends TestCase
         $recipient = Recipient::fromPendingOptIn($pendingOptIn, new EmailAddress('webfactory@example.com', null));
 
         $this->assertEquals('uuid', $recipient->getUuid());
-        $this->assertEquals('webfactory@example.com', $recipient->getEmailAddress());
+        $this->assertEquals('webfactory@example.com', (string) $recipient->getEmailAddress());
         $this->assertEquals($newslettersForPendingOptIn, $recipient->getNewsletters());
     }
 
