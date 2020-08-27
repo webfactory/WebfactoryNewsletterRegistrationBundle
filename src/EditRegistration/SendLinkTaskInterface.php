@@ -1,10 +1,10 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
+namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
-interface SendEditRegistrationLinkTaskInterface
+interface SendLinkTaskInterface
 {
     public function sendEditRegistrationLink(RecipientInterface $recipient): void;
 }

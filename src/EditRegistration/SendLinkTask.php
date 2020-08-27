@@ -1,6 +1,6 @@
 <?php
 
-namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
+namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
-class SendEditRegistrationLinkTask implements SendEditRegistrationLinkTaskInterface
+class SendLinkTask implements SendLinkTaskInterface
 {
     /** @var MailerInterface */
     protected $mailer;
@@ -49,7 +49,7 @@ class SendEditRegistrationLinkTask implements SendEditRegistrationLinkTaskInterf
     {
         return trim(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/StartRegistration/edit-registration-email-subject.txt.twig',
+                '@WebfactoryNewsletterRegistration/EditRegistration/link-email-subject.twig',
                 ['recipient' => $recipient]
             )
         );
@@ -59,7 +59,7 @@ class SendEditRegistrationLinkTask implements SendEditRegistrationLinkTaskInterf
     {
         return trim(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/StartRegistration/edit-registration-email-body.txt.twig',
+                '@WebfactoryNewsletterRegistration/EditRegistration/link-email-body.txt.twig',
                 [
                     'recipient' => $recipient,
                     'urlForEditing' => $this->urlGenerator->generate(

@@ -8,7 +8,7 @@ use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTask;
-use Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface as StartRegistrationTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
@@ -24,8 +24,8 @@ class HandleRegistrationSubmissionTaskTest extends TestCase
     /** @var StartRegistrationTaskInterface|MockObject */
     private $startRegistrationTask;
 
-    /** @var SendEditRegistrationLinkTaskInterface|MockObject */
-    private $sendEditRegistrationLinkTask;
+    /** @var SendLinkTaskInterface|MockObject */
+    private $sendLinkTask;
 
     /** @var HandleRegistrationSubmissionTask */
     private $task;
@@ -37,19 +37,19 @@ class HandleRegistrationSubmissionTaskTest extends TestCase
         $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         $this->twig = $this->createMock(Environment::class);
         $this->startRegistrationTask = $this->createMock(StartRegistrationTaskInterface::class);
-        $this->sendEditRegistrationLinkTask = $this->createMock(SendEditRegistrationLinkTaskInterface::class);
+        $this->sendLinkTask = $this->createMock(SendLinkTaskInterface::class);
         $this->task = new HandleRegistrationSubmissionTask(
             $this->recipientRepository,
             $this->twig,
             $this->startRegistrationTask,
-            $this->sendEditRegistrationLinkTask
+            $this->sendLinkTask
         );
     }
 
     /**
      * @test
      */
-    public function runs_SendEditRegistrationLinkTask_if_user_is_already_registered()
+    public function runs_SendLinkTask_if_user_is_already_registered()
     {
         $pendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.org', 'secret'));
         $recipientFixture = Recipient::fromPendingOptIn($pendingOptIn);
@@ -63,7 +63,7 @@ class HandleRegistrationSubmissionTaskTest extends TestCase
             ->expects($this->never())
             ->method('startRegistration');
 
-        $this->sendEditRegistrationLinkTask
+        $this->sendLinkTask
             ->expects($this->once())
             ->method('sendEditRegistrationLink')
             ->with($recipientFixture);
@@ -83,7 +83,7 @@ class HandleRegistrationSubmissionTaskTest extends TestCase
             ->method('findByEmailAddress')
             ->willReturn(null);
 
-        $this->sendEditRegistrationLinkTask
+        $this->sendLinkTask
             ->expects($this->never())
             ->method('sendEditRegistrationLink');
 

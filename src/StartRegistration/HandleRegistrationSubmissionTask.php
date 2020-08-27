@@ -4,6 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
@@ -18,30 +19,30 @@ class HandleRegistrationSubmissionTask implements HandleRegistrationSubmissionTa
     /** @var TaskInterface */
     private $startRegistrationTask;
 
-    /** @var SendEditRegistrationLinkTaskInterface */
-    private $sendEditRegistrationLinkTask;
+    /** @var SendLinkTaskInterface */
+    private $sendLinkTask;
 
     public function __construct(
         RecipientRepositoryInterface $recipientRepository,
         Environment $twig,
         TaskInterface $startRegistrationTask,
-        SendEditRegistrationLinkTaskInterface $sendEditRegistrationLinkTask
+        SendLinkTaskInterface $sendLinkTask
     ) {
         $this->recipientRepository = $recipientRepository;
         $this->twig = $twig;
         $this->startRegistrationTask = $startRegistrationTask;
-        $this->sendEditRegistrationLinkTask = $sendEditRegistrationLinkTask;
+        $this->sendLinkTask = $sendLinkTask;
     }
 
     public function handleRegistrationSubmission(PendingOptInInterface $pendingOptIn): Response
     {
         $recipient = $this->recipientRepository->findByEmailAddress($pendingOptIn->getEmailAddress());
         if ($recipient) {
-            $this->sendEditRegistrationLinkTask->sendEditRegistrationLink($recipient);
+            $this->sendLinkTask->sendEditRegistrationLink($recipient);
 
             return new Response(
                 $this->twig->render(
-                    '@WebfactoryNewsletterRegistration/StartRegistration/edit-registration-email-sent.html.twig',
+                    '@WebfactoryNewsletterRegistration/EditRegistration/link-email-sent.html.twig',
                     [
                         'pendingOptIn' => $pendingOptIn,
                     ]

@@ -9,10 +9,10 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
-use Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTask;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTask;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
-class SendEditRegistrationLinkTaskTest extends TestCase
+class SendLinkTaskTest extends TestCase
 {
     protected const SENDER = 'sender@example.com';
 
@@ -25,7 +25,7 @@ class SendEditRegistrationLinkTaskTest extends TestCase
     /** @var UrlGeneratorInterface|MockObject */
     protected $urlGenerator;
 
-    /** @var SendEditRegistrationLinkTask */
+    /** @var SendLinkTask */
     private $task;
 
     protected function setUp(): void
@@ -34,7 +34,7 @@ class SendEditRegistrationLinkTaskTest extends TestCase
         $this->mailer = $this->createMock(MailerInterface::class);
         $this->twig = $this->createMock(Environment::class);
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $this->task = new SendEditRegistrationLinkTask($this->mailer, self::SENDER, $this->twig, $this->urlGenerator);
+        $this->task = new SendLinkTask($this->mailer, self::SENDER, $this->twig, $this->urlGenerator);
     }
 
     /**

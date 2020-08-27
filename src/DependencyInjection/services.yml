@@ -56,20 +56,20 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Twig\Environment'
             - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTaskInterface'
 
     Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTask'
 
-    Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTask:
+    Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTask:
         arguments:
             - '@Symfony\Component\Mailer\MailerInterface'
             - '%webfactory.newsletter_registration.email_sender_address%'
             - '@Twig\Environment'
             - '@router'
 
-    Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTaskInterface:
-        alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTask'
+    Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\EditRegistration\SendLinkTask'
 
     Webfactory\NewsletterRegistrationBundle\StartRegistration\Task:
         arguments:
