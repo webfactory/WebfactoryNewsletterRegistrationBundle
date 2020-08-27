@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 
 /**
@@ -93,9 +94,13 @@ abstract class PendingOptIn implements PendingOptInInterface
         return $this->emailAddress;
     }
 
-    public function matchesEmailAddress(EmailAddress $emailAddress): bool
+    public function setEmailAddressIfItMatchesStoredHash(EmailAddress $emailAddress): void
     {
-        return $this->emailAddressHash === $emailAddress->getHash();
+        if ($this->emailAddressHash !== $emailAddress->getHash()) {
+            throw new EmailAddressDoesNotMatchHashOfPendingOptInException($emailAddress, $this);
+        }
+
+        $this->emailAddress = $emailAddress;
     }
 
     public function getNewsletters(): array

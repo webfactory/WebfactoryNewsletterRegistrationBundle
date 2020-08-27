@@ -10,7 +10,7 @@ interface PendingOptInInterface
 
     public function getEmailAddress(): EmailAddress;
 
-    public function matchesEmailAddress(EmailAddress $email): bool;
+    public function setEmailAddressIfItMatchesStoredHash(EmailAddress $email): void;
 
     /**
      * @return NewsletterInterface[]

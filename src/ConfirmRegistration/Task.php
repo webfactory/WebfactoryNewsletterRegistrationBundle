@@ -73,9 +73,7 @@ class Task implements TaskInterface
         }
 
         $emailAddress = $this->emailAddressFactory->fromString($emailAddressString);
-        if (false === $pendingOptIn->matchesEmailAddress($emailAddress)) {
-            throw new EmailAddressDoesNotMatchHashOfPendingOptInException($emailAddress, $pendingOptIn);
-        }
+        $pendingOptIn->setEmailAddressIfItMatchesStoredHash($emailAddress);
 
         $recipient = $this->recipientFactory->fromPendingOptIn($pendingOptIn);
         $this->recipientRepo->save($recipient);

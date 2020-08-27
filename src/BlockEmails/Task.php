@@ -38,11 +38,9 @@ class Task implements TaskInterface
     public function blockEmailsFor(PendingOptInInterface $pendingOptIn, string $emailAddressString): void
     {
         $emailAddress = $this->emailAddressFactory->fromString($emailAddressString);
-        if (false === $pendingOptIn->matchesEmailAddress($emailAddress)) {
-            throw new EmailAddressDoesNotMatchHashOfPendingOptInException($emailAddress, $pendingOptIn);
-        }
+        $pendingOptIn->setEmailAddressIfItMatchesStoredHash($emailAddress);
 
-        $block = $this->blockedEmailHashesRepository->findByEmailAddress($emailAddress);
+        $block = $this->blockedEmailHashesRepository->findByEmailAddress($pendingOptIn->getEmailAddress());
         if ($block) {
             $this->blockedEmailHashesRepository->remove($block);
         }

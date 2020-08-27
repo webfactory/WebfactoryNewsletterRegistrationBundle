@@ -4,6 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
+use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
@@ -65,37 +66,38 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
-    public function emailAddressMatchesHash_returns_true_if_matches(): void
+    public function setEmailAddressIfItMatchesStoredHash_sets_EmailAddress_if_it_matches_stored_Hash(): void
     {
-        $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
+        $emailAddressFixture = new EmailAddress('webfactory@example.com', 'secret');
+        $pendingOptIn = new PendingOptIn('uuid', $emailAddressFixture);
 
-        $this->assertTrue(
-            $pendingOptIn->matchesEmailAddress(new EmailAddress('webfactory@example.com', 'secret'))
-        );
+        $pendingOptIn->setEmailAddressIfItMatchesStoredHash($emailAddressFixture);
+
+        $this->assertEquals($emailAddressFixture, $pendingOptIn->getEmailAddress());
     }
 
     /**
      * @test
      */
-    public function emailAddressMatchesHash_returns_false_if_email_address_does_not_match(): void
+    public function setEmailAddressIfItMatchesStoredHash_throws_Exception_if_email_address_does_not_match(): void
     {
+        $this->expectException(EmailAddressDoesNotMatchHashOfPendingOptInException::class);
+
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
-        $this->assertFalse(
-            $pendingOptIn->matchesEmailAddress(new EmailAddress('other@example.com', 'secret'))
-        );
+        $pendingOptIn->setEmailAddressIfItMatchesStoredHash(new EmailAddress('other@example.com', 'secret'));
     }
 
     /**
      * @test
      */
-    public function emailAddressMatchesHash_returns_false_if_secret_does_not_match(): void
+    public function setEmailAddressIfItMatchesStoredHash_throws_Exception_if_secret_does_not_match(): void
     {
+        $this->expectException(EmailAddressDoesNotMatchHashOfPendingOptInException::class);
+
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
-        $this->assertFalse(
-            $pendingOptIn->matchesEmailAddress(new EmailAddress('webfactory@example.com', 'other-secret'))
-        );
+        $pendingOptIn->setEmailAddressIfItMatchesStoredHash(new EmailAddress('webfactory@example.com', 'other-secret'));
     }
 
     /**
