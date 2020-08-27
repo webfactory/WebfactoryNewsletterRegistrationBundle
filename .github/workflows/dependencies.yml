@@ -14,6 +14,7 @@ jobs:
         name: Check missing composer requirements
         runs-on: ubuntu-18.04
         steps:
+            -   uses: actions/checkout@v2
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
                 run: |
                     sudo update-alternatives --set php /usr/bin/php$PHP_VERSION

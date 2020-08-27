@@ -14,6 +14,7 @@ jobs:
         name: PHPUnit
         runs-on: ubuntu-18.04
         steps:
+            -   uses: actions/checkout@v2
             -   name: Richte ein $TEMP-Verzeichnis ein
                 run: |
                     echo ::set-env name=TEMP::$GITHUB_WORKSPACE/tmp
@@ -33,4 +34,4 @@ jobs:
             -   run: |
                     composer install --no-interaction --no-scripts --no-progress --no-suggest
                     composer show
-            -   run: vendor/bin/phpunit
+            -   run: vendor/phpunit/phpunit/phpunit
