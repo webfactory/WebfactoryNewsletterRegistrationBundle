@@ -23,7 +23,6 @@ services:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '%webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours%'
             - '@Symfony\Contracts\Translation\TranslatorInterface'

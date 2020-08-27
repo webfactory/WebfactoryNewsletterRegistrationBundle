@@ -19,7 +19,6 @@ use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashReposi
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
 class EmailAddressType extends AbstractType implements DataMapperInterface
 {
@@ -27,16 +26,12 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
 
     public const ERROR_EMAIL_ADDRESS_BLOCKED = 'start.registration.email.address.blocked';
     public const ERROR_OPT_IN_EMAIL_LIMIT_REACHED = 'start.registration.opt.in.email.limit.reached';
-    public const ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED = 'start.registration.email.address.already.registered';
 
     /** @var BlockedEmailAddressHashRepositoryInterface */
     protected $blockedEmailAddressHashesRepository;
 
     /** @var PendingOptInRepositoryInterface */
     protected $pendingOptInRepository;
-
-    /** @var RecipientRepositoryInterface */
-    protected $recipientRepository;
 
     /** @var EmailAddressFactoryInterface */
     protected $emailAddressFactory;
@@ -50,14 +45,12 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
     public function __construct(
         BlockedEmailAddressHashRepositoryInterface $blockedEmailAddressHashesRepository,
         PendingOptInRepositoryInterface $pendingOptInRepository,
-        RecipientRepositoryInterface $recipientRepository,
         EmailAddressFactoryInterface $emailAddressFactory,
         int $minimalIntervalBetweenOptInEmailsInHours,
         TranslatorInterface $translator
     ) {
         $this->blockedEmailAddressHashesRepository = $blockedEmailAddressHashesRepository;
         $this->pendingOptInRepository = $pendingOptInRepository;
-        $this->recipientRepository = $recipientRepository;
         $this->emailAddressFactory = $emailAddressFactory;
         $this->minimalIntervalBetweenOptInEmailsInHours = $minimalIntervalBetweenOptInEmailsInHours;
         $this->translator = $translator;
@@ -130,16 +123,6 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
                     $this->translator->trans(
                         self::ERROR_OPT_IN_EMAIL_LIMIT_REACHED,
                         ['time' => $pendingOptIn->getRegistrationDate()->add($dateInterval)->format('H:i')],
-                        'webfactory-newsletter-registration'
-                    )
-                );
-            }
-
-            if ($that->recipientRepository->isEmailAddressAlreadyRegistered($emailAddress)) {
-                $executionContext->addViolation(
-                    $this->translator->trans(
-                        self::ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED,
-                        [],
                         'webfactory-newsletter-registration'
                     )
                 );

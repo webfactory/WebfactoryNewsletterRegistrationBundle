@@ -13,10 +13,6 @@
         <source>start.registration.opt.in.email.limit.reached</source>
         <target>This email address is already in the process of registering and an email containing a confirmation link has been sent to it. Please follow that link to continue. For spam protection, the next confirmation email cannot be send until {time}.</target>
       </trans-unit>
-      <trans-unit id="pM8scZF" resname="start.registration.email.address.already.registered">
-        <source>start.registration.email.address.already.registered</source>
-        <target>This email address is already registered.</target>
-      </trans-unit>
       <trans-unit id="IxI29VV" resname="start.registration.honeypot.not.submitted">
         <source>start.registration.honeypot.not.submitted</source>
         <target>You haven't submitted our spam protection field. Please try again, including it empty this time.</target>

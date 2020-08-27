@@ -17,7 +17,6 @@ use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
@@ -30,9 +29,6 @@ class EmailAddressTypeTest extends TypeTestCase
 
     /** @var PendingOptInRepositoryInterface|MockObject */
     protected $pendingOptInRepository;
-
-    /** @var RecipientRepositoryInterface|MockObject */
-    protected $recipientRepository;
 
     /** @var EmailAddressFactoryInterface */
     protected $emailAddressFactory;
@@ -47,7 +43,6 @@ class EmailAddressTypeTest extends TypeTestCase
     {
         $this->blockedEmailAddressHashRepository = $this->createMock(BlockedEmailAddressHashRepositoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
-        $this->recipientRepository = $this->createMock(RecipientRepositoryInterface::class);
         $this->emailAddressFactory = new EmailAddressFactory('secret');
         $this->translator = $this->createMock(TranslatorInterface::class);
         $this->translator->method('trans')->willReturnArgument(0);
@@ -163,28 +158,6 @@ class EmailAddressTypeTest extends TypeTestCase
     /**
      * @test
      */
-    public function does_not_validate_with_already_registered_email_address()
-    {
-        $this->recipientRepository
-            ->method('isEmailAddressAlreadyRegistered')
-            ->with('webfactory@example.com')
-            ->willReturn(true);
-
-        $this->form->submit([
-            'emailAddress' => 'webfactory@example.com',
-        ]);
-
-        $this->assertFalse($this->form->isValid());
-        $this->assertCount(1, $this->form->getErrors(true, true));
-        $this->assertEquals(
-            EmailAddressType::ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED,
-            $this->form->getErrors(true, true)->current()->getMessage()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function provides_EmailAddress_if_submitted_with_valid_data()
     {
         $this->form->submit([
@@ -206,7 +179,6 @@ class EmailAddressTypeTest extends TypeTestCase
                     new EmailAddressType(
                         $this->blockedEmailAddressHashRepository,
                         $this->pendingOptInRepository,
-                        $this->recipientRepository,
                         $this->emailAddressFactory,
                         self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS,
                         $this->translator

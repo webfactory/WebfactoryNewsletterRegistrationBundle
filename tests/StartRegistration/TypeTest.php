@@ -24,7 +24,7 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegis
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
-class StartRegistrationTypeTest extends TypeTestCase
+class TypeTest extends TypeTestCase
 {
     protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
 
@@ -228,31 +228,6 @@ class StartRegistrationTypeTest extends TypeTestCase
     /**
      * @test
      */
-    public function does_not_validate_with_already_registered_email_address()
-    {
-        $this->recipientRepository
-            ->method('isEmailAddressAlreadyRegistered')
-            ->with('webfactory@example.com')
-            ->willReturn(true);
-
-        $form = $this->factory->create(StartRegistrationType::class);
-        $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
-        ]);
-
-        $this->assertTrue($form->isSynchronized());
-        $this->assertFalse($form->isValid());
-        $this->assertCount(1, $form->getErrors(true, true));
-        $this->assertEquals(
-            EmailAddressType::ERROR_EMAIL_ADDRESS_ALREADY_REGISTERED,
-            $form->getErrors(true, true)->current()->getMessage()
-        );
-    }
-
-    /**
-     * @test
-     */
     public function does_not_validate_if_newsletter_choices_exist_but_none_was_selected()
     {
         $this->setUpTwoNewsletters();
@@ -351,7 +326,6 @@ class StartRegistrationTypeTest extends TypeTestCase
                     new EmailAddressType(
                         $this->blockedEmailAddressHashRepository,
                         $this->pendingOptInRepository,
-                        $this->recipientRepository,
                         $this->emailAddressFactory,
                         self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS,
                         $this->translator
