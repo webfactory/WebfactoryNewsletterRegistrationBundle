@@ -90,7 +90,7 @@ Configure the bundle:
 // config.yml
 
 parameters:
-  webfactory.newsletter_registration.opt_in_sender_address: 'newsletter-registration@example.com'
+  webfactory.newsletter_registration.email_sender_address: 'newsletter@example.com'
   webfactory.newsletter_registration.secret: 'your-secret' # do not use Symfony's %secret%!
   webfactory.newsletter_registration.time_limit_for_opt_in_in_hours: 72 # default value
   webfactory.newsletter_registration.minimal_interval_between_op_in_emails_in_hours: 1 # default value

@@ -55,7 +55,7 @@ services:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
             - '@Symfony\Component\Mailer\MailerInterface'
-            - '%webfactory.newsletter_registration.opt_in_sender_address%'
+            - '%webfactory.newsletter_registration.email_sender_address%'
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
             - '%webfactory.newsletter_registration.time_limit_for_opt_in_in_hours%'
