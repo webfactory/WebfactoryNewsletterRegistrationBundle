@@ -4,7 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 interface RecipientRepositoryInterface
 {
-    public function isEmailAddressAlreadyRegistered(EmailAddress $emailAddress): bool;
+    public function findByEmailAddress(EmailAddress $emailAddress): ?RecipientInterface;
 
     public function save(RecipientInterface $pendingOptIn): void;
 

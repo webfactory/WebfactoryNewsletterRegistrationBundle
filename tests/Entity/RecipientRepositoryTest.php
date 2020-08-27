@@ -28,19 +28,21 @@ class RecipientRepositoryTest extends TestCase
      */
     public function isEmailAddressAlreadyRegistered_returns_true_if_already_registered()
     {
-        $alreadyRegisteredEmailAddress = new EmailAddress('webfactory@example.com', null);
-        $this->infrastructure->import(new Recipient('uuid-1', $alreadyRegisteredEmailAddress));
+        $recipientFixture = new Recipient('uuid-1', new EmailAddress('webfactory@example.com', null));
+        $this->infrastructure->import($recipientFixture);
 
-        $this->assertTrue($this->repository->isEmailAddressAlreadyRegistered($alreadyRegisteredEmailAddress));
+        $retrievedRecipient = $this->repository->findByEmailAddress($recipientFixture->getEmailAddress());
+        $this->assertNotNull($retrievedRecipient);
+        $this->assertEquals($recipientFixture->getUuid(), $retrievedRecipient->getUuid());
     }
 
     /**
      * @test
      */
-    public function isEmailAddressAlreadyRegistered_returns_false_if_not_already_registered()
+    public function isEmailAddressAlreadyRegistered_returns_null_if_not_already_registered()
     {
-        $this->assertFalse(
-            $this->repository->isEmailAddressAlreadyRegistered(new EmailAddress('webfactory@example.com', null))
+        $this->assertNull(
+            $this->repository->findByEmailAddress(new EmailAddress('webfactory@example.com', null))
         );
     }
 }

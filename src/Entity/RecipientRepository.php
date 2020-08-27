@@ -6,16 +6,14 @@ use Doctrine\ORM\EntityRepository;
 
 class RecipientRepository extends EntityRepository implements RecipientRepositoryInterface
 {
-    public function isEmailAddressAlreadyRegistered(EmailAddress $emailAddress): bool
+    public function findByEmailAddress(EmailAddress $emailAddress): ?RecipientInterface
     {
-        $recipient = $this->createQueryBuilder('recipient')
+        return $this->createQueryBuilder('recipient')
             ->select()
             ->where('recipient.emailAddress = :emailAddress')
             ->setParameter('emailAddress', $emailAddress->getEmailAddress())
             ->getQuery()
             ->getOneOrNullResult();
-
-        return null !== $recipient;
     }
 
     public function save(RecipientInterface $pendingOptIn): void
