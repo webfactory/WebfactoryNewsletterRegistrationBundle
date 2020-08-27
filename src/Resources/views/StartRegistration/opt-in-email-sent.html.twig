@@ -1,13 +1,16 @@
-<h1>Confirm your Newsletter Registration</h1>
+{#
+Intentially vague to prevent leaking user meta information, see
+https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-and-error-messages
+#}
+<h1>Your Newsletter Registration</h1>
 
 <p>
-    We've received your newsletter registration, but for privacy and spam protection reasons, we won't send any
-    newsletters to {{ pendingOptIn.emailAddress }} until you've confirmed ownership of this email address.
+    We've sent you an email to {{ pendingOptIn.emailAddress }} with further instructions for your newsletter registration.
+    If you don't receive it in a couple of minutes, please have a look in your spam folder.
 </p>
+
 <p>
-    To do so, please follow the link in the email with the subject "{{ optInEmail.getSubject() }}" that we've just sent
-    to {{ pendingOptIn.emailAddress }}. Then we'll activate your registration immediately.
-</p>
-<p>
-    If you don't receive our email in a couple of minutes, please have a look in your spam folder.
+    If your email address is not yet registered yet, please note that for privacy and spam protection reasons, we won't
+    send any newsletters to {{ pendingOptIn.emailAddress }} until you've confirmed ownership of this email address.
+    Please see the email for details on that.
 </p>

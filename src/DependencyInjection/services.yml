@@ -4,7 +4,7 @@ services:
             - '@Symfony\Component\Form\FormFactoryInterface'
             - '@Twig\Environment'
             - '@Symfony\Component\Routing\RouterInterface'
-            - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface'
             - '@Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface'
@@ -50,6 +50,26 @@ services:
         arguments:
             - '@router'
         tags: ['form.type']
+
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTask:
+        arguments:
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
+            - '@Twig\Environment'
+            - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTaskInterface'
+
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTask'
+
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTask:
+        arguments:
+            - '@Symfony\Component\Mailer\MailerInterface'
+            - '%webfactory.newsletter_registration.email_sender_address%'
+            - '@Twig\Environment'
+            - '@router'
+
+    Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTaskInterface:
+        alias: 'Webfactory\NewsletterRegistrationBundle\StartRegistration\SendEditRegistrationLinkTask'
 
     Webfactory\NewsletterRegistrationBundle\StartRegistration\Task:
         arguments:

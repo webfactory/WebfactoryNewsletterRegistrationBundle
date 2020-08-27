@@ -6,11 +6,12 @@ WebfactoryNewsletterRegistrationBundle
 ![](https://github.com/webfactory/WebfactoryNewsletterRegistrationBundle/workflows/Coding%20Standards/badge.svg)
 
 This Symfony bundle features a newsletter registration template with attention to data avoidance for privacy
-protection, and a smooth user journey:
+protection:
 
-- Sign up with email address only
+- Sign up with email address only (which is also a low barrier for a better interaction rate)
 - No personal data (like the email address) is saved until the newsletter recipient verifies their email address (double opt in)
 - Pending opt in processes get deleted after a configurable amount of time (default: 72 hours)
+- Intentionally vague messages to prevent leaking user meta information (e.g. if some email address is registered)
 
 To reduce the amount of unwanted emails, the following ideas are implemented:
 

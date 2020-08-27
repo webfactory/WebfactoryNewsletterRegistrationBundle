@@ -15,11 +15,12 @@ use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface as 
 use Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type as DeleteRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface as EditRegistrationTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\EditRegistration\Type as EditRegistrationType;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInIsOutdatedException;
-use Webfactory\NewsletterRegistrationBundle\StartRegistration\TaskInterface as StartRegistrationTaskInterface;
+use Webfactory\NewsletterRegistrationBundle\StartRegistration\HandleRegistrationSubmissionTaskInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 
 class Controller
@@ -33,8 +34,8 @@ class Controller
     /** @var UrlGeneratorInterface */
     protected $urlGenerator;
 
-    /** @var StartRegistrationTaskInterface */
-    protected $startRegistrationTask;
+    /** @var HandleRegistrationSubmissionTaskInterface */
+    protected $handleRegistrationSubmissionTask;
 
     /** @var ConfirmRegistrationTaskInterface */
     protected $confirmRegistrationTask;
@@ -58,7 +59,7 @@ class Controller
         FormFactoryInterface $formFactory,
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
-        StartRegistrationTaskInterface $startRegistrationTask,
+        HandleRegistrationSubmissionTaskInterface $handleRegistrationSubmissionTask,
         ConfirmRegistrationTaskInterface $confirmRegistrationTask,
         EditRegistrationTaskInterface $editRegistrationTask,
         DeleteRegistrationTaskInterface $deleteRegistrationTask,
@@ -69,7 +70,7 @@ class Controller
         $this->formFactory = $formFactory;
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
-        $this->startRegistrationTask = $startRegistrationTask;
+        $this->handleRegistrationSubmissionTask = $handleRegistrationSubmissionTask;
         $this->confirmRegistrationTask = $confirmRegistrationTask;
         $this->editRegistrationTask = $editRegistrationTask;
         $this->deleteRegistrationTask = $deleteRegistrationTask;
@@ -91,21 +92,10 @@ class Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var PendingOptInInterface $pendingOptIn */
             $pendingOptIn = $form->getData();
-            $optInEmail = $this->startRegistrationTask->startRegistration($pendingOptIn);
 
-            // Usually, we would send a redirect here to prevent double posts. But we want to provide personal data
-            // to the upcoming view - personal data that we do not want to save before the user confirmed their
-            // registration. Hence, the downsides of double posts are dealt with in the form itself.
-            return new Response(
-                $this->twig->render(
-                    '@WebfactoryNewsletterRegistration/StartRegistration/opt-in-email-sent.html.twig',
-                    [
-                        'pendingOptIn' => $pendingOptIn,
-                        'optInEmail' => $optInEmail,
-                    ]
-                )
-            );
+            return $this->handleRegistrationSubmissionTask->handleRegistrationSubmission($pendingOptIn);
         }
 
         return new Response(
