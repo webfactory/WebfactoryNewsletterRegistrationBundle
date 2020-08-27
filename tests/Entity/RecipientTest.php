@@ -40,7 +40,7 @@ class RecipientTest extends TestCase
         $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1'), new Newsletter(2, 'newsletter 2')];
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $newslettersForPendingOptIn);
 
-        $recipient = Recipient::fromPendingOptIn($pendingOptIn, new EmailAddress('webfactory@example.com', null));
+        $recipient = Recipient::fromPendingOptIn($pendingOptIn);
 
         $this->assertEquals('uuid', $recipient->getUuid());
         $this->assertEquals('webfactory@example.com', (string) $recipient->getEmailAddress());
@@ -55,6 +55,6 @@ class RecipientTest extends TestCase
     {
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 
-        Recipient::fromPendingOptIn($pendingOptIn, new EmailAddress('webfactory@example.com', null));
+        Recipient::fromPendingOptIn($pendingOptIn);
     }
 }

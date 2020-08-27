@@ -23,8 +23,7 @@ class RecipientFactoryTest extends TestCase
 
         $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1')];
         $recipient = (new RecipientFactory())->fromPendingOptIn(
-            new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $newslettersForPendingOptIn),
-            new EmailAddress('webfactory@example.com', null)
+            new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $newslettersForPendingOptIn)
         );
 
         $this->assertEquals('uuid', $recipient->getUuid());

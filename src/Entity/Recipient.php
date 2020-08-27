@@ -64,11 +64,11 @@ abstract class Recipient implements RecipientInterface
      */
     protected $newsletters;
 
-    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn, EmailAddress $emailAddress): RecipientInterface
+    public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn): RecipientInterface
     {
         return new static(
             $pendingOptIn->getUuid(),
-            $emailAddress,
+            $pendingOptIn->getEmailAddress(),
             $pendingOptIn->getNewsletters()
         );
     }
