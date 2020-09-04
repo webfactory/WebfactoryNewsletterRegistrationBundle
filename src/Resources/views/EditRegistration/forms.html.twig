@@ -18,6 +18,8 @@
 
         <input type="submit" value="Change newsletters you're subscribed to" />
     {{ form_end(editForm) }}
+{% elseif recipient.newsletters |length == 1 %}
+    <p>You are subscribed to the "{{ recipient.newsletters[0].name }}" newsletter with your email address {{ recipient.emailAddress }}.</p>
 {% endif %}
 
 <h2>Delete your whole Newsletter Registration</h2>

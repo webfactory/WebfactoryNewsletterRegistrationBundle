@@ -192,6 +192,7 @@ class Controller
             $this->twig->render(
                 '@WebfactoryNewsletterRegistration/EditRegistration/forms.html.twig',
                 [
+                    'recipient' => $recipient,
                     'editForm' => $editForm->createView(),
                     'deleteForm' => $deleteForm->createView(),
                 ]
