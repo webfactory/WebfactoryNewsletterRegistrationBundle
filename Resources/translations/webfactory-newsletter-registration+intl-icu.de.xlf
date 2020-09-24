@@ -11,7 +11,7 @@
       </trans-unit>
       <trans-unit id="QUJEZDo" resname="start.registration.opt.in.email.limit.reached">
         <source>start.registration.opt.in.email.limit.reached</source>
-        <target>Diese Email-Adresse wird bereits registriert und eine Email mit Bestätigungslink wurde versand. Bitte folgen Sie diesem Link um die Registrierung abzuschließen. Zum Spamschutz kann die nächste Bestätigungs-Email erst um {time} Uhr angefordert werden.</target>
+        <target>Diese Email-Adresse wird bereits registriert und eine Email mit Bestätigungslink wurde versandt. Bitte folgen Sie diesem Link um die Registrierung abzuschließen. Zum Spamschutz kann die nächste Bestätigungs-Email erst um {time} Uhr angefordert werden.</target>
       </trans-unit>
       <trans-unit id="IxI29VV" resname="start.registration.honeypot.not.submitted">
         <source>start.registration.honeypot.not.submitted</source>
