@@ -62,11 +62,16 @@ abstract class PendingOptIn implements PendingOptInInterface
      */
     protected $newsletters;
 
-    public static function fromRegistrationFormData(array $formData): PendingOptInInterface
+    public static function fromRegistrationFormData(array $formData): ?PendingOptInInterface
     {
+        $emailAddress = $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS];
+        if (!($emailAddress instanceof EmailAddress)) {
+            return null;
+        }
+
         return new static(
             null,
-            $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS],
+            $emailAddress,
             $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] ?? []
         );
     }

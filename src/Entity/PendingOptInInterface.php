@@ -4,7 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 interface PendingOptInInterface
 {
-    public static function fromRegistrationFormData(array $formData): self;
+    public static function fromRegistrationFormData(array $formData): ?self;
 
     public function getUuid(): string;
 

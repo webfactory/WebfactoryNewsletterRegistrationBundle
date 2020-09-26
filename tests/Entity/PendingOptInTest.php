@@ -66,6 +66,18 @@ class PendingOptInTest extends TestCase
     /**
      * @test
      */
+    public function static_construction_without_email_address_returns_NULL(): void
+    {
+        $this->assertNull(
+            PendingOptIn::fromRegistrationFormData([
+                StartRegistrationType::ELEMENT_EMAIL_ADDRESS => null,
+            ])
+        );
+    }
+
+    /**
+     * @test
+     */
     public function setEmailAddressIfItMatchesStoredHash_sets_EmailAddress_if_it_matches_stored_Hash(): void
     {
         $emailAddressFixture = new EmailAddress('webfactory@example.com', 'secret');

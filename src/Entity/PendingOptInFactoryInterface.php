@@ -4,5 +4,5 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 interface PendingOptInFactoryInterface
 {
-    public function fromRegistrationFormData(array $formData): PendingOptInInterface;
+    public function fromRegistrationFormData(array $formData): ?PendingOptInInterface;
 }

@@ -11,7 +11,7 @@ class PendingOptInFactory implements PendingOptInFactoryInterface
 {
     use DetermineAppsSubclassTrait;
 
-    public function fromRegistrationFormData(array $formData): PendingOptInInterface
+    public function fromRegistrationFormData(array $formData): ?PendingOptInInterface
     {
         $appsPendingOptInClass = $this->getAppsSubclassOf(
             PendingOptInInterface::class,
