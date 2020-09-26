@@ -36,4 +36,9 @@ class BlockedEmailAddressHash implements BlockedEmailAddressHashInterface
         $this->hash = $hash;
         $this->blockDate = $blockDate ?? new \DateTimeImmutable();
     }
+
+    public function getBlockedUntilDate(\DateInterval $blockDuration): \DateTimeImmutable
+    {
+        return $this->blockDate->add($blockDuration);
+    }
 }

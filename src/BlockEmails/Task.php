@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\BlockEmails;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHash;
+use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
@@ -59,5 +60,12 @@ class Task implements TaskInterface
     public function getBlockDurationInDays(): int
     {
         return $this->blockDurationInDays;
+    }
+
+    public function getBlockedEmailAddressHash(string $emailAddress): ?BlockedEmailAddressHashInterface
+    {
+        return $this->blockedEmailHashesRepository->findByEmailAddress(
+            $this->emailAddressFactory->fromString($emailAddress)
+        );
     }
 }
