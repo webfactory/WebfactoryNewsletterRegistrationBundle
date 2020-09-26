@@ -132,7 +132,7 @@ class Controller
         $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);
         if (null === $pendingOptIn) {
             $blockedEmailAddressHash = $this->blockEmailsTask->getBlockedEmailAddressHash($emailAddress);
-            if ($blockedEmailAddressHash !== null) {
+            if (null !== $blockedEmailAddressHash) {
                 $blockedUntilDate = $blockedEmailAddressHash->getBlockedUntilDate(
                     new \DateInterval('P'.$this->blockEmailsTask->getBlockDurationInDays().'D')
                 );
@@ -142,11 +142,11 @@ class Controller
                         '@WebfactoryNewsletterRegistration/StartRegistration/opt-in-failed-due-to-blocked-email-address.html.twig',
                         [
                             'emailAddress' => $emailAddress,
-                            'blockedUntilDate' => $blockedUntilDate
+                            'blockedUntilDate' => $blockedUntilDate,
                         ]
                     )
                 );
-            };
+            }
 
             return new Response(
                 $this->twig->render('@WebfactoryNewsletterRegistration/StartRegistration/opt-in-failed-due-to-unknown-uuid.html.twig')
