@@ -9,6 +9,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHash;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
@@ -22,6 +23,9 @@ class TaskTest extends TestCase
     /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
     protected $blockedEmailHashesRepository;
 
+    /** @var PendingOptInRepositoryInterface */
+    protected $pendingOptInRepository;
+
     /** @var Task */
     protected $task;
 
@@ -31,10 +35,12 @@ class TaskTest extends TestCase
 
         $this->emailAddressFactory = new EmailAddressFactory('secret');
         $this->blockedEmailHashesRepository = $this->createMock(BlockedEmailAddressHashRepositoryInterface::class);
+        $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->task = new Task(
             self::BLOCK_DURATION_IN_DAYS,
             $this->emailAddressFactory,
-            $this->blockedEmailHashesRepository
+            $this->blockedEmailHashesRepository,
+            $this->pendingOptInRepository
         );
     }
 
@@ -82,6 +88,17 @@ class TaskTest extends TestCase
         $this->blockedEmailHashesRepository
             ->expects($this->once())
             ->method('save');
+
+        $this->task->blockEmailsFor($pendingOptIn, 'webfactory@example.com');
+    }
+
+    /**
+     * @test
+     */
+    public function removes_PendingOpIn()
+    {
+        $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
+        $this->pendingOptInRepository->expects($this->once())->method('remove')->with($pendingOptIn);
 
         $this->task->blockEmailsFor($pendingOptIn, 'webfactory@example.com');
     }

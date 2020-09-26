@@ -130,6 +130,7 @@ services:
             - '%webfactory.newsletter_registration.block_email_address_duration_in_days%'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface'
 
     Webfactory\NewsletterRegistrationBundle\BlockEmails\TaskInterface:
         alias: 'Webfactory\NewsletterRegistrationBundle\BlockEmails\Task'
