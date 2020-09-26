@@ -1,0 +1,11 @@
+{# string emailAddress #}
+{# int blockDurationInDays #}
+<h1>Block Email Address?</h1>
+
+<p>
+    If you really want to block your email address "{{ emailAddress }}", please just press the following button:
+</p>
+
+{{ form_start(confirmBlockForm) }}
+    {{ form_widget(confirmBlockForm.submit, {'label': 'Block '~emailAddress~' for '~blockDurationInDays~' days', 'attr': {'class': 'danger'}}) }}
+{{ form_end(confirmBlockForm) }}

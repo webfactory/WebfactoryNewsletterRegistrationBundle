@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -227,12 +228,13 @@ class Controller
     /**
      * @Route("/{uuid}/{emailAddress}/block/", name="newsletter-registration-block-emails", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
      *
-     * @param string $uuid
-     * @param string $emailAddress
+     * @param string  $uuid
+     * @param string  $emailAddress
+     * @param Request $request
      *
      * @return RedirectResponse|Response
      */
-    public function blockEmails(string $uuid, string $emailAddress): Response
+    public function blockEmails(string $uuid, string $emailAddress, Request $request): Response
     {
         $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);
         if (null === $pendingOptIn) {
@@ -244,20 +246,38 @@ class Controller
             );
         }
 
-        try {
-            $this->blockEmailsTask->blockEmailsFor($pendingOptIn, $emailAddress);
-        } catch (EmailAddressDoesNotMatchHashOfPendingOptInException $exception) {
-            return new Response(
-                $this->twig->render(
-                    '@WebfactoryNewsletterRegistration/BlockEmails/block-failed-due-to-email-address-not-matching.html.twig'
-                )
-            );
+        $form = $this->formFactory->createNamedBuilder('')
+            ->add('submit', SubmitType::class)
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->blockEmailsTask->blockEmailsFor($pendingOptIn, $emailAddress);
+
+                return new Response(
+                    $this->twig->render(
+                        '@WebfactoryNewsletterRegistration/BlockEmails/emails-blocked.html.twig',
+                        ['blockDurationInDays' => $this->blockEmailsTask->getBlockDurationInDays()]
+                    )
+                );
+            } catch (EmailAddressDoesNotMatchHashOfPendingOptInException $exception) {
+                return new Response(
+                    $this->twig->render(
+                        '@WebfactoryNewsletterRegistration/BlockEmails/block-failed-due-to-email-address-not-matching.html.twig'
+                    )
+                );
+            }
         }
 
         return new Response(
             $this->twig->render(
-                '@WebfactoryNewsletterRegistration/BlockEmails/emails-blocked.html.twig',
-                ['blockDurationInDays' => $this->blockEmailsTask->getBlockDurationInDays()]
+                '@WebfactoryNewsletterRegistration/BlockEmails/form.html.twig',
+                [
+                    'emailAddress' => $emailAddress,
+                    'blockDurationInDays' => $this->blockEmailsTask->getBlockDurationInDays(),
+                    'confirmBlockForm' => $form->createView(),
+                ]
             )
         );
     }
