@@ -55,11 +55,6 @@ class Task implements TaskInterface
     }
 
     /**
-     * @param PendingOptInInterface $pendingOptIn
-     * @param string                $emailAddressString
-     *
-     * @return RecipientInterface
-     *
      * @throws EmailAddressDoesNotMatchHashOfPendingOptInException
      * @throws PendingOptInIsOutdatedException
      */
