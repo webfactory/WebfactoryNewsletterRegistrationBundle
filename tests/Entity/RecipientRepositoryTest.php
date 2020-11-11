@@ -3,9 +3,9 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
+use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
-use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
 class RecipientRepositoryTest extends TestCase

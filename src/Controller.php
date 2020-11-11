@@ -82,10 +82,6 @@ class Controller
 
     /**
      * @Route("/", name="newsletter-registration-start")
-     *
-     * @param Request $request
-     *
-     * @return Response
      */
     public function startRegistration(Request $request): Response
     {
@@ -121,11 +117,6 @@ class Controller
 
     /**
      * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@((?!\/).)*"})
-     *
-     * @param string $uuid
-     * @param string $emailAddress
-     *
-     * @return Response
      */
     public function confirmRegistration(string $uuid, string $emailAddress): Response
     {
@@ -172,11 +163,6 @@ class Controller
 
     /**
      * @Route("/{uuid}/", name="newsletter-registration-edit", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
-     *
-     * @param string  $uuid
-     * @param Request $request
-     *
-     * @return Response
      */
     public function editRegistration(string $uuid, Request $request): Response
     {
@@ -221,8 +207,6 @@ class Controller
     /**
      * @Route("/{uuid}/delete/", name="newsletter-registration-delete", methods={"POST"}, requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
      *
-     * @param string $uuid
-     *
      * @return RedirectResponse|Response
      */
     public function deleteRegistration(string $uuid): Response
@@ -244,10 +228,6 @@ class Controller
 
     /**
      * @Route("/{uuid}/{emailAddress}/block/", name="newsletter-registration-block-emails", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
-     *
-     * @param string  $uuid
-     * @param string  $emailAddress
-     * @param Request $request
      *
      * @return RedirectResponse|Response
      */

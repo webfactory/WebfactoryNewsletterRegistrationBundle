@@ -37,9 +37,6 @@ class Task implements TaskInterface
     }
 
     /**
-     * @param PendingOptInInterface $pendingOptIn
-     * @param string                $emailAddressString
-     *
      * @throws EmailAddressDoesNotMatchHashOfPendingOptInException
      */
     public function blockEmailsFor(PendingOptInInterface $pendingOptIn, string $emailAddressString): void
