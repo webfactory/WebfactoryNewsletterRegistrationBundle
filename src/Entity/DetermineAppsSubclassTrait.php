@@ -2,9 +2,11 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use Exception;
+
 trait DetermineAppsSubclassTrait
 {
-    protected function getAppsSubclassOf(string $parentClass, \Exception $exceptionToThrowIfNotDeterminable): ?string
+    protected function getAppsSubclassOf(string $parentClass, Exception $exceptionToThrowIfNotDeterminable): ?string
     {
         foreach (get_declared_classes() as $class) {
             if (

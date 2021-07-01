@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityRepository;
 
 class BlockedEmailAddressHashRepository extends EntityRepository implements BlockedEmailAddressHashRepositoryInterface
@@ -23,7 +24,7 @@ class BlockedEmailAddressHashRepository extends EntityRepository implements Bloc
         $this->getEntityManager()->flush();
     }
 
-    public function removeOutdated(\DateTimeImmutable $thresholdDate): int
+    public function removeOutdated(DateTimeImmutable $thresholdDate): int
     {
         return $this->createQueryBuilder('blockedEmailAddressHash')
             ->delete()

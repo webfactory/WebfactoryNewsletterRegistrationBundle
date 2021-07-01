@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
+use DateTimeImmutable;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -97,7 +98,7 @@ class Task implements TaskInterface
                         ['emailAddress' => (string) $pendingOptIn->getEmailAddress(), 'uuid' => $pendingOptIn->getUuid()],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
-                    'dateUrlForConfirmationIsValidUntil' => new \DateTimeImmutable('+'.$this->timeLimitForOpInInHours.' hour'),
+                    'dateUrlForConfirmationIsValidUntil' => new DateTimeImmutable('+'.$this->timeLimitForOpInInHours.' hour'),
                     'urlForBlockingEmails' => $this->urlGenerator->generate(
                         'newsletter-registration-block-emails',
                         [

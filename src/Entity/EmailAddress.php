@@ -23,7 +23,7 @@ class EmailAddress
 
     protected function normalize(string $string): string
     {
-        return mb_convert_case($string, MB_CASE_LOWER, 'UTF-8');
+        return mb_convert_case($string, \MB_CASE_LOWER, 'UTF-8');
     }
 
     public function getEmailAddress(): string

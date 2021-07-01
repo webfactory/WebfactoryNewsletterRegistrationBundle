@@ -2,6 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateTimeImmutable;
+
 interface PendingOptInRepositoryInterface
 {
     public function findByEmailAddress(EmailAddress $emailAddress): ?PendingOptInInterface;
@@ -15,5 +17,5 @@ interface PendingOptInRepositoryInterface
     /**
      * @return int Number of deleted PendingOptIns
      */
-    public function removeOutdated(\DateTimeImmutable $thresholdDate): int;
+    public function removeOutdated(DateTimeImmutable $thresholdDate): int;
 }

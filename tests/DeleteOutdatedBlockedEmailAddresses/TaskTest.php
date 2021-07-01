@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\DeleteOutdatedBlockedEmailAddresses;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\Task;
@@ -42,14 +43,14 @@ class TaskTest extends TestCase
      */
     public function sets_threshold_date_from_now_if_called_without_one(): void
     {
-        $expected = new \DateTimeImmutable('-'.self::BLOCK_EMAIL_DURATION_IN_DAYS.' hour');
+        $expected = new DateTimeImmutable('-'.self::BLOCK_EMAIL_DURATION_IN_DAYS.' hour');
         $allowedDeltaInSeconds = 10;
 
         $this->repository
             ->expects($this->once())
             ->method('removeOutdated')
             ->with($this->callback(
-                function (\DateTimeImmutable $calculdatedThresholdDate) use ($expected, $allowedDeltaInSeconds) {
+                function (DateTimeImmutable $calculdatedThresholdDate) use ($expected, $allowedDeltaInSeconds) {
                     $delta = $calculdatedThresholdDate->diff($expected, true);
 
                     return 0 === $delta->y

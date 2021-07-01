@@ -2,11 +2,12 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Exception;
 
+use Throwable;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 
 class PendingOptInIsOutdatedException extends WebfactoryNewsletterRegistrationException
 {
-    public function __construct(PendingOptInInterface $pendingOptIn, $code = 0, \Throwable $previous = null)
+    public function __construct(PendingOptInInterface $pendingOptIn, $code = 0, Throwable $previous = null)
     {
         parent::__construct(
             'The PendingOptIn with uuid '.$pendingOptIn->getUuid().' is outdated and can no longer be '

@@ -2,6 +2,9 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateInterval;
+use DateTimeImmutable;
+
 interface PendingOptInInterface
 {
     public static function fromRegistrationFormData(array $formData): ?self;
@@ -17,12 +20,12 @@ interface PendingOptInInterface
      */
     public function getNewsletters(): array;
 
-    public function getRegistrationDate(): \DateTimeImmutable;
+    public function getRegistrationDate(): DateTimeImmutable;
 
-    public function isOutdated(\DateTimeImmutable $threshold): bool;
+    public function isOutdated(DateTimeImmutable $threshold): bool;
 
     public function isAllowedToReceiveAnotherOptInEmail(
-        \DateInterval $minimalIntervalBetweenOptInEmailsInHours,
-        ?\DateTimeImmutable $now = null
+        DateInterval $minimalIntervalBetweenOptInEmailsInHours,
+        ?DateTimeImmutable $now = null
     ): bool;
 }

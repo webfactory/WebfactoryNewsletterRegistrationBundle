@@ -2,6 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateTimeImmutable;
+
 interface BlockedEmailAddressHashRepositoryInterface
 {
     public function findByEmailAddress(EmailAddress $emailAddress): ?BlockedEmailAddressHashInterface;
@@ -13,5 +15,5 @@ interface BlockedEmailAddressHashRepositoryInterface
     /**
      * @return int Number of deleted BlockedEmailAddressHashes
      */
-    public function removeOutdated(\DateTimeImmutable $thresholdDate): int;
+    public function removeOutdated(DateTimeImmutable $thresholdDate): int;
 }

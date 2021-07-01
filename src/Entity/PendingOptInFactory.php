@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use ReflectionMethod;
 use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInClassCouldNotBeDeterminedException;
 
 /**
@@ -17,7 +18,7 @@ class PendingOptInFactory implements PendingOptInFactoryInterface
             PendingOptInInterface::class,
             new PendingOptInClassCouldNotBeDeterminedException()
         );
-        $reflectionMethod = new \ReflectionMethod($appsPendingOptInClass, 'fromRegistrationFormData');
+        $reflectionMethod = new ReflectionMethod($appsPendingOptInClass, 'fromRegistrationFormData');
 
         return $reflectionMethod->invoke(null, $formData);
     }

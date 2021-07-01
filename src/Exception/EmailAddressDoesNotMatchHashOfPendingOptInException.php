@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Exception;
 
+use Throwable;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 
@@ -11,7 +12,7 @@ class EmailAddressDoesNotMatchHashOfPendingOptInException extends WebfactoryNews
         EmailAddress $emailAddress,
         PendingOptInInterface $pendingOptIn,
         $code = 0,
-        \Throwable $previous = null
+        Throwable $previous = null
     ) {
         parent::__construct(
             'The email address "'.$emailAddress->getEmailAddress().'" does not correspond to the hash of the '

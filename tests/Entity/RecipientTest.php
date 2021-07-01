@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
@@ -26,7 +27,7 @@ class RecipientTest extends TestCase
     public function optInDate_is_added_if_omitted()
     {
         $this->assertEqualsWithDelta(
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             (new Recipient('uuid', new EmailAddress('webfactory@example.com', null)))->getOptInDate(),
             1
         );
