@@ -2,6 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 
+use Closure;
+use DateInterval;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\DataMapperInterface;
@@ -15,6 +17,7 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Traversable;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -95,7 +98,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
         ]);
     }
 
-    protected function createEmailAddressIsAllowedToReceiveOptInEmailsConstraint(): \Closure
+    protected function createEmailAddressIsAllowedToReceiveOptInEmailsConstraint(): Closure
     {
         $that = $this;
 
@@ -117,7 +120,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
 
             $pendingOptIn = $that->pendingOptInRepository->findByEmailAddress($emailAddress);
 
-            $dateInterval = new \DateInterval('PT'.$that->minimalIntervalBetweenOptInEmailsInHours.'H');
+            $dateInterval = new DateInterval('PT'.$that->minimalIntervalBetweenOptInEmailsInHours.'H');
             if (null !== $pendingOptIn && false === $pendingOptIn->isAllowedToReceiveAnotherOptInEmail($dateInterval)) {
                 $executionContext->addViolation(
                     $this->translator->trans(
@@ -131,8 +134,8 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param EmailAddress|null            $viewData
-     * @param FormInterface[]|\Traversable $forms
+     * @param EmailAddress|null           $viewData
+     * @param FormInterface[]|Traversable $forms
      */
     public function mapDataToForms($viewData, $forms)
     {

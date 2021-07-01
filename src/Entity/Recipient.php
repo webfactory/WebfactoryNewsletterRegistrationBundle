@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -49,7 +50,7 @@ abstract class Recipient implements RecipientInterface
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
      *
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     protected $optInDate;
 
@@ -77,12 +78,12 @@ abstract class Recipient implements RecipientInterface
         ?string $uuid,
         EmailAddress $emailAddress,
         array $newsletters = [],
-        ?\DateTimeImmutable $optInDate = null
+        ?DateTimeImmutable $optInDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $emailAddress->getEmailAddress();
         $this->newsletters = new ArrayCollection($newsletters);
-        $this->optInDate = $optInDate ?: new \DateTimeImmutable();
+        $this->optInDate = $optInDate ?: new DateTimeImmutable();
     }
 
     public function getUuid(): string
@@ -95,7 +96,7 @@ abstract class Recipient implements RecipientInterface
         return new EmailAddress($this->emailAddress, null);
     }
 
-    public function getOptInDate(): \DateTimeImmutable
+    public function getOptInDate(): DateTimeImmutable
     {
         return $this->optInDate;
     }

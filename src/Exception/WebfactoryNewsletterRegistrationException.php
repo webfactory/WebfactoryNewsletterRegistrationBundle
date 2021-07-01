@@ -2,6 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Exception;
 
-class WebfactoryNewsletterRegistrationException extends \Exception
+use Exception;
+
+class WebfactoryNewsletterRegistrationException extends Exception
 {
 }

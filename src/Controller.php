@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle;
 
+use DateInterval;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -125,7 +126,7 @@ class Controller
             $blockedEmailAddressHash = $this->blockEmailsTask->getBlockedEmailAddressHash($emailAddress);
             if (null !== $blockedEmailAddressHash) {
                 $blockedUntilDate = $blockedEmailAddressHash->getBlockedUntilDate(
-                    new \DateInterval('P'.$this->blockEmailsTask->getBlockDurationInDays().'D')
+                    new DateInterval('P'.$this->blockEmailsTask->getBlockDurationInDays().'D')
                 );
 
                 return new Response(

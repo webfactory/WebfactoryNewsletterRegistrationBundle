@@ -2,6 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateInterval;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -47,7 +49,7 @@ abstract class PendingOptIn implements PendingOptInInterface
     /**
      * @ORM\Column(type="datetime_immutable", nullable=false)
      *
-     * @var \DateTimeImmutable
+     * @var DateTimeImmutable
      */
     protected $registrationDate;
 
@@ -80,13 +82,13 @@ abstract class PendingOptIn implements PendingOptInInterface
         ?string $uuid,
         EmailAddress $emailAddress,
         array $newsletters = [],
-        ?\DateTimeImmutable $registrationDate = null
+        ?DateTimeImmutable $registrationDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $emailAddress;
         $this->emailAddressHash = $emailAddress->getHash();
         $this->newsletters = new ArrayCollection($newsletters);
-        $this->registrationDate = $registrationDate ?: new \DateTimeImmutable();
+        $this->registrationDate = $registrationDate ?: new DateTimeImmutable();
     }
 
     public function getUuid(): string
@@ -113,21 +115,21 @@ abstract class PendingOptIn implements PendingOptInInterface
         return $this->newsletters->toArray();
     }
 
-    public function getRegistrationDate(): \DateTimeImmutable
+    public function getRegistrationDate(): DateTimeImmutable
     {
         return $this->registrationDate;
     }
 
-    public function isOutdated(\DateTimeImmutable $threshold): bool
+    public function isOutdated(DateTimeImmutable $threshold): bool
     {
         return $this->getRegistrationDate() < $threshold;
     }
 
     public function isAllowedToReceiveAnotherOptInEmail(
-        \DateInterval $minimalIntervalBetweenOptInEmailsInHours,
-        ?\DateTimeImmutable $now = null
+        DateInterval $minimalIntervalBetweenOptInEmailsInHours,
+        ?DateTimeImmutable $now = null
     ): bool {
-        $now = $now ?? new \DateTimeImmutable();
+        $now = $now ?? new DateTimeImmutable();
 
         return $this->getRegistrationDate()->add($minimalIntervalBetweenOptInEmailsInHours) < $now;
     }

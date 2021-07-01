@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use DateTimeImmutable;
 use Doctrine\ORM\EntityRepository;
 
 class PendingOptInRepository extends EntityRepository implements PendingOptInRepositoryInterface
@@ -33,7 +34,7 @@ class PendingOptInRepository extends EntityRepository implements PendingOptInRep
         return $this->findOneBy(['uuid' => $uuid]);
     }
 
-    public function removeOutdated(\DateTimeImmutable $thresholdDate): int
+    public function removeOutdated(DateTimeImmutable $thresholdDate): int
     {
         return $this->createQueryBuilder('pendingOptIn')
             ->delete()

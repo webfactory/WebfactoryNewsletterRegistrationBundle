@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormInterface;
@@ -39,7 +40,7 @@ class EmailAddressTypeTest extends TypeTestCase
     /** @var FormInterface */
     protected $form;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->blockedEmailAddressHashRepository = $this->createMock(BlockedEmailAddressHashRepositoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
@@ -138,7 +139,7 @@ class EmailAddressTypeTest extends TypeTestCase
             null,
             $this->emailAddressFactory->fromString('webfactory@example.com'),
             [],
-            new \DateTimeImmutable('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
+            new DateTimeImmutable('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
         );
         $this->pendingOptInRepository
             ->method('findByEmailAddress')

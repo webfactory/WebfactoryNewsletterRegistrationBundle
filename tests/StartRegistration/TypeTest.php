@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\PreloadedExtension;
@@ -55,7 +56,7 @@ class TypeTest extends TypeTestCase
     /** @var Newsletter|null */
     protected $newsletter2;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->newsletterRepository = $this->createMock(NewsletterRepositoryInterface::class);
         $this->pendingOptInFactory = $this->createMock(PendingOptInFactoryInterface::class);
@@ -210,7 +211,7 @@ class TypeTest extends TypeTestCase
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
             [],
-            new \DateTimeImmutable('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
+            new DateTimeImmutable('-'.(self::MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS + 1).' hour')
         );
         $this->pendingOptInRepository
             ->method('findByEmailAddress')

@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\ConfirmRegistration;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -71,7 +72,7 @@ class TaskTest extends TestCase
             'uuid',
             $this->emailAddressFactory->fromString('webfactory@example.com'),
             [],
-            new \DateTimeImmutable('2000-01-01')
+            new DateTimeImmutable('2000-01-01')
         );
         $this->expectException(PendingOptInIsOutdatedException::class);
 

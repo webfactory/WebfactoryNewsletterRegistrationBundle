@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\ConfirmRegistration;
 
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
@@ -62,7 +63,7 @@ class Task implements TaskInterface
         PendingOptInInterface $pendingOptIn,
         string $emailAddressString
     ): RecipientInterface {
-        $thresholdDate = new \DateTimeImmutable('-'.$this->timeLimitForOptInInHours.' hour');
+        $thresholdDate = new DateTimeImmutable('-'.$this->timeLimitForOptInInHours.' hour');
         if ($pendingOptIn->isOutdated($thresholdDate)) {
             throw new PendingOptInIsOutdatedException($pendingOptIn);
         }

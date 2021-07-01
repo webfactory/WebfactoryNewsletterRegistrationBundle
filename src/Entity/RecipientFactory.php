@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
+use ReflectionMethod;
 use Webfactory\NewsletterRegistrationBundle\Exception\RecipientClassCouldNotBeDeterminedException;
 
 /**
@@ -17,7 +18,7 @@ class RecipientFactory implements RecipientFactoryInterface
             RecipientInterface::class,
             new RecipientClassCouldNotBeDeterminedException()
         );
-        $reflectionMethod = new \ReflectionMethod($appsRecipientClass, 'fromPendingOptIn');
+        $reflectionMethod = new ReflectionMethod($appsRecipientClass, 'fromPendingOptIn');
 
         return $reflectionMethod->invoke(null, $pendingOptIn);
     }

@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHash;
@@ -55,11 +56,11 @@ class BlockedEmailAddressHashRepositoryTest extends TestCase
         $this->infrastructure->import(
             BlockedEmailAddressHash::fromEmailAddress(
                 new EmailAddress('webfactory@example.com', 'secret'),
-                new \DateTimeImmutable('2000-01-01')
+                new DateTimeImmutable('2000-01-01')
             )
         );
 
-        $numberOfDeletedOnes = $this->repository->removeOutdated(new \DateTimeImmutable());
+        $numberOfDeletedOnes = $this->repository->removeOutdated(new DateTimeImmutable());
 
         $this->assertEquals(1, $numberOfDeletedOnes);
         $this->assertCount(0, $this->repository->findAll());
@@ -73,11 +74,11 @@ class BlockedEmailAddressHashRepositoryTest extends TestCase
         $this->infrastructure->import(
             BlockedEmailAddressHash::fromEmailAddress(
                 new EmailAddress('webfactory@example.com', 'secret'),
-                new \DateTimeImmutable('-1d')
+                new DateTimeImmutable('-1d')
             )
         );
 
-        $numberOfDeletedOnes = $this->repository->removeOutdated(new \DateTimeImmutable('-30d'));
+        $numberOfDeletedOnes = $this->repository->removeOutdated(new DateTimeImmutable('-30d'));
 
         $this->assertEquals(0, $numberOfDeletedOnes);
         $this->assertCount(1, $this->repository->findAll());
