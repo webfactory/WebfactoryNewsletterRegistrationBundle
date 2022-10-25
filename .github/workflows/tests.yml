@@ -15,7 +15,7 @@ jobs:
         name: PHPUnit
         runs-on: ubuntu-20.04
         steps:
-            -   uses: actions/checkout@v2
+            -   uses: actions/checkout@v3
             -   run: mkdir --mode=777 -p $GITHUB_WORKSPACE/{tmp,logs}
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
                 uses: shivammathur/setup-php@v2
