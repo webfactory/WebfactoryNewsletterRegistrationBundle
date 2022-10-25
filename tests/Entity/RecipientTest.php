@@ -50,6 +50,7 @@ class RecipientTest extends TestCase
 
     /**
      * @test
+     *
      * @doesNotPerformAssertions
      */
     public function static_construction_without_newsletters()
