@@ -37,6 +37,7 @@ class PendingOptInTest extends TestCase
 
     /**
      * @test
+     *
      * @doesNotPerformAssertions
      */
     public function static_construction_with_newsletters(): void
@@ -54,6 +55,7 @@ class PendingOptInTest extends TestCase
 
     /**
      * @test
+     *
      * @doesNotPerformAssertions
      */
     public function static_construction_without_newsletters(): void

@@ -9,6 +9,7 @@ class NewsletterTest extends TestCase
 {
     /**
      * @test
+     *
      * @doesNotPerformAssertions
      */
     public function can_be_constructed()
