@@ -13,7 +13,7 @@ env:
 jobs:
     PHPUnit:
         name: PHPUnit
-        runs-un: ubuntu-22.04
+        runs-on: ubuntu-22.04
         steps:
             -   uses: actions/checkout@v4
             -   run: mkdir --mode=777 -p $GITHUB_WORKSPACE/{tmp,logs}
