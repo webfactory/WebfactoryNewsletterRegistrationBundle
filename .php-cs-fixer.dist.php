@@ -1,6 +1,7 @@
 <?php
 
 return (new PhpCsFixer\Config())
+    ->setPhpVersion(70200)
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
