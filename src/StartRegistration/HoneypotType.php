@@ -29,7 +29,7 @@ class HoneypotType extends AbstractType
     /** @var LoggerInterface */
     protected $logger;
 
-    public function __construct(TranslatorInterface $translator, LoggerInterface $logger = null)
+    public function __construct(TranslatorInterface $translator, ?LoggerInterface $logger = null)
     {
         $this->translator = $translator;
         $this->logger = $logger ?: new NullLogger();

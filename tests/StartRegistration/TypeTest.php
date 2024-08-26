@@ -76,7 +76,7 @@ class TypeTest extends TypeTestCase
     public function view_has_no_newsletter_choices_element_if_there_are_no_choices(): void
     {
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
+        $this->assertArrayNotHasKey(StartRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
     }
 
     /**
@@ -87,7 +87,7 @@ class TypeTest extends TypeTestCase
         $this->setUpOneNewsletter();
 
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
+        $this->assertArrayNotHasKey(StartRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
     }
 
     /**
@@ -98,7 +98,7 @@ class TypeTest extends TypeTestCase
         $this->setUpTwoNewsletters();
 
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $newslettersVars = $formView->vars['form']->children[startRegistrationType::ELEMENT_NEWSLETTERS]->vars;
+        $newslettersVars = $formView->vars['form']->children[StartRegistrationType::ELEMENT_NEWSLETTERS]->vars;
         $this->assertArrayHasKey('choices', $newslettersVars);
 
         $this->assertCount(2, $newslettersVars['choices']);
@@ -115,7 +115,7 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -133,8 +133,8 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => 'http://spam.com',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => 'http://spam.com',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -149,8 +149,8 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => '',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => '',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
         $this->assertTrue($form->isSynchronized());
         $this->assertFalse($form->isValid());
@@ -165,8 +165,8 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'this is no valid email address',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'this is no valid email address',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -187,8 +187,8 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -219,8 +219,8 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
@@ -235,9 +235,9 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_NEWSLETTERS => [],
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_NEWSLETTERS => [],
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -270,8 +270,8 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
@@ -307,9 +307,9 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_NEWSLETTERS => [$this->newsletter1->getId(), $this->newsletter2->getId()],
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_NEWSLETTERS => [$this->newsletter1->getId(), $this->newsletter2->getId()],
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());

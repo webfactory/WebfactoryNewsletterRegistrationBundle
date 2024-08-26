@@ -11,7 +11,7 @@ trait DetermineAppsSubclassTrait
         foreach (get_declared_classes() as $class) {
             if (
                 is_subclass_of($class, $parentClass)
-                && 0 !== strpos($class, 'Webfactory\NewsletterRegistrationBundle')
+                && !str_starts_with($class, 'Webfactory\NewsletterRegistrationBundle')
             ) {
                 return $class;
             }

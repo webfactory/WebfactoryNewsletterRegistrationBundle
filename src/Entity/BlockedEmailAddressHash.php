@@ -28,12 +28,12 @@ class BlockedEmailAddressHash implements BlockedEmailAddressHashInterface
 
     public static function fromEmailAddress(
         EmailAddress $emailAddress,
-        DateTimeImmutable $blockDate = null
+        ?DateTimeImmutable $blockDate = null
     ): BlockedEmailAddressHashInterface {
         return new self($emailAddress->getHash(), $blockDate);
     }
 
-    public function __construct(string $hash, DateTimeImmutable $blockDate = null)
+    public function __construct(string $hash, ?DateTimeImmutable $blockDate = null)
     {
         $this->hash = $hash;
         $this->blockDate = $blockDate ?? new DateTimeImmutable();
