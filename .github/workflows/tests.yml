@@ -15,7 +15,7 @@ jobs:
         name: PHPUnit
         runs-on: ubuntu-22.04
         steps:
-            -   uses: actions/checkout@v4
+            -   uses: actions/checkout@v6
             -   run: mkdir --mode=777 -p $GITHUB_WORKSPACE/{tmp,logs}
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
                 uses: shivammathur/setup-php@v2
@@ -25,7 +25,7 @@ jobs:
                   tools: composer:v2
                   ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
             -   name: Cache Composer Dependencies
-                uses: actions/cache@v4
+                uses: actions/cache@v5
                 with:
                     path: vendor/
                     key: composer-${{ env.PHP_VERSION }}-${{ hashFiles('composer.*') }}
