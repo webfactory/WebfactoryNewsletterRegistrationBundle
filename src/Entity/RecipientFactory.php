@@ -10,11 +10,9 @@ use Webfactory\NewsletterRegistrationBundle\Exception\RecipientClassCouldNotBeDe
  */
 class RecipientFactory implements RecipientFactoryInterface
 {
-    use DetermineAppsSubclassTrait;
-
     public function fromPendingOptIn(PendingOptInInterface $pendingOptIn): RecipientInterface
     {
-        $appsRecipientClass = $this->getAppsSubclassOf(
+        $appsRecipientClass = DetermineAppsSubclassHelper::getAppsSubclassOf(
             RecipientInterface::class,
             new RecipientClassCouldNotBeDeterminedException()
         );
