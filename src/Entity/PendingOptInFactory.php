@@ -10,11 +10,9 @@ use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInClassCouldNotB
  */
 class PendingOptInFactory implements PendingOptInFactoryInterface
 {
-    use DetermineAppsSubclassTrait;
-
     public function fromRegistrationFormData(array $formData): ?PendingOptInInterface
     {
-        $appsPendingOptInClass = $this->getAppsSubclassOf(
+        $appsPendingOptInClass = DetermineAppsSubclassHelper::getAppsSubclassOf(
             PendingOptInInterface::class,
             new PendingOptInClassCouldNotBeDeterminedException()
         );
