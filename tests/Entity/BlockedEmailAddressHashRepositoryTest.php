@@ -13,8 +13,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class BlockedEmailAddressHashRepositoryTest extends KernelTestCase
 {
-    use ResetDatabase;
     use Factories;
+    use ResetDatabase;
 
     /** @var BlockedEmailAddressHashRepositoryInterface */
     private $repository;

@@ -11,8 +11,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class NewsletterRepositoryTest extends KernelTestCase
 {
-    use ResetDatabase;
     use Factories;
+    use ResetDatabase;
 
     /** @var NewsletterRepository */
     private $repository;
@@ -60,6 +60,6 @@ class NewsletterRepositoryTest extends KernelTestCase
 
         $newsletters = $this->repository->findVisible();
 
-        $this->assertEquals(['1', '2', '3'], array_map(fn($n) => $n->getName(), $newsletters));
+        $this->assertEquals(['1', '2', '3'], array_map(fn ($n) => $n->getName(), $newsletters));
     }
 }

@@ -12,8 +12,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class RecipientRepositoryTest extends KernelTestCase
 {
-    use ResetDatabase;
     use Factories;
+    use ResetDatabase;
 
     /** @var RecipientRepositoryInterface */
     private $repository;

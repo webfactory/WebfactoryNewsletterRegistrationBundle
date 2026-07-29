@@ -13,8 +13,8 @@ use Zenstruck\Foundry\Test\ResetDatabase;
 
 class PendingOptInRepositoryTest extends KernelTestCase
 {
-    use ResetDatabase;
     use Factories;
+    use ResetDatabase;
 
     /** @var PendingOptInRepositoryInterface */
     private $repository;
