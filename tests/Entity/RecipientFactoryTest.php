@@ -2,9 +2,9 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use App\Recipient as AppRecipient;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
-use Webfactory\NewsletterRegistrationBundle\Entity\Recipient;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
@@ -16,10 +16,10 @@ class RecipientFactoryTest extends TestCase
      */
     public function fromPendingOptIn()
     {
-        // The RecipientFactory searches for a RecipientInterface implementation outside the
-        // Webfactory\NewsletterRegistrationBundle namespace, so let's declare an anonymous one:
-        new class(null, new EmailAddress('webfactory@example.com', null)) extends Recipient {
-        };
+        // The RecipientFactory uses get_declared_classes() to find a RecipientInterface
+        // implementation outside the Webfactory\NewsletterRegistrationBundle namespace —
+        // the class must be loaded before the factory is called:
+        class_exists(AppRecipient::class);
 
         $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1')];
         $recipient = (new RecipientFactory())->fromPendingOptIn(

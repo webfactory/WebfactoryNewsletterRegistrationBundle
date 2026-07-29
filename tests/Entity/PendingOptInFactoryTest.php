@@ -2,9 +2,9 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use App\PendingOptIn as AppPendingOptIn;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
-use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
@@ -26,10 +26,10 @@ class PendingOptInFactoryTest extends TestCase
      */
     public function fromRegistrationFormData_without_newsletter_choices(): void
     {
-        // The PendingOptInFactory searches for a PendingOptInInterface implementation outside the
-        // Webfactory\NewsletterRegistrationBundle namespace, so let's declare an anonymous one:
-        new class(null, new EmailAddress('webfactory@example.com', 'secret')) extends PendingOptIn {
-        };
+        // The PendingOptInFactory uses get_declared_classes() to find a PendingOptInInterface
+        // implementation outside the Webfactory\NewsletterRegistrationBundle namespace —
+        // the class must be loaded before the factory is called:
+        class_exists(AppPendingOptIn::class);
 
         $pendingOptIn = $this->factory->fromRegistrationFormData([
             StartRegistrationType::ELEMENT_EMAIL_ADDRESS => new EmailAddress('webfactory@example.com', 'secret'),
@@ -43,10 +43,10 @@ class PendingOptInFactoryTest extends TestCase
      */
     public function fromRegistrationFormData_with_newsletter_choices(): void
     {
-        // The PendingOptInFactory searches for a PendingOptInInterface implementation outside the
-        // Webfactory\NewsletterRegistrationBundle namespace, so let's declare an anonymous one:
-        new class(null, new EmailAddress('webfactory@example.com', 'secret')) extends PendingOptIn {
-        };
+        // The PendingOptInFactory uses get_declared_classes() to find a PendingOptInInterface
+        // implementation outside the Webfactory\NewsletterRegistrationBundle namespace —
+        // the class must be loaded before the factory is called:
+        class_exists(AppPendingOptIn::class);
 
         $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1')];
         $pendingOptIn = $this->factory->fromRegistrationFormData([

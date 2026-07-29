@@ -2,16 +2,18 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
-use PHPUnit\Framework\TestCase;
-use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
+use Webfactory\NewsletterRegistrationBundle\Tests\Factory\RecipientFactory;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
-class RecipientRepositoryTest extends TestCase
+class RecipientRepositoryTest extends KernelTestCase
 {
-    /** @var ORMInfrastructure */
-    private $infrastructure;
+    use Factories;
+    use ResetDatabase;
 
     /** @var RecipientRepositoryInterface */
     private $repository;
@@ -19,8 +21,10 @@ class RecipientRepositoryTest extends TestCase
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void
     {
-        $this->infrastructure = ORMInfrastructure::createWithDependenciesFor(Recipient::class);
-        $this->repository = $this->infrastructure->getRepository(Recipient::class);
+        $this->repository = self::getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository(Recipient::class);
     }
 
     /**
@@ -28,12 +32,13 @@ class RecipientRepositoryTest extends TestCase
      */
     public function isEmailAddressAlreadyRegistered_returns_true_if_already_registered()
     {
-        $recipientFixture = new Recipient('uuid-1', new EmailAddress('webfactory@example.com', null));
-        $this->infrastructure->import($recipientFixture);
+        $emailAddress = new EmailAddress('webfactory@example.com', null);
+        $registeredRecipient = RecipientFactory::createOne(['emailAddress' => $emailAddress]);
 
-        $retrievedRecipient = $this->repository->findByEmailAddress($recipientFixture->getEmailAddress());
+        $retrievedRecipient = $this->repository->findByEmailAddress($emailAddress);
+
         $this->assertNotNull($retrievedRecipient);
-        $this->assertEquals($recipientFixture->getUuid(), $retrievedRecipient->getUuid());
+        $this->assertEquals($registeredRecipient->getUuid(), $retrievedRecipient->getUuid());
     }
 
     /**

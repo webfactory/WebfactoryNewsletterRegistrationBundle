@@ -2,15 +2,17 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
-use PHPUnit\Framework\TestCase;
-use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepository;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Factory\NewsletterFactory;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
-class NewsletterRepositoryTest extends TestCase
+class NewsletterRepositoryTest extends KernelTestCase
 {
-    /** @var ORMInfrastructure */
-    private $infrastructure;
+    use Factories;
+    use ResetDatabase;
 
     /** @var NewsletterRepository */
     private $repository;
@@ -18,8 +20,10 @@ class NewsletterRepositoryTest extends TestCase
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void
     {
-        $this->infrastructure = ORMInfrastructure::createWithDependenciesFor(Newsletter::class);
-        $this->repository = $this->infrastructure->getRepository(Newsletter::class);
+        $this->repository = self::getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository(Newsletter::class);
     }
 
     /**
@@ -27,8 +31,7 @@ class NewsletterRepositoryTest extends TestCase
      */
     public function findVisible_returns_visible_newsletters()
     {
-        $newsletter = new Newsletter(null, 'test_newsletter');
-        $this->infrastructure->import($newsletter);
+        NewsletterFactory::createOne();
 
         $newsletters = $this->repository->findVisible();
 
@@ -41,12 +44,9 @@ class NewsletterRepositoryTest extends TestCase
      */
     public function findVisible_does_not_return_invisible_newsletters()
     {
-        $newsletter = new Newsletter(null, 'test_newsletter', 0, false);
-        $this->infrastructure->import($newsletter);
+        NewsletterFactory::createOne(['visible' => false]);
 
-        $newsletters = $this->repository->findVisible();
-
-        $this->assertEmpty($newsletters);
+        $this->assertEmpty($this->repository->findVisible());
     }
 
     /**
@@ -54,14 +54,12 @@ class NewsletterRepositoryTest extends TestCase
      */
     public function findVisible_orders_by_rank()
     {
-        $firstNewsletter = new Newsletter(null, '1', 1);
-        $secondNewsletter = new Newsletter(null, '2', 2);
-        $thirdNewsletter = new Newsletter(null, '3', 3);
-
-        $this->infrastructure->import([$firstNewsletter, $thirdNewsletter, $secondNewsletter]);
+        NewsletterFactory::createOne(['name' => '1', 'rank' => 1]);
+        NewsletterFactory::createOne(['name' => '3', 'rank' => 3]);
+        NewsletterFactory::createOne(['name' => '2', 'rank' => 2]);
 
         $newsletters = $this->repository->findVisible();
 
-        $this->assertEquals([$firstNewsletter, $secondNewsletter, $thirdNewsletter], $newsletters);
+        $this->assertEquals(['1', '2', '3'], array_map(fn ($n) => $n->getName(), $newsletters));
     }
 }
