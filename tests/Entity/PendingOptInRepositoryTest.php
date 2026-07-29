@@ -3,16 +3,18 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use DateTimeImmutable;
-use PHPUnit\Framework\TestCase;
-use Webfactory\Doctrine\ORMTestInfrastructure\ORMInfrastructure;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
+use Webfactory\NewsletterRegistrationBundle\Tests\Factory\PendingOptInFactory;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
-class PendingOptInRepositoryTest extends TestCase
+class PendingOptInRepositoryTest extends KernelTestCase
 {
-    /** @var ORMInfrastructure */
-    private $infrastructure;
+    use ResetDatabase;
+    use Factories;
 
     /** @var PendingOptInRepositoryInterface */
     private $repository;
@@ -20,8 +22,10 @@ class PendingOptInRepositoryTest extends TestCase
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void
     {
-        $this->infrastructure = ORMInfrastructure::createWithDependenciesFor(PendingOptIn::class);
-        $this->repository = $this->infrastructure->getRepository(PendingOptIn::class);
+        $this->repository = self::getContainer()
+            ->get('doctrine')
+            ->getManager()
+            ->getRepository(PendingOptIn::class);
     }
 
     /**
@@ -29,13 +33,13 @@ class PendingOptInRepositoryTest extends TestCase
      */
     public function findByEmailAddress_returns_PendingOptIn_if_it_exists(): void
     {
-        $alreadyRegisteredEmailAddress = new EmailAddress('webfactory@example.com', 'secret');
-        $pendingOptInFixture = new PendingOptIn('uuid-1', $alreadyRegisteredEmailAddress);
-        $this->infrastructure->import($pendingOptInFixture);
+        $emailAddress = new EmailAddress('webfactory@example.com', 'secret');
+        $proxy = PendingOptInFactory::createOne(['emailAddress' => $emailAddress]);
 
-        $result = $this->repository->findByEmailAddress($alreadyRegisteredEmailAddress);
+        $result = $this->repository->findByEmailAddress($emailAddress);
+
         $this->assertNotEmpty($result);
-        $this->assertEquals($pendingOptInFixture->getUuid(), $result->getUuid());
+        $this->assertEquals($proxy->getUuid(), $result->getUuid());
     }
 
     /**
@@ -53,14 +57,7 @@ class PendingOptInRepositoryTest extends TestCase
      */
     public function removeOutdated_removes_outdated_ones(): void
     {
-        $this->infrastructure->import(
-            new PendingOptIn(
-                'uuid-1',
-                new EmailAddress('webfactory@example.com', 'secret'),
-                [],
-                new DateTimeImmutable('2000-01-01')
-            )
-        );
+        PendingOptInFactory::createOne(['registrationDate' => new DateTimeImmutable('2000-01-01')]);
 
         $numberOfDeletedOnes = $this->repository->removeOutdated(new DateTimeImmutable());
 
@@ -73,14 +70,7 @@ class PendingOptInRepositoryTest extends TestCase
      */
     public function removeOutdated_does_not_remove_current_ones(): void
     {
-        $this->infrastructure->import(
-            new PendingOptIn(
-                'uuid-1',
-                new EmailAddress('webfactory@example.com', 'secret'),
-                [],
-                new DateTimeImmutable('-1h')
-            )
-        );
+        PendingOptInFactory::createOne(['registrationDate' => new DateTimeImmutable('-1h')]);
 
         $numberOfDeletedOnes = $this->repository->removeOutdated(new DateTimeImmutable('-72h'));
 
