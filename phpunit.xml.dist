@@ -8,6 +8,9 @@
         <ini name="error_reporting" value="-1" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
+        <env name="KERNEL_CLASS" value="Webfactory\NewsletterRegistrationBundle\Tests\Fixtures\Kernel"/>
+        <env name="APP_ENV" value="test"/>
+        <env name="APP_DEBUG" value="0"/>
     </php>
 
     <!-- Filter for code coverage -->

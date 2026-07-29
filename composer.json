@@ -28,6 +28,7 @@
     },
 
     "require-dev": {
+        "doctrine/annotations": "^1.13 | ^2.0",
         "doctrine/common": "^2.0 | ^3.0",
         "doctrine/doctrine-bundle": "^2.4",
         "phpunit/phpunit": "^8.5.0",
