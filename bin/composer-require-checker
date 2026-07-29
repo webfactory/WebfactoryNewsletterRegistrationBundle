@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+COMPOSER_REQUIRE_CHECKER_VERSION=${COMPOSER_REQUIRE_CHECKER_VERSION:-3.2.0}
+if [ -t 1 ]; then TTY='--tty'; else TTY=''; fi
+
+exec docker run --rm --init --interactive $TTY -w=/${PWD} -v $(pwd):/${PWD} webfactory/composer-require-checker:$COMPOSER_REQUIRE_CHECKER_VERSION "$@"
