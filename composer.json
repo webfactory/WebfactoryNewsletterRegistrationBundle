@@ -44,6 +44,7 @@
 
     "autoload-dev": {
         "psr-4": {
+            "App\\": "tests/Fixtures/App",
             "Webfactory\\NewsletterRegistrationBundle\\Tests\\": "tests"
         }
     },
