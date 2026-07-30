@@ -48,7 +48,7 @@ Implement all `src/Entity/*Interface.php` in your project. The easiest way, if y
 to copy the templates:
 
     mkdir src/AppBundle/Newsletter
-    cp vendor/webfactory/newsletter-registration-bundle/app-class-templates/* src/AppBundle/Newsletter/*
+    cp vendor/webfactory/newsletter-registration-bundle/Resources/app-class-templates/* src/AppBundle/Newsletter/
 
 If you want to implement the interfaces by yourself, extend the corresponding abstract classes and add
 `#[ORM\Entity(repositoryClass: MyRepo::class)]` (and any desired `#[ORM\Table(...)]` constraints) on your concrete
@@ -77,7 +77,7 @@ doctrine:
             default:
                 mappings:
                     NewsletterRegistrationBundle:
-                        type: annotation
+                        type: attribute
                         prefix: AppBundle\Newsletter\Entity\
                         dir: "%kernel.root_dir%/AppBundle/Newsletter/Entity/"
                         is_bundle: false
@@ -105,8 +105,8 @@ Include the RegistrationController in your routing:
 
 newsletter:
     prefix: /newsletter
-    type: annotation
-    resource: '@WebfactoryNewsletterRegistrationBundle/Controller/RegistrationController.php'
+    type: attribute
+    resource: '@WebfactoryNewsletterRegistrationBundle/src/Controller.php'
 ```
  
 The RegistrationController gets some Interfaces injected in its constructor. Alias these interfaces with your own
