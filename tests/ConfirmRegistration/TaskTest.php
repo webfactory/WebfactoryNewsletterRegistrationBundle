@@ -21,26 +21,13 @@ class TaskTest extends TestCase
 {
     protected const TIME_LIMIT_FOR_OPT_IN_IN_HOURS = 1;
 
-    /** @var EmailAddressFactoryInterface */
-    protected $emailAddressFactory;
-
-    /** @var RecipientFactoryInterface|MockObject */
-    protected $recipientFactory;
-
-    /** @var RecipientRepositoryInterface|MockObject */
-    protected $recipientRepo;
-
-    /** @var PendingOptInRepositoryInterface|MockObject */
-    protected $pendingOptInRepo;
-
-    /** @var FlashBagInterface|MockObject */
-    protected $flashBag;
-
-    /** @var TranslatorInterface|MockObject */
-    protected $translator;
-
-    /** @var Task */
-    protected $task;
+    protected EmailAddressFactoryInterface $emailAddressFactory;
+    protected RecipientFactoryInterface&MockObject $recipientFactory;
+    protected RecipientRepositoryInterface&MockObject $recipientRepo;
+    protected PendingOptInRepositoryInterface&MockObject $pendingOptInRepo;
+    protected FlashBagInterface&MockObject $flashBag;
+    protected TranslatorInterface&MockObject $translator;
+    protected Task $task;
 
     protected function setUp(): void
     {

@@ -17,20 +17,11 @@ class TaskTest extends TestCase
 {
     protected const SENDER = 'sender@example.com';
 
-    /** @var PendingOptInRepositoryInterface|MockObject */
-    protected $pendingOptInRepo;
-
-    /** @var MailerInterface|MockObject */
-    protected $mailer;
-
-    /** @var Environment|MockObject */
-    protected $twig;
-
-    /** @var UrlGeneratorInterface|MockObject */
-    protected $urlGenerator;
-
-    /** @var Task */
-    private $task;
+    protected PendingOptInRepositoryInterface&MockObject $pendingOptInRepo;
+    protected MailerInterface&MockObject $mailer;
+    protected Environment&MockObject $twig;
+    protected UrlGeneratorInterface&MockObject $urlGenerator;
+    private Task $task;
 
     protected function setUp(): void
     {

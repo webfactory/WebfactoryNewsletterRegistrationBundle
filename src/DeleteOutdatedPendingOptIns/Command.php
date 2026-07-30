@@ -7,8 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Command extends \Symfony\Component\Console\Command\Command
 {
-    /** @var TaskInterface */
-    protected $task;
+    protected TaskInterface $task;
 
     public function __construct(TaskInterface $task)
     {

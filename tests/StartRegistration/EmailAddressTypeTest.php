@@ -25,20 +25,11 @@ class EmailAddressTypeTest extends TypeTestCase
 {
     protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
 
-    /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
-    protected $blockedEmailAddressHashRepository;
-
-    /** @var PendingOptInRepositoryInterface|MockObject */
-    protected $pendingOptInRepository;
-
-    /** @var EmailAddressFactoryInterface */
-    protected $emailAddressFactory;
-
-    /** @var TranslatorInterface|MockObject */
-    protected $translator;
-
-    /** @var FormInterface */
-    protected $form;
+    protected BlockedEmailAddressHashRepositoryInterface&MockObject $blockedEmailAddressHashRepository;
+    protected PendingOptInRepositoryInterface&MockObject $pendingOptInRepository;
+    protected EmailAddressFactoryInterface $emailAddressFactory;
+    protected TranslatorInterface&MockObject $translator;
+    protected FormInterface $form;
 
     protected function setUp(): void
     {

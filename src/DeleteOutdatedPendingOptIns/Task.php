@@ -10,14 +10,9 @@ use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterfa
 
 class Task implements TaskInterface
 {
-    /** @var PendingOptInRepositoryInterface */
-    protected $repository;
-
-    /** @var int */
-    protected $timeLimitForOptInInHours;
-
-    /** @var LoggerInterface */
-    protected $logger;
+    protected PendingOptInRepositoryInterface $repository;
+    protected int $timeLimitForOptInInHours;
+    protected LoggerInterface $logger;
 
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepository,

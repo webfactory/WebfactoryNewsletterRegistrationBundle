@@ -16,26 +16,13 @@ use Webfactory\NewsletterRegistrationBundle\Exception\PendingOptInIsOutdatedExce
 
 class Task implements TaskInterface
 {
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepo;
-
-    /** @var int */
-    protected $timeLimitForOptInInHours;
-
-    /** @var EmailAddressFactoryInterface */
-    protected $emailAddressFactory;
-
-    /** @var RecipientFactoryInterface */
-    protected $recipientFactory;
-
-    /** @var RecipientRepositoryInterface */
-    protected $recipientRepo;
-
-    /** @var FlashBagInterface */
-    protected $flashBag;
-
-    /** @var TranslatorInterface */
-    protected $translator;
+    protected PendingOptInRepositoryInterface $pendingOptInRepo;
+    protected int $timeLimitForOptInInHours;
+    protected EmailAddressFactoryInterface $emailAddressFactory;
+    protected RecipientFactoryInterface $recipientFactory;
+    protected RecipientRepositoryInterface $recipientRepo;
+    protected FlashBagInterface $flashBag;
+    protected TranslatorInterface $translator;
 
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepo,

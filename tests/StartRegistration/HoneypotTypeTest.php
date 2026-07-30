@@ -11,11 +11,8 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\HoneypotType;
 
 class HoneypotTypeTest extends TypeTestCase
 {
-    /** @var FormInterface */
-    protected $form;
-
-    /** @var TranslatorInterface|MockObject */
-    protected $translator;
+    protected FormInterface $form;
+    protected TranslatorInterface&MockObject $translator;
 
     protected function setUp(): void
     {

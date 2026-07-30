@@ -14,8 +14,7 @@ class NewsletterRepositoryTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    /** @var NewsletterRepository */
-    private $repository;
+    private NewsletterRepository $repository;
 
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void

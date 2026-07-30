@@ -12,11 +12,8 @@ class TaskTest extends TestCase
 {
     protected const BLOCK_EMAIL_DURATION_IN_DAYS = 30;
 
-    /** @var PendingOptInRepositoryInterface|MockObject */
-    protected $repository;
-
-    /** @var Task */
-    protected $task;
+    protected PendingOptInRepositoryInterface&MockObject $repository;
+    protected Task $task;
 
     protected function setUp(): void
     {

@@ -10,8 +10,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
 class Type extends AbstractType
 {
-    /** @var UrlGeneratorInterface */
-    protected $urlGenerator;
+    protected UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {

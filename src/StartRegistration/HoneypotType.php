@@ -23,11 +23,8 @@ class HoneypotType extends AbstractType
     public const ERROR_MESSAGE_HONEYPOT_NOT_SUBMITTED = 'start.registration.honeypot.not.submitted';
     public const ERROR_MESSAGE_HONEYPOT_FILLED = 'start.registration.honeypot.filled';
 
-    /** @var TranslatorInterface */
-    protected $translator;
-
-    /** @var LoggerInterface */
-    protected $logger;
+    protected TranslatorInterface $translator;
+    protected LoggerInterface $logger;
 
     public function __construct(TranslatorInterface $translator, LoggerInterface $logger = null)
     {

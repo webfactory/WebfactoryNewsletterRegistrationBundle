@@ -16,5 +16,5 @@ class PendingOptIn extends \Webfactory\NewsletterRegistrationBundle\Entity\Pendi
         joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected $newsletters;
+    protected Collection $newsletters;
 }

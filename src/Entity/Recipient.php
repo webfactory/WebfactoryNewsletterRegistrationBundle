@@ -21,34 +21,22 @@ use Ramsey\Uuid\Uuid;
 abstract class Recipient implements RecipientInterface
 {
     /**
-     * @var int|null
-     *
      * This id is used for external webfactory purposes. You may remove it and declare uuid as your primary key.
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    protected $id;
+    protected ?int $id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', length: 36, unique: true, nullable: false)]
-    protected $uuid;
+    protected string $uuid;
 
-    /**
-     * @var string
-     *
-     * Normalized email address.
-     */
+    /** Normalized email address. */
     #[ORM\Column(type: 'string', name: 'email', nullable: false)]
-    protected $emailAddress;
+    protected string $emailAddress;
 
-    /**
-     * @var DateTimeImmutable
-     */
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    protected $optInDate;
+    protected DateTimeImmutable $optInDate;
 
     /**
      * @var Collection of NewsletterInterface
@@ -58,7 +46,7 @@ abstract class Recipient implements RecipientInterface
         joinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected $newsletters;
+    protected Collection $newsletters;
 
     public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn): RecipientInterface
     {

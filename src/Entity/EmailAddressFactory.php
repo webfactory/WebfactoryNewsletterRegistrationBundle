@@ -4,8 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 class EmailAddressFactory implements EmailAddressFactoryInterface
 {
-    /** @var string */
-    protected $secret;
+    protected string $secret;
 
     public function __construct(string $secret)
     {

@@ -22,33 +22,19 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegis
  */
 abstract class PendingOptIn implements PendingOptInInterface
 {
-    /**
-     * @var string
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 36, unique: true, nullable: false)]
-    protected $uuid;
+    protected string $uuid;
 
-    /**
-     * @var EmailAddress
-     *
-     * Not ORM-mapped since we don't want to store personal data before confirmation.
-     */
-    protected $emailAddress;
+    /** Not ORM-mapped since we don't want to store personal data before confirmation. */
+    protected EmailAddress $emailAddress;
 
-    /**
-     * @var string
-     *
-     * Hash of normalized email address.
-     */
+    /** Hash of normalized email address. */
     #[ORM\Column(type: 'string', nullable: false)]
-    protected $emailAddressHash;
+    protected string $emailAddressHash;
 
-    /**
-     * @var DateTimeImmutable
-     */
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    protected $registrationDate;
+    protected DateTimeImmutable $registrationDate;
 
     /**
      * @var Collection of NewsletterInterface
@@ -58,7 +44,7 @@ abstract class PendingOptIn implements PendingOptInInterface
         joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected $newsletters;
+    protected Collection $newsletters;
 
     public static function fromRegistrationFormData(array $formData): ?PendingOptInInterface
     {

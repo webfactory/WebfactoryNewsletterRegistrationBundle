@@ -27,35 +27,16 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegis
 
 class Controller
 {
-    /** @var FormFactoryInterface */
-    protected $formFactory;
-
-    /** @var Environment */
-    protected $twig;
-
-    /** @var UrlGeneratorInterface */
-    protected $urlGenerator;
-
-    /** @var HandleRegistrationSubmissionTaskInterface */
-    protected $handleRegistrationSubmissionTask;
-
-    /** @var ConfirmRegistrationTaskInterface */
-    protected $confirmRegistrationTask;
-
-    /** @var EditRegistrationTaskInterface */
-    protected $editRegistrationTask;
-
-    /** @var DeleteRegistrationTaskInterface */
-    protected $deleteRegistrationTask;
-
-    /** @var BlockEmailsTaskInterface */
-    protected $blockEmailsTask;
-
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepository;
-
-    /** @var RecipientRepositoryInterface */
-    protected $recipientRepository;
+    protected FormFactoryInterface $formFactory;
+    protected Environment $twig;
+    protected UrlGeneratorInterface $urlGenerator;
+    protected HandleRegistrationSubmissionTaskInterface $handleRegistrationSubmissionTask;
+    protected ConfirmRegistrationTaskInterface $confirmRegistrationTask;
+    protected EditRegistrationTaskInterface $editRegistrationTask;
+    protected DeleteRegistrationTaskInterface $deleteRegistrationTask;
+    protected BlockEmailsTaskInterface $blockEmailsTask;
+    protected PendingOptInRepositoryInterface $pendingOptInRepository;
+    protected RecipientRepositoryInterface $recipientRepository;
 
     public function __construct(
         FormFactoryInterface $formFactory,

@@ -16,5 +16,5 @@ class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipien
         joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected $newsletters;
+    protected Collection $newsletters;
 }
