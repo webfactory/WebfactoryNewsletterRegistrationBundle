@@ -3,12 +3,12 @@
 namespace Webfactory\NewsletterRegistrationBundle;
 
 use DateInterval;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Webfactory\NewsletterRegistrationBundle\BlockEmails\TaskInterface as BlockEmailsTaskInterface;
@@ -81,9 +81,7 @@ class Controller
         $this->recipientRepository = $recipientRepository;
     }
 
-    /**
-     * @Route("/", name="newsletter-registration-start")
-     */
+    #[Route('/', name: 'newsletter-registration-start')]
     public function startRegistration(Request $request): Response
     {
         $form = $this->formFactory->createNamed('', StartRegistrationType::class);
@@ -116,9 +114,7 @@ class Controller
         );
     }
 
-    /**
-     * @Route("/{uuid}/{emailAddress}/", name="newsletter-registration-confirm", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@((?!\/).)*"})
-     */
+    #[Route('/{uuid}/{emailAddress}/', name: 'newsletter-registration-confirm', requirements: ['uuid' => '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}', 'emailAddress' => '.*@((?!\/).)*'])]
     public function confirmRegistration(string $uuid, string $emailAddress): Response
     {
         $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);
@@ -162,9 +158,7 @@ class Controller
         );
     }
 
-    /**
-     * @Route("/{uuid}/", name="newsletter-registration-edit", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
-     */
+    #[Route('/{uuid}/', name: 'newsletter-registration-edit', requirements: ['uuid' => '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}'])]
     public function editRegistration(string $uuid, Request $request): Response
     {
         $recipient = $this->recipientRepository->findByUuid($uuid);
@@ -205,11 +199,7 @@ class Controller
         );
     }
 
-    /**
-     * @Route("/{uuid}/delete/", name="newsletter-registration-delete", methods={"POST"}, requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}"})
-     *
-     * @return RedirectResponse|Response
-     */
+    #[Route('/{uuid}/delete/', name: 'newsletter-registration-delete', methods: ['POST'], requirements: ['uuid' => '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}'])]
     public function deleteRegistration(string $uuid): Response
     {
         $recipient = $this->recipientRepository->findByUuid($uuid);
@@ -227,11 +217,7 @@ class Controller
         );
     }
 
-    /**
-     * @Route("/{uuid}/{emailAddress}/block/", name="newsletter-registration-block-emails", requirements={"uuid": "([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}", "emailAddress": ".*@.*"})
-     *
-     * @return RedirectResponse|Response
-     */
+    #[Route('/{uuid}/{emailAddress}/block/', name: 'newsletter-registration-block-emails', requirements: ['uuid' => '([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}){1}', 'emailAddress' => '.*@.*'])]
     public function blockEmails(string $uuid, string $emailAddress, Request $request): Response
     {
         $pendingOptIn = $this->pendingOptInRepository->findByUuid($uuid);

@@ -4,8 +4,10 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Fixtures;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Webfactory\NewsletterRegistrationBundle\WebfactoryNewsletterRegistrationBundle;
 use Zenstruck\Foundry\ZenstruckFoundryBundle;
 
 class Kernel extends BaseKernel
@@ -16,6 +18,8 @@ class Kernel extends BaseKernel
             new FrameworkBundle(),
             new DoctrineBundle(),
             new ZenstruckFoundryBundle(),
+            new TwigBundle(),
+            new WebfactoryNewsletterRegistrationBundle(),
         ];
     }
 
@@ -24,6 +28,8 @@ class Kernel extends BaseKernel
         $loader->load(__DIR__.'/config/framework.php');
         $loader->load(__DIR__.'/config/doctrine.php');
         $loader->load(__DIR__.'/config/zenstruck_foundry.php');
+        $loader->load(__DIR__.'/config/twig.php');
+        $loader->load(__DIR__.'/config/functional_services.php');
     }
 
     public function getCacheDir(): string
