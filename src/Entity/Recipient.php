@@ -4,6 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
@@ -20,6 +21,8 @@ use Ramsey\Uuid\Uuid;
 abstract class Recipient implements RecipientInterface
 {
     /**
+     * @var int|null
+     *
      * This id is used for external webfactory purposes. You may remove it and declare uuid as your primary key.
      */
     #[ORM\Id]
@@ -27,16 +30,29 @@ abstract class Recipient implements RecipientInterface
     #[ORM\Column(type: 'integer', nullable: false)]
     protected $id;
 
+    /**
+     * @var string
+     */
     #[ORM\Column(type: 'string', length: 36, unique: true, nullable: false)]
     protected $uuid;
 
-    /** Normalized email address. */
+    /**
+     * @var string
+     *
+     * Normalized email address.
+     */
     #[ORM\Column(type: 'string', name: 'email', nullable: false)]
     protected $emailAddress;
 
+    /**
+     * @var DateTimeImmutable
+     */
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     protected $optInDate;
 
+    /**
+     * @var Collection of NewsletterInterface
+     */
     #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
     #[ORM\JoinTable(
         joinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],

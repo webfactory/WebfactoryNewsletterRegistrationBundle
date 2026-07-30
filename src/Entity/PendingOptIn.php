@@ -5,6 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
@@ -21,20 +22,37 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegis
  */
 abstract class PendingOptIn implements PendingOptInInterface
 {
+    /**
+     * @var string
+     */
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 36, unique: true, nullable: false)]
     protected $uuid;
 
-    /** Not ORM-mapped since we don't want to store personal data before confirmation. */
+    /**
+     * @var EmailAddress
+     *
+     * Not ORM-mapped since we don't want to store personal data before confirmation.
+     */
     protected $emailAddress;
 
-    /** Hash of normalized email address. */
+    /**
+     * @var string
+     *
+     * Hash of normalized email address.
+     */
     #[ORM\Column(type: 'string', nullable: false)]
     protected $emailAddressHash;
 
+    /**
+     * @var DateTimeImmutable
+     */
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     protected $registrationDate;
 
+    /**
+     * @var Collection of NewsletterInterface
+     */
     #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
     #[ORM\JoinTable(
         joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
