@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipient
 {
     /**
-     * @var Collection of Newsletter
+     * @var Collection<int, Newsletter>
      */
     #[ORM\ManyToMany(targetEntity: Newsletter::class)]
     #[ORM\JoinTable(

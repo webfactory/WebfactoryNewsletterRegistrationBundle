@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PendingOptIn extends \Webfactory\NewsletterRegistrationBundle\Entity\PendingOptIn
 {
     /**
-     * @var Collection of Newsletter
+     * @var Collection<int, Newsletter>
      */
     #[ORM\ManyToMany(targetEntity: Newsletter::class)]
     #[ORM\JoinTable(

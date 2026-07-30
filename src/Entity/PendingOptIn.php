@@ -37,7 +37,7 @@ abstract class PendingOptIn implements PendingOptInInterface
     protected DateTimeImmutable $registrationDate;
 
     /**
-     * @var Collection of NewsletterInterface
+     * @var Collection<int, NewsletterInterface>
      */
     #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
     #[ORM\JoinTable(

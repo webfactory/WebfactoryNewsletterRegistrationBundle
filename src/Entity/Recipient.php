@@ -39,7 +39,7 @@ abstract class Recipient implements RecipientInterface
     protected DateTimeImmutable $optInDate;
 
     /**
-     * @var Collection of NewsletterInterface
+     * @var Collection<int, NewsletterInterface>
      */
     #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
     #[ORM\JoinTable(
