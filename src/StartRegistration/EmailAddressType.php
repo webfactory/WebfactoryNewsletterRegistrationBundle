@@ -30,20 +30,11 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
     public const ERROR_EMAIL_ADDRESS_BLOCKED = 'start.registration.email.address.blocked';
     public const ERROR_OPT_IN_EMAIL_LIMIT_REACHED = 'start.registration.opt.in.email.limit.reached';
 
-    /** @var BlockedEmailAddressHashRepositoryInterface */
-    protected $blockedEmailAddressHashesRepository;
-
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepository;
-
-    /** @var EmailAddressFactoryInterface */
-    protected $emailAddressFactory;
-
-    /** @var int */
-    protected $minimalIntervalBetweenOptInEmailsInHours;
-
-    /** @var TranslatorInterface */
-    protected $translator;
+    protected BlockedEmailAddressHashRepositoryInterface $blockedEmailAddressHashesRepository;
+    protected PendingOptInRepositoryInterface $pendingOptInRepository;
+    protected EmailAddressFactoryInterface $emailAddressFactory;
+    protected int $minimalIntervalBetweenOptInEmailsInHours;
+    protected TranslatorInterface $translator;
 
     public function __construct(
         BlockedEmailAddressHashRepositoryInterface $blockedEmailAddressHashesRepository,

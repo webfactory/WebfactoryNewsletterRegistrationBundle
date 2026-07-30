@@ -10,17 +10,10 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 
 class SendLinkTask implements SendLinkTaskInterface
 {
-    /** @var MailerInterface */
-    protected $mailer;
-
-    /** @var string */
-    protected $senderEmailAddress;
-
-    /** @var Environment */
-    protected $twig;
-
-    /** @var UrlGeneratorInterface */
-    protected $urlGenerator;
+    protected MailerInterface $mailer;
+    protected string $senderEmailAddress;
+    protected Environment $twig;
+    protected UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
         MailerInterface $mailer,

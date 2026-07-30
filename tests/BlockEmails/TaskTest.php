@@ -17,17 +17,10 @@ class TaskTest extends TestCase
 {
     protected const BLOCK_DURATION_IN_DAYS = 30;
 
-    /** @var EmailAddressFactoryInterface|MockObject */
-    protected $emailAddressFactory;
-
-    /** @var BlockedEmailAddressHashRepositoryInterface|MockObject */
-    protected $blockedEmailHashesRepository;
-
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepository;
-
-    /** @var Task */
-    protected $task;
+    protected EmailAddressFactoryInterface $emailAddressFactory;
+    protected BlockedEmailAddressHashRepositoryInterface&MockObject $blockedEmailHashesRepository;
+    protected PendingOptInRepositoryInterface $pendingOptInRepository;
+    protected Task $task;
 
     protected function setUp(): void
     {

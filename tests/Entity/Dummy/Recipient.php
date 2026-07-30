@@ -9,12 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipient
 {
     /**
-     * @var Collection of Newsletter
+     * @var Collection<int, Newsletter>
      */
     #[ORM\ManyToMany(targetEntity: Newsletter::class)]
     #[ORM\JoinTable(
         joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected $newsletters;
+    protected Collection $newsletters;
 }

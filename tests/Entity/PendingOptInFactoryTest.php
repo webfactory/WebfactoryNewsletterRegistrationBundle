@@ -11,8 +11,7 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 
 class PendingOptInFactoryTest extends TestCase
 {
-    /** @var PendingOptInFactory */
-    protected $factory;
+    protected PendingOptInFactory $factory;
 
     protected function setUp(): void
     {

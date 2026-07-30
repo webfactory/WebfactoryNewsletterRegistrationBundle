@@ -16,17 +16,10 @@ class SendLinkTaskTest extends TestCase
 {
     protected const SENDER = 'sender@example.com';
 
-    /** @var MailerInterface|MockObject */
-    protected $mailer;
-
-    /** @var Environment|MockObject */
-    protected $twig;
-
-    /** @var UrlGeneratorInterface|MockObject */
-    protected $urlGenerator;
-
-    /** @var SendLinkTask */
-    private $task;
+    protected MailerInterface&MockObject $mailer;
+    protected Environment&MockObject $twig;
+    protected UrlGeneratorInterface&MockObject $urlGenerator;
+    private SendLinkTask $task;
 
     protected function setUp(): void
     {

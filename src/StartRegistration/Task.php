@@ -12,26 +12,13 @@ use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterfa
 
 class Task implements TaskInterface
 {
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepo;
-
-    /** @var MailerInterface */
-    protected $mailer;
-
-    /** @var string */
-    protected $senderEmailAddress;
-
-    /** @var Environment */
-    protected $twig;
-
-    /** @var UrlGeneratorInterface */
-    protected $urlGenerator;
-
-    /** @var int */
-    protected $timeLimitForOpInInHours;
-
-    /** @var int */
-    protected $blockEmailsDurationInDays;
+    protected PendingOptInRepositoryInterface $pendingOptInRepo;
+    protected MailerInterface $mailer;
+    protected string $senderEmailAddress;
+    protected Environment $twig;
+    protected UrlGeneratorInterface $urlGenerator;
+    protected int $timeLimitForOpInInHours;
+    protected int $blockEmailsDurationInDays;
 
     public function __construct(
         PendingOptInRepositoryInterface $pendingOptInRepo,

@@ -9,11 +9,8 @@ use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressCanNotBeHashed
  */
 class EmailAddress
 {
-    /** @var string */
-    protected $emailAddress;
-
-    /** @var string|null */
-    protected $secret;
+    protected string $emailAddress;
+    protected ?string $secret;
 
     public function __construct(string $emailAddressString, ?string $secret)
     {

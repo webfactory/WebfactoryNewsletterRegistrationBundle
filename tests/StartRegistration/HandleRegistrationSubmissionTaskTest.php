@@ -15,20 +15,11 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
 class HandleRegistrationSubmissionTaskTest extends TestCase
 {
-    /** @var RecipientRepositoryInterface */
-    private $recipientRepository;
-
-    /** @var Environment */
-    private $twig;
-
-    /** @var StartRegistrationTaskInterface|MockObject */
-    private $startRegistrationTask;
-
-    /** @var SendLinkTaskInterface|MockObject */
-    private $sendLinkTask;
-
-    /** @var HandleRegistrationSubmissionTask */
-    private $task;
+    private RecipientRepositoryInterface $recipientRepository;
+    private Environment $twig;
+    private StartRegistrationTaskInterface&MockObject $startRegistrationTask;
+    private SendLinkTaskInterface&MockObject $sendLinkTask;
+    private HandleRegistrationSubmissionTask $task;
 
     protected function setUp(): void
     {

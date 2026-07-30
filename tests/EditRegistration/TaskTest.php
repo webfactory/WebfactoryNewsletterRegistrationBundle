@@ -13,17 +13,10 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
 class TaskTest extends TestCase
 {
-    /** @var RecipientRepositoryInterface|MockObject */
-    protected $recipientRepo;
-
-    /** @var FlashBagInterface|MockObject */
-    protected $flashBag;
-
-    /** @var Task */
-    protected $task;
-
-    /** @var TranslatorInterface|MockObject */
-    protected $translator;
+    protected RecipientRepositoryInterface&MockObject $recipientRepo;
+    protected FlashBagInterface&MockObject $flashBag;
+    protected Task $task;
+    protected TranslatorInterface&MockObject $translator;
 
     protected function setUp(): void
     {

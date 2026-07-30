@@ -16,8 +16,7 @@ class PendingOptInRepositoryTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    /** @var PendingOptInRepositoryInterface */
-    private $repository;
+    private PendingOptInRepositoryInterface $repository;
 
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void

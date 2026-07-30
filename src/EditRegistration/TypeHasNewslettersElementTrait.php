@@ -9,8 +9,7 @@ use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface
 
 trait TypeHasNewslettersElementTrait
 {
-    /** @var NewsletterRepositoryInterface */
-    protected $newsletterRepository;
+    protected NewsletterRepositoryInterface $newsletterRepository;
 
     protected function addNewslettersElementToForm(FormBuilderInterface $builder, bool $recipientHasToChooseAtLeastOne)
     {

@@ -10,17 +10,10 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
 class HandleRegistrationSubmissionTask implements HandleRegistrationSubmissionTaskInterface
 {
-    /** @var RecipientRepositoryInterface */
-    private $recipientRepository;
-
-    /** @var Environment */
-    private $twig;
-
-    /** @var TaskInterface */
-    private $startRegistrationTask;
-
-    /** @var SendLinkTaskInterface */
-    private $sendLinkTask;
+    private RecipientRepositoryInterface $recipientRepository;
+    private Environment $twig;
+    private TaskInterface $startRegistrationTask;
+    private SendLinkTaskInterface $sendLinkTask;
 
     public function __construct(
         RecipientRepositoryInterface $recipientRepository,

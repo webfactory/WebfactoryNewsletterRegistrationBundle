@@ -9,18 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BlockedEmailAddressHashRepository::class)]
 class BlockedEmailAddressHash implements BlockedEmailAddressHashInterface
 {
-    /**
-     * @var string
-     */
     #[ORM\Id]
     #[ORM\Column(type: 'string', nullable: false)]
-    protected $hash;
+    protected string $hash;
 
-    /**
-     * @var DateTimeImmutable
-     */
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    protected $blockDate;
+    protected DateTimeImmutable $blockDate;
 
     public static function fromEmailAddress(
         EmailAddress $emailAddress,

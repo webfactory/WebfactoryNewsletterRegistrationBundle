@@ -10,14 +10,9 @@ use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashReposi
 
 class Task implements TaskInterface
 {
-    /** @var BlockedEmailAddressHashRepositoryInterface */
-    protected $repository;
-
-    /** @var int */
-    protected $blockEmailAddressDurationInDays;
-
-    /** @var LoggerInterface */
-    protected $logger;
+    protected BlockedEmailAddressHashRepositoryInterface $repository;
+    protected int $blockEmailAddressDurationInDays;
+    protected LoggerInterface $logger;
 
     public function __construct(
         BlockedEmailAddressHashRepositoryInterface $pendingOptInRepository,

@@ -12,17 +12,10 @@ use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHa
 
 class Task implements TaskInterface
 {
-    /** @var int */
-    protected $blockDurationInDays;
-
-    /** @var EmailAddressFactoryInterface */
-    protected $emailAddressFactory;
-
-    /** @var BlockedEmailAddressHashRepositoryInterface */
-    protected $blockedEmailHashesRepository;
-
-    /** @var PendingOptInRepositoryInterface */
-    protected $pendingOptInRepository;
+    protected int $blockDurationInDays;
+    protected EmailAddressFactoryInterface $emailAddressFactory;
+    protected BlockedEmailAddressHashRepositoryInterface $blockedEmailHashesRepository;
+    protected PendingOptInRepositoryInterface $pendingOptInRepository;
 
     public function __construct(
         int $blockDurationInDays,

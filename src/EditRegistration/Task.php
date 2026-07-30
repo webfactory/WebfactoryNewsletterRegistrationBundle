@@ -9,14 +9,9 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 
 class Task implements TaskInterface
 {
-    /** @var RecipientRepositoryInterface */
-    protected $recipientRepo;
-
-    /** @var FlashBagInterface */
-    protected $flashBag;
-
-    /** @var TranslatorInterface */
-    protected $translator;
+    protected RecipientRepositoryInterface $recipientRepo;
+    protected FlashBagInterface $flashBag;
+    protected TranslatorInterface $translator;
 
     public function __construct(
         RecipientRepositoryInterface $recipientRepo,

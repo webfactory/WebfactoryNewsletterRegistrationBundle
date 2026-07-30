@@ -15,8 +15,7 @@ class RecipientRepositoryTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    /** @var RecipientRepositoryInterface */
-    private $repository;
+    private RecipientRepositoryInterface $repository;
 
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void

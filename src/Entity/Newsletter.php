@@ -10,33 +10,20 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class Newsletter implements NewsletterInterface
 {
-    /**
-     * @var int|null
-     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer', nullable: false)]
-    protected $id;
+    protected ?int $id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(type: 'string', nullable: false)]
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var bool
-     */
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
-    protected $visible;
+    protected bool $visible;
 
-    /**
-     * @var int
-     *
-     * Used for sorting amongst other Newsletters.
-     */
+    /** Used for sorting amongst other Newsletters. */
     #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
-    protected $rank;
+    protected int $rank;
 
     public function __construct(?int $id, string $name, int $rank = 0, $visible = true)
     {

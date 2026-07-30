@@ -12,11 +12,8 @@ class TaskTest extends TestCase
 {
     protected const TIME_LIMIT_FOR_OPT_IN_IN_HOURS = 1;
 
-    /** @var PendingOptInRepositoryInterface|MockObject */
-    protected $repository;
-
-    /** @var Task */
-    protected $task;
+    protected PendingOptInRepositoryInterface&MockObject $repository;
+    protected Task $task;
 
     protected function setUp(): void
     {

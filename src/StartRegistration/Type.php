@@ -18,8 +18,7 @@ class Type extends AbstractType
     public const ELEMENT_NEWSLETTERS = 'newsletters';
     public const ELEMENT_HONEYPOT = 'url';
 
-    /** @var PendingOptInFactoryInterface */
-    protected $pendingOptInFactory;
+    protected PendingOptInFactoryInterface $pendingOptInFactory;
 
     public function __construct(NewsletterRepositoryInterface $newsletterRepository, PendingOptInFactoryInterface $pendingOptInFactory)
     {

@@ -16,8 +16,7 @@ class BlockedEmailAddressHashRepositoryTest extends KernelTestCase
     use Factories;
     use ResetDatabase;
 
-    /** @var BlockedEmailAddressHashRepositoryInterface */
-    private $repository;
+    private BlockedEmailAddressHashRepositoryInterface $repository;
 
     /** @see \PHPUnit_Framework_TestCase::setUp() */
     protected function setUp(): void
