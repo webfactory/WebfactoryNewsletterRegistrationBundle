@@ -48,6 +48,7 @@
     "autoload-dev": {
         "psr-4": {
             "App\\": "tests/Fixtures/App",
+            "AppBundle\\Newsletter\\Entity\\": "Resources/app-class-templates",
             "Webfactory\\NewsletterRegistrationBundle\\Tests\\": "tests"
         }
     },
