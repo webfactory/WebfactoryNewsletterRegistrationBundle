@@ -5,7 +5,6 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 use DateInterval;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
@@ -22,46 +21,25 @@ use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegis
  */
 abstract class PendingOptIn implements PendingOptInInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=36, unique=true, nullable=false)
-     *
-     * @var string
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', length: 36, unique: true, nullable: false)]
     protected $uuid;
 
-    /**
-     * @var EmailAddress
-     *
-     * Not ORM-mapped since we don't want to store personal data before confirmation.
-     */
+    /** Not ORM-mapped since we don't want to store personal data before confirmation. */
     protected $emailAddress;
 
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     *
-     * @var string
-     *
-     * Hash of normalized email address.
-     */
+    /** Hash of normalized email address. */
+    #[ORM\Column(type: 'string', nullable: false)]
     protected $emailAddressHash;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=false)
-     *
-     * @var DateTimeImmutable
-     */
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     protected $registrationDate;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface")
-     * @ORM\JoinTable(
-     *     joinColumns={@ORM\JoinColumn(referencedColumnName="uuid", onDelete="CASCADE")},
-     *     inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
-     * )
-     *
-     * @var Collection of NewsletterInterface
-     */
+    #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
+    #[ORM\JoinTable(
+        joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
+        inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
+    )]
     protected $newsletters;
 
     public static function fromRegistrationFormData(array $formData): ?PendingOptInInterface

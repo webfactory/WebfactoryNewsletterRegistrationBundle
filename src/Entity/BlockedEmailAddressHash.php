@@ -6,24 +6,14 @@ use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="\Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepository")
- */
+#[ORM\Entity(repositoryClass: '\Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepository')]
 class BlockedEmailAddressHash implements BlockedEmailAddressHashInterface
 {
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     * @ORM\Id
-     *
-     * @var string
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'string', nullable: false)]
     protected $hash;
 
-    /**
-     * @ORM\Column(type="datetime_immutable", nullable=false)
-     *
-     * @var DateTimeImmutable
-     */
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     protected $blockDate;
 
     public static function fromEmailAddress(

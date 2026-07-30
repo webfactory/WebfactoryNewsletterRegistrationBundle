@@ -13,14 +13,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'mappings' => [
                 'BundleEntities' => [
                     'is_bundle' => false,
-                    'type' => 'annotation',
+                    'type' => 'attribute',
                     'dir' => '%kernel.project_dir%/src/Entity',
                     'prefix' => 'Webfactory\\NewsletterRegistrationBundle\\Entity',
                     'alias' => 'Bundle',
                 ],
                 'TestEntities' => [
                     'is_bundle' => false,
-                    'type' => 'annotation',
+                    'type' => 'attribute',
                     'dir' => '%kernel.project_dir%/tests/Entity/Dummy',
                     'prefix' => 'Webfactory\\NewsletterRegistrationBundle\\Tests\\Entity\\Dummy',
                     'alias' => 'Test',
