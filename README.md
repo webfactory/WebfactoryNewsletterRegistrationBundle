@@ -22,9 +22,9 @@ To reduce the amount of unwanted emails, the following ideas are implemented:
 
 Finally, the bundle tries to be developer friendly:
 
-- Registration can be embedded as a page on it's own as well as a partial view
+- Registration can be embedded as a page on its own as well as a partial view
 - Depending on the number of different newsletters, the registration and edit forms feature a newsletter selection or
-  no disturbing element (a checkbox for a single newsletter would be silly) 
+  no disturbing element (a checkbox for a single newsletter would be silly)
 - It's highly customizable due to small interfaces, Doctrine interface mapping and service replacements
 
 
@@ -33,7 +33,7 @@ Installation
 
     composer req webfactory/newsletter-registration-bundle
     
-activate in `src/bundles.php`:
+activate in `bundles.php`:
 
 ```php
 <?php
@@ -47,8 +47,8 @@ return [
 Implement all `src/Entity/*Interface.php` in your project. The easiest way, if you don't mind the biased namespaces, is
 to copy the templates:
 
-    mkdir src/AppBundle/Newsletter
-    cp vendor/webfactory/newsletter-registration-bundle/Resources/app-class-templates/* src/AppBundle/Newsletter/
+    mkdir -p src/AppBundle/Newsletter/Entity
+    cp vendor/webfactory/newsletter-registration-bundle/Resources/app-class-templates/* src/AppBundle/Newsletter/Entity/
 
 If you want to implement the interfaces by yourself, extend the corresponding abstract classes and add
 `#[ORM\Entity(repositoryClass: MyRepo::class)]` (and any desired `#[ORM\Table(...)]` constraints) on your concrete
@@ -57,19 +57,19 @@ subclass. For customizing, see the "Customizing" section below.
 In either case, configure Doctrine's interface mapping to deal with your custom entity class:
 
 ```yaml
-// config.yml
+# config.yml
 
 doctrine:
     orm:
         resolve_target_entities:
-            \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface: '\AppBundle\Entity\Newsletter'
+            \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface: '\AppBundle\Newsletter\Entity\Newsletter'
 ```
 
 Side node: The templates and example above assume that you want to keep your Newsletter classes inside a Newsletter
 directory in your AppBundle. If you choose to do so, you might need to configure Doctrine to load the entities: 
 
 ```yaml
-// config.yml
+# config.yml
 
 doctrine:
     orm:
@@ -79,7 +79,7 @@ doctrine:
                     NewsletterRegistrationBundle:
                         type: attribute
                         prefix: AppBundle\Newsletter\Entity\
-                        dir: "%kernel.root_dir%/AppBundle/Newsletter/Entity/"
+                        dir: "%kernel.project_dir%/src/AppBundle/Newsletter/Entity/"
                         is_bundle: false
 ```
 
@@ -88,7 +88,7 @@ Update your database schema, e.g. with a migration.
 Configure the bundle:
 
 ```yaml
-// config.yml
+# config.yml
 
 parameters:
   webfactory.newsletter_registration.email_sender_address: 'newsletter@example.com'
@@ -98,22 +98,22 @@ parameters:
   webfactory.newsletter_registration.block_email_address_duration_in_days: 30 # default value
 ```
 
-Include the RegistrationController in your routing:
+Include the `Controller` in your routing:
 
 ```yaml
-// routing.yml
+# routing.yml
 
 newsletter:
     prefix: /newsletter
     type: attribute
-    resource: '@WebfactoryNewsletterRegistrationBundle/src/Controller.php'
+    resource: '@WebfactoryNewsletterRegistrationBundle/Controller.php'
 ```
  
-The RegistrationController gets some Interfaces injected in its constructor. Alias these interfaces with your own
+The `Controller` gets some Interfaces injected in its constructor. Alias these interfaces with your own
 implementations: 
 
 ```yaml
-// src/services.yml
+# src/services.yml
 
 services:
   AppBundle\Newsletter\Entity\NewsletterRepository:
@@ -121,7 +121,7 @@ services:
       - '@doctrine.orm.entity_manager'
       - 'getRepository'
     arguments:
-      - 'AppBundle\Entity\Newsletter'
+      - 'AppBundle\Newsletter\Entity\Newsletter'
 
   Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface:
     alias: 'AppBundle\Newsletter\Entity\NewsletterRepository'
@@ -131,7 +131,7 @@ services:
       - '@doctrine.orm.entity_manager'
       - 'getRepository'
     arguments:
-      - 'AppBundle\Entity\PendingOptIn'
+      - 'AppBundle\Newsletter\Entity\PendingOptIn'
 
   Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface:
     alias: 'AppBundle\Newsletter\Entity\PendingOptInRepository'
@@ -141,7 +141,7 @@ services:
       - '@doctrine.orm.entity_manager'
       - 'getRepository'
     arguments:
-      - 'AppBundle\Entity\Recipient'
+      - 'AppBundle\Newsletter\Entity\Recipient'
 
   Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface:
     alias: 'AppBundle\Newsletter\Entity\RecipientRepository'
@@ -178,16 +178,16 @@ If you add new languages or fix mistakes, please consider contributing via pull 
 ### Adding fields
 
 - Extend the StartRegistration Type with a [Form Type Extension](https://symfony.com/doc/4.4/form/create_form_type_extension.html).
-- Add the new fields to your entities (`AppBundle\Entity\PendingOptIn` and `AppBundle\Entity\Recipient` in the example
-  above). Maybe you want to extends their respective Repositories, too.
-- Implement `Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface` and `Webfactory\NewsletterRegistrationBundle\Entity\RecpientFactoryInterface`,
+- Add the new fields to your entities (`AppBundle\Newsletter\Entity\PendingOptIn` and `AppBundle\Newsletter\Entity\Recipient`
+  in the example above). Maybe you want to extends their respective Repositories, too.
+- Implement `Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface` and `Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface`,
   as they are responsible for creating your entities from the corresponding form data. Alias the interfaces to your
   implementations, e.g.
   ```yaml
-  // services.yml
+  # services.yml
   services:
     Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface:
-        alias: 'App\Newsletter\Entity\PendingOptInFactory'
+        alias: 'AppBundle\Newsletter\Entity\PendingOptInFactory'
   ```
 
 ### Logic
@@ -196,7 +196,7 @@ If you can pin down your modifications to the `StartRegistration`, `ConfirmRegis
 `DeleteRegistration` tasks, you are probably better off implementing your own versions of the respective interface
 (maybe extending the task class) and aliasing the interface service to them.
 
-For greater flexibility, you can replace the RegistrationController with your own, e.g.:
+For greater flexibility, you can replace the `Controller` with your own, e.g.:
 
 ```php
 <?php
