@@ -8,16 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
-/**
- * @ ORM\Entity()
- * @ ORM\Table(
- *     name="wfd_newsletterRecipient",
- *     uniqueConstraints={
- *         @ ORM\UniqueConstraint(columns={"email"}),
- *         @ ORM\UniqueConstraint(columns={"uuid"}),
- *     }
- * )
- */
+#[ORM\MappedSuperclass]
 abstract class Recipient implements RecipientInterface
 {
     /**

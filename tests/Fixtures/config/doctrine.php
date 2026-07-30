@@ -1,6 +1,8 @@
 <?php
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('doctrine', [
@@ -10,6 +12,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'orm' => [
             'auto_generate_proxy_classes' => true,
+            'resolve_target_entities' => [
+                NewsletterInterface::class => Newsletter::class,
+            ],
             'mappings' => [
                 'BundleEntities' => [
                     'is_bundle' => false,

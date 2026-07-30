@@ -11,15 +11,7 @@ use Ramsey\Uuid\Uuid;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
 
-/**
- * @ ORM\Entity(repositoryClass="PendingOptInRepository")
- * @ ORM\Table(
- *     uniqueConstraints={
- *         @ ORM\UniqueConstraint(columns={"emailAddressHash"}),
- *         @ ORM\UniqueConstraint(columns={"uuid"}),
- *     }
- * )
- */
+#[ORM\MappedSuperclass]
 abstract class PendingOptIn implements PendingOptInInterface
 {
     #[ORM\Id]
