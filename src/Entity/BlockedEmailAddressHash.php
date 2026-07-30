@@ -6,7 +6,7 @@ use DateInterval;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: '\Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepository')]
+#[ORM\Entity(repositoryClass: BlockedEmailAddressHashRepository::class)]
 class BlockedEmailAddressHash implements BlockedEmailAddressHashInterface
 {
     #[ORM\Id]
