@@ -50,9 +50,9 @@ to copy the templates:
     mkdir src/AppBundle/Newsletter
     cp vendor/webfactory/newsletter-registration-bundle/app-class-templates/* src/AppBundle/Newsletter/*
 
-If you want to implement the interfaces by yourself, you could extend the corresponding abstract classes like in the
-templates above and add class level Doctrine ORM annotations (find template for them in the abstract classes). For
-customizing, see the "Customizing" section below.
+If you want to implement the interfaces by yourself, extend the corresponding abstract classes and add
+`#[ORM\Entity(repositoryClass: MyRepo::class)]` (and any desired `#[ORM\Table(...)]` constraints) on your concrete
+subclass. For customizing, see the "Customizing" section below.
 
 In either case, configure Doctrine's interface mapping to deal with your custom entity class:
 

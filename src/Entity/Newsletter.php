@@ -4,10 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ ORM\Entity(repositoryClass="\Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface")
- * @ ORM\Table("wfd_newsletterNewsletter")
- */
+#[ORM\MappedSuperclass]
 abstract class Newsletter implements NewsletterInterface
 {
     #[ORM\Id]
