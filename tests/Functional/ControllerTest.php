@@ -51,7 +51,7 @@ class ControllerTest extends WebTestCase
     }
 
     #[Test]
-    public function edit_registration_sets_success_flash(): void
+    public function edit_registration_with_no_newsletter_selected_sets_success_flash(): void
     {
         $client = static::createClient();
         NewsletterFactory::createMany(2);
@@ -67,6 +67,20 @@ class ControllerTest extends WebTestCase
             .' (like your email address) is still saved in our database. If you would like to'
             .' delete that data too, please delete your registration with the button below.'
         );
+    }
+
+    #[Test]
+    public function edit_registration_with_newsletter_selected_sets_success_flash(): void
+    {
+        $client = static::createClient();
+        $newsletters = NewsletterFactory::createMany(2);
+        $recipient = RecipientFactory::createOne();
+
+        $crawler = $client->request('GET', sprintf('/%s/', $recipient->getUuid()));
+        $form = $crawler->selectButton("Change newsletters you're subscribed to")->form();
+        $client->submit($form, ['newsletters' => [$newsletters[0]->getId()]]);
+
+        self::assertSelectorTextContains('.flash-success', 'Your newsletter registration was updated.');
     }
 
     #[Test]
