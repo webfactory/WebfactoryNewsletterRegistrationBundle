@@ -82,9 +82,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
             'constraints' => [
                 new NotBlank(),
                 new Email(),
-                new Callback([
-                    'callback' => $this->createEmailAddressIsAllowedToReceiveOptInEmailsConstraint(),
-                ]),
+                new Callback($this->createEmailAddressIsAllowedToReceiveOptInEmailsConstraint()),
             ],
         ]);
     }

@@ -48,6 +48,7 @@ class AppClassTemplatesTest extends TestCase
             [__DIR__.'/../../Resources/app-class-templates'],
             isDevMode: true,
         );
+        $config->enableNativeLazyObjects(true);
 
         $this->em = new EntityManager($connection, $config, $eventManager);
     }

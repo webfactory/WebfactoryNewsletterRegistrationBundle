@@ -5,9 +5,9 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 use DateTimeImmutable;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-final class PendingOptInFactory extends PersistentProxyObjectFactory
+final class PendingOptInFactory extends PersistentObjectFactory
 {
     protected function defaults(): array
     {

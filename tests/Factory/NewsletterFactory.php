@@ -3,9 +3,9 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-final class NewsletterFactory extends PersistentProxyObjectFactory
+final class NewsletterFactory extends PersistentObjectFactory
 {
     protected function defaults(): array
     {
