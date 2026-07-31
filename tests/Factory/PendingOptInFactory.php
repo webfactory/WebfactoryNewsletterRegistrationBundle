@@ -5,11 +5,11 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 use DateTimeImmutable;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
-use Zenstruck\Foundry\ModelFactory;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class PendingOptInFactory extends ModelFactory
+final class PendingOptInFactory extends PersistentProxyObjectFactory
 {
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'uuid' => self::faker()->uuid(),
@@ -18,7 +18,7 @@ final class PendingOptInFactory extends ModelFactory
         ];
     }
 
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this->instantiateWith(function (array $attributes): PendingOptIn {
             return new PendingOptIn(
@@ -30,7 +30,7 @@ final class PendingOptInFactory extends ModelFactory
         });
     }
 
-    protected static function getClass(): string
+    public static function class(): string
     {
         return PendingOptIn::class;
     }

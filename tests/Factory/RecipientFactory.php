@@ -4,11 +4,11 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
-use Zenstruck\Foundry\ModelFactory;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class RecipientFactory extends ModelFactory
+final class RecipientFactory extends PersistentProxyObjectFactory
 {
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'uuid' => self::faker()->uuid(),
@@ -16,14 +16,14 @@ final class RecipientFactory extends ModelFactory
         ];
     }
 
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this->instantiateWith(function (array $attributes): Recipient {
             return new Recipient($attributes['uuid'], $attributes['emailAddress']);
         });
     }
 
-    protected static function getClass(): string
+    public static function class(): string
     {
         return Recipient::class;
     }

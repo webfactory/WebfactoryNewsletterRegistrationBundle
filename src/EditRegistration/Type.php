@@ -18,7 +18,7 @@ class Type extends AbstractType
         $this->newsletterRepository = $newsletterRepository;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->addNewslettersElementToForm($builder, false);
 
