@@ -31,16 +31,4 @@ class TaskTest extends TestCase
 
         $this->task->deleteRegistration($recipient);
     }
-<<<<<<< HEAD
-
-    #[Test]
-    public function writes_success_flash()
-    {
-        $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));
-        $this->flashBag->expects($this->once())->method('add');
-
-        $this->task->deleteRegistration($recipient);
-    }
-=======
->>>>>>> 69d36a6 (Refactoring: Move flash messages from Task services to Controller actions)
 }

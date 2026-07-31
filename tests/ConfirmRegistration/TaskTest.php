@@ -83,16 +83,4 @@ class TaskTest extends TestCase
 
         $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');
     }
-<<<<<<< HEAD
-
-    #[Test]
-    public function writes_success_flash()
-    {
-        $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
-        $this->flashBag->expects($this->once())->method('add');
-
-        $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');
-    }
-=======
->>>>>>> 69d36a6 (Refactoring: Move flash messages from Task services to Controller actions)
 }
