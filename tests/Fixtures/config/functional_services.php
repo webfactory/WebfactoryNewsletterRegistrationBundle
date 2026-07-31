@@ -6,10 +6,12 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
+use Webfactory\NewsletterRegistrationBundle\Tests\Fixtures\DummyRecipientFactory;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->parameters()
@@ -26,6 +28,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $services = $containerConfigurator->services();
+
+    $services->set(RecipientFactoryInterface::class, DummyRecipientFactory::class);
 
     $services->set(PendingOptInRepositoryInterface::class)
         ->factory([service('doctrine.orm.entity_manager'), 'getRepository'])
