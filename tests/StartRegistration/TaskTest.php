@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\MailerInterface;
@@ -41,9 +42,7 @@ class TaskTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function saves_PendingOptIn()
     {
         $pendingOptIn = new PendingOptIn(null, new EmailAddress('receiver@example.com', 'secret'));
@@ -56,9 +55,7 @@ class TaskTest extends TestCase
         $this->task->startRegistration($pendingOptIn);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removes_outdated_PendingOptIn_if_it_exists_and_saves_new_one()
     {
         $outdatedPendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
@@ -80,9 +77,7 @@ class TaskTest extends TestCase
         $this->task->startRegistration($pendingOptIn);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function sends_opt_in_email()
     {
         $pendingOptIn = new PendingOptIn(null, new EmailAddress('receiver@example.com', 'secret'));

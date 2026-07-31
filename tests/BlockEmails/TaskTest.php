@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\BlockEmails;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\BlockEmails\Task;
@@ -37,9 +38,7 @@ class TaskTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throws_exception_if_email_address_does_not_match_hash()
     {
         $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
@@ -48,9 +47,7 @@ class TaskTest extends TestCase
         $this->task->blockEmailsFor($pendingOptIn, 'other@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function saves_block()
     {
         $this->blockedEmailHashesRepository->expects($this->once())->method('save');
@@ -59,9 +56,7 @@ class TaskTest extends TestCase
         $this->task->blockEmailsFor($pendingOptIn, 'webfactory@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function replaces_older_block_if_it_exists()
     {
         $emailAddress = $this->emailAddressFactory->fromString('webfactory@example.com');
@@ -85,9 +80,7 @@ class TaskTest extends TestCase
         $this->task->blockEmailsFor($pendingOptIn, 'webfactory@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removes_PendingOpIn()
     {
         $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));

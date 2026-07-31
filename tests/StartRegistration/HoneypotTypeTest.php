@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\PreloadedExtension;
@@ -22,9 +23,7 @@ class HoneypotTypeTest extends TypeTestCase
         $this->form = $this->factory->createBuilder()->add('url', HoneypotType::class)->getForm();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function is_valid_if_empty_honeypot_is_submitted(): void
     {
         $this->form->submit(['url' => '']);
@@ -32,9 +31,7 @@ class HoneypotTypeTest extends TypeTestCase
         $this->assertTrue($this->form->isValid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function is_not_valid_if_honeypot_is_not_submitted_at_all(): void
     {
         $this->form->submit([]);
@@ -46,9 +43,7 @@ class HoneypotTypeTest extends TypeTestCase
         $this->assertEquals(HoneypotType::ERROR_MESSAGE_HONEYPOT_NOT_SUBMITTED, $errors->current()->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function is_not_valid_if_honeypot_was_filled_in(): void
     {
         $this->form->submit(['url' => 'spam-url']);

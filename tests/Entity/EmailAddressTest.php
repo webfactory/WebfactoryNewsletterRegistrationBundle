@@ -2,15 +2,14 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressCanNotBeHashedWithoutSecretException;
 
 class EmailAddressTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function email_address_gets_normalized()
     {
         $this->assertEquals(
@@ -19,9 +18,7 @@ class EmailAddressTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function email_address_gets_hashed()
     {
         $this->assertNotEmpty(
@@ -29,9 +26,7 @@ class EmailAddressTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throws_exception_when_trying_to_hash_without_secret()
     {
         $this->expectException(EmailAddressCanNotBeHashedWithoutSecretException::class);

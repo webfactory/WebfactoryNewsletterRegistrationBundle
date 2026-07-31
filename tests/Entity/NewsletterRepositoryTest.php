@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepository;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
@@ -25,9 +26,7 @@ class NewsletterRepositoryTest extends KernelTestCase
             ->getRepository(Newsletter::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findVisible_returns_visible_newsletters()
     {
         NewsletterFactory::createOne();
@@ -38,9 +37,7 @@ class NewsletterRepositoryTest extends KernelTestCase
         $this->assertContainsOnly(Newsletter::class, $newsletters);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findVisible_does_not_return_invisible_newsletters()
     {
         NewsletterFactory::createOne(['visible' => false]);
@@ -48,9 +45,7 @@ class NewsletterRepositoryTest extends KernelTestCase
         $this->assertEmpty($this->repository->findVisible());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findVisible_orders_by_rank()
     {
         NewsletterFactory::createOne(['name' => '1', 'rank' => 1]);

@@ -15,6 +15,7 @@ use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\Newsletter as AbstractNewsletter;
 use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface;
@@ -53,43 +54,43 @@ class AppClassTemplatesTest extends TestCase
         $this->em = new EntityManager($connection, $config, $eventManager);
     }
 
-    /** @test */
+    #[Test]
     public function newsletter_template_extends_abstract_newsletter(): void
     {
         self::assertTrue(is_subclass_of(NewsletterTemplate::class, AbstractNewsletter::class));
     }
 
-    /** @test */
+    #[Test]
     public function recipient_template_extends_abstract_recipient(): void
     {
         self::assertTrue(is_subclass_of(RecipientTemplate::class, AbstractRecipient::class));
     }
 
-    /** @test */
+    #[Test]
     public function pending_opt_in_template_extends_abstract_pending_opt_in(): void
     {
         self::assertTrue(is_subclass_of(PendingOptInTemplate::class, AbstractPendingOptIn::class));
     }
 
-    /** @test */
+    #[Test]
     public function newsletter_repository_template_extends_abstract_newsletter_repository(): void
     {
         self::assertTrue(is_subclass_of(NewsletterRepositoryTemplate::class, AbstractNewsletterRepository::class));
     }
 
-    /** @test */
+    #[Test]
     public function recipient_repository_template_extends_abstract_recipient_repository(): void
     {
         self::assertTrue(is_subclass_of(RecipientRepositoryTemplate::class, AbstractRecipientRepository::class));
     }
 
-    /** @test */
+    #[Test]
     public function pending_opt_in_repository_template_extends_abstract_pending_opt_in_repository(): void
     {
         self::assertTrue(is_subclass_of(PendingOptInRepositoryTemplate::class, AbstractPendingOptInRepository::class));
     }
 
-    /** @test */
+    #[Test]
     public function mapping_validates_without_errors(): void
     {
         $errors = (new SchemaValidator($this->em))->validateMapping();
@@ -97,19 +98,19 @@ class AppClassTemplatesTest extends TestCase
         self::assertSame([], $errors);
     }
 
-    /** @test */
+    #[Test]
     public function newsletter_table_name_is_correct(): void
     {
         self::assertTrue($this->getSchema()->hasTable('wfd_newsletterNewsletter'));
     }
 
-    /** @test */
+    #[Test]
     public function recipient_table_name_is_correct(): void
     {
         self::assertTrue($this->getSchema()->hasTable('wfd_newsletterRecipient'));
     }
 
-    /** @test */
+    #[Test]
     public function recipient_has_unique_constraints_on_email_and_uuid(): void
     {
         $constrainedColumns = $this->getUniqueConstraintColumns('wfd_newsletterRecipient');
@@ -118,7 +119,7 @@ class AppClassTemplatesTest extends TestCase
         self::assertContains(['uuid'], $constrainedColumns);
     }
 
-    /** @test */
+    #[Test]
     public function pending_opt_in_has_unique_constraints_on_email_address_hash_and_uuid(): void
     {
         $tableName = $this->em->getClassMetadata(PendingOptInTemplate::class)->getTableName();

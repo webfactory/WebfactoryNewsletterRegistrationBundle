@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\MailerInterface;
@@ -30,9 +31,7 @@ class SendLinkTaskTest extends TestCase
         $this->task = new SendLinkTask($this->mailer, self::SENDER, $this->twig, $this->urlGenerator);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function sends_edit_registration_email()
     {
         $recipient = new Recipient(null, new EmailAddress('receiver@example.com', null));

@@ -4,6 +4,8 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use DateInterval;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
@@ -13,9 +15,7 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 class PendingOptInTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function uuid_is_added_if_omitted(): void
     {
         $this->assertNotEmpty(
@@ -23,9 +23,7 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function registrationDate_is_added_if_omitted(): void
     {
         $this->assertEqualsWithDelta(
@@ -35,11 +33,8 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
+    #[Test]
     public function static_construction_with_newsletters(): void
     {
         PendingOptIn::fromRegistrationFormData(
@@ -53,11 +48,8 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
+    #[Test]
     public function static_construction_without_newsletters(): void
     {
         PendingOptIn::fromRegistrationFormData(
@@ -67,9 +59,7 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function static_construction_without_email_address_returns_NULL(): void
     {
         $this->assertNull(
@@ -79,9 +69,7 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setEmailAddressIfItMatchesStoredHash_sets_EmailAddress_if_it_matches_stored_Hash(): void
     {
         $emailAddressFixture = new EmailAddress('webfactory@example.com', 'secret');
@@ -92,9 +80,7 @@ class PendingOptInTest extends TestCase
         $this->assertEquals($emailAddressFixture, $pendingOptIn->getEmailAddress());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setEmailAddressIfItMatchesStoredHash_throws_Exception_if_email_address_does_not_match(): void
     {
         $this->expectException(EmailAddressDoesNotMatchHashOfPendingOptInException::class);
@@ -104,9 +90,7 @@ class PendingOptInTest extends TestCase
         $pendingOptIn->setEmailAddressIfItMatchesStoredHash(new EmailAddress('other@example.com', 'secret'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function setEmailAddressIfItMatchesStoredHash_throws_Exception_if_secret_does_not_match(): void
     {
         $this->expectException(EmailAddressDoesNotMatchHashOfPendingOptInException::class);
@@ -116,9 +100,7 @@ class PendingOptInTest extends TestCase
         $pendingOptIn->setEmailAddressIfItMatchesStoredHash(new EmailAddress('webfactory@example.com', 'other-secret'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isOutdated_returns_true_if_outdated(): void
     {
         $pendingOptIn = new PendingOptIn(
@@ -133,9 +115,7 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isOutdated_returns_false_if_not_outdated(): void
     {
         $pendingOptIn = new PendingOptIn(
@@ -150,9 +130,7 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isAllowedToReceiveAnotherOptInEmail_returns_true_if_enough_time_passed_since_registration(): void
     {
         $pendingOptIn = new PendingOptIn(
@@ -167,9 +145,7 @@ class PendingOptInTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isAllowedToReceiveAnotherOptInEmail_returns_false_if_too_little_time_passed_since_registration(): void
     {
         $pendingOptIn = new PendingOptIn(
