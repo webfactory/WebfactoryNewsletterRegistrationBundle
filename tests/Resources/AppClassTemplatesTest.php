@@ -42,7 +42,6 @@ class AppClassTemplatesTest extends TestCase
 
         $connection = DriverManager::getConnection(
             ['driver' => 'pdo_sqlite', 'memory' => true],
-            eventManager: $eventManager,
         );
 
         $config = ORMSetup::createAttributeMetadataConfiguration(
@@ -50,7 +49,7 @@ class AppClassTemplatesTest extends TestCase
             isDevMode: true,
         );
 
-        $this->em = new EntityManager($connection, $config);
+        $this->em = new EntityManager($connection, $config, $eventManager);
     }
 
     /** @test */
