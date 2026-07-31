@@ -2,7 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
@@ -10,16 +11,16 @@ use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 class Task implements TaskInterface
 {
     protected RecipientRepositoryInterface $recipientRepo;
-    protected FlashBagInterface $flashBag;
+    protected RequestStack $requestStack;
     protected TranslatorInterface $translator;
 
     public function __construct(
         RecipientRepositoryInterface $recipientRepo,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->recipientRepo = $recipientRepo;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
@@ -30,7 +31,9 @@ class Task implements TaskInterface
         $messageKey = \count($recipient->getNewsletters()) > 0
             ? 'edit.registration.updated'
             : 'edit.registration.updated.no.newsletters.chosen';
-        $this->flashBag->add(
+        $session = $this->requestStack->getSession();
+        \assert($session instanceof FlashBagAwareSessionInterface);
+        $session->getFlashBag()->add(
             'success',
             $this->translator->trans($messageKey, [], 'webfactory-newsletter-registration')
         );

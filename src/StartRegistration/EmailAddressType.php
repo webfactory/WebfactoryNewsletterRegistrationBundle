@@ -124,11 +124,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
         };
     }
 
-    /**
-     * @param EmailAddress|null           $viewData
-     * @param FormInterface[]|Traversable $forms
-     */
-    public function mapDataToForms($viewData, $forms)
+    public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
         if (null === $viewData) {
             return;
@@ -144,7 +140,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
         $forms[static::ELEMENT_EMAIL_ADDRESS]->setData($viewData->getEmailAddress());
     }
 
-    public function mapFormsToData($forms, &$viewData)
+    public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
         $forms = iterator_to_array($forms);
 

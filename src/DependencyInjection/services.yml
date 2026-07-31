@@ -96,7 +96,7 @@ services:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
-            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+            - '@request_stack'
             - '@Symfony\Contracts\Translation\TranslatorInterface'
 
     Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\TaskInterface:
@@ -110,7 +110,7 @@ services:
     Webfactory\NewsletterRegistrationBundle\EditRegistration\Task:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
-            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+            - '@request_stack'
             - '@Symfony\Contracts\Translation\TranslatorInterface'
 
     Webfactory\NewsletterRegistrationBundle\EditRegistration\TaskInterface:
@@ -119,7 +119,7 @@ services:
     Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Task:
         arguments:
             - '@Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface'
-            - '@Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface'
+            - '@request_stack'
             - '@Symfony\Contracts\Translation\TranslatorInterface'
 
     Webfactory\NewsletterRegistrationBundle\DeleteRegistration\TaskInterface:

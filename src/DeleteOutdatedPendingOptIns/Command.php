@@ -16,8 +16,10 @@ class Command extends \Symfony\Component\Console\Command\Command
         $this->task = $task;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->task->deleteOutdatedPendingOptIns();
+
+        return self::SUCCESS;
     }
 }
