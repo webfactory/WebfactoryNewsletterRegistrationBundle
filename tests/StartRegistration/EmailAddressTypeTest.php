@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\FormInterface;
@@ -43,9 +44,7 @@ class EmailAddressTypeTest extends TypeTestCase
         $this->form = $this->factory->createBuilder()->add('emailAddress', EmailAddressType::class)->getForm();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_without_email_address()
     {
         $this->form->submit([
@@ -57,9 +56,7 @@ class EmailAddressTypeTest extends TypeTestCase
         $this->assertEquals((new NotBlank())->message, $this->form->getErrors(true, true)->current()->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_with_invalid_email_address()
     {
         $this->form->submit([
@@ -71,9 +68,7 @@ class EmailAddressTypeTest extends TypeTestCase
         $this->assertEquals((new Email())->message, $this->form->getErrors(true, true)->current()->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_with_blocked_email_address()
     {
         $emailAddress = $this->emailAddressFactory->fromString('webfactory@example.com');
@@ -97,9 +92,7 @@ class EmailAddressTypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_with_already_registering_email_address_if_not_enough_time_has_passed()
     {
         $veryRecentPendingOptIn = new PendingOptIn(null, $this->emailAddressFactory->fromString('webfactory@example.com'));
@@ -121,9 +114,7 @@ class EmailAddressTypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_validate_with_already_registering_email_address_if_enough_time_has_passed()
     {
         $oldPendingOptIn = new PendingOptIn(
@@ -147,9 +138,7 @@ class EmailAddressTypeTest extends TypeTestCase
         $this->assertEquals('webfactory@example.com', $emailAddress->getEmailAddress());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function provides_EmailAddress_if_submitted_with_valid_data()
     {
         $this->form->submit([

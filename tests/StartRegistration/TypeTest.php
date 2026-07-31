@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\StartRegistration;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\PreloadedExtension;
@@ -53,18 +54,14 @@ class TypeTest extends TypeTestCase
         parent::setUp();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function view_has_no_newsletter_choices_element_if_there_are_no_choices(): void
     {
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
         $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function view_has_no_newsletter_choice_element_if_there_is_exactly_one_choice(): void
     {
         $this->setUpOneNewsletter();
@@ -73,9 +70,7 @@ class TypeTest extends TypeTestCase
         $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function view_contains_newsletter_choice_element_if_there_is_more_than_one_choice(): void
     {
         $this->setUpTwoNewsletters();
@@ -91,9 +86,7 @@ class TypeTest extends TypeTestCase
         $this->assertEquals($this->newsletter2->getName(), $newslettersVars['choices'][1]->label);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_without_honeypot()
     {
         $form = $this->factory->create(StartRegistrationType::class);
@@ -109,9 +102,7 @@ class TypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_with_filled_honeypot()
     {
         $form = $this->factory->create(StartRegistrationType::class);
@@ -125,9 +116,7 @@ class TypeTest extends TypeTestCase
         $this->assertEquals(HoneypotType::ERROR_MESSAGE_HONEYPOT_FILLED, $form->getErrors()->current()->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_without_email_address()
     {
         $form = $this->factory->create(StartRegistrationType::class);
@@ -141,9 +130,7 @@ class TypeTest extends TypeTestCase
         $this->assertEquals((new NotBlank())->message, $form->getErrors(true, true)->current()->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_with_invalid_email_address()
     {
         $form = $this->factory->create(StartRegistrationType::class);
@@ -158,9 +145,7 @@ class TypeTest extends TypeTestCase
         $this->assertEquals((new Email())->message, $form->getErrors(true, true)->current()->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_with_already_registering_email_address_if_not_enough_time_has_passed()
     {
         $veryRecentPendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
@@ -185,9 +170,7 @@ class TypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_validate_with_already_registering_email_address_if_enough_time_has_passed()
     {
         $oldPendingOptIn = new PendingOptIn(
@@ -209,9 +192,7 @@ class TypeTest extends TypeTestCase
         $this->assertTrue($form->isValid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function does_not_validate_if_newsletter_choices_exist_but_none_was_selected()
     {
         $this->setUpTwoNewsletters();
@@ -232,9 +213,7 @@ class TypeTest extends TypeTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function provides_PendingOptIn_if_submitted_with_valid_data_without_newsletter_choices()
     {
         $pendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
@@ -261,9 +240,7 @@ class TypeTest extends TypeTestCase
         $this->assertEquals($pendingOptIn, $form->getData());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function provides_PendingOptIn_if_submitted_with_valid_data_and_newsletter_choices()
     {
         $this->setUpTwoNewsletters();

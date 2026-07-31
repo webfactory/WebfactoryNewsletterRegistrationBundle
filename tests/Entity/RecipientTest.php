@@ -3,6 +3,8 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
@@ -11,9 +13,7 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
 class RecipientTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function uuid_is_added_if_omitted()
     {
         $this->assertNotEmpty(
@@ -21,9 +21,7 @@ class RecipientTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function optInDate_is_added_if_omitted()
     {
         $this->assertEqualsWithDelta(
@@ -33,9 +31,7 @@ class RecipientTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function static_construction_with_newsletters()
     {
         $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1'), new Newsletter(2, 'newsletter 2')];
@@ -48,11 +44,8 @@ class RecipientTest extends TestCase
         $this->assertEquals($newslettersForPendingOptIn, $recipient->getNewsletters());
     }
 
-    /**
-     * @test
-     *
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
+    #[Test]
     public function static_construction_without_newsletters()
     {
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));

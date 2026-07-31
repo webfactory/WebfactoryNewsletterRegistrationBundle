@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\DeleteRegistration;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,9 +36,7 @@ class TaskTest extends TestCase
         $this->task = new Task($this->recipientRepo, $this->requestStack, $this->translator);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removes_recipient()
     {
         $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));
@@ -46,9 +45,7 @@ class TaskTest extends TestCase
         $this->task->deleteRegistration($recipient);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function writes_success_flash()
     {
         $recipient = new Recipient('uuid', new EmailAddress('webfactory@example.com', null));

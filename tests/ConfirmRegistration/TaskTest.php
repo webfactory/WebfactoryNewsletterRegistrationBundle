@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\ConfirmRegistration;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -57,9 +58,7 @@ class TaskTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throws_exception_if_PendingOptIn_is_outdated()
     {
         $pendingOptIn = new PendingOptIn(
@@ -73,9 +72,7 @@ class TaskTest extends TestCase
         $this->task->confirmRegistration($pendingOptIn, 'other@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throws_exception_if_email_address_does_not_match_hash()
     {
         $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
@@ -84,9 +81,7 @@ class TaskTest extends TestCase
         $this->task->confirmRegistration($pendingOptIn, 'other@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function saves_recipient()
     {
         $this->recipientRepo->expects($this->once())->method('save');
@@ -95,9 +90,7 @@ class TaskTest extends TestCase
         $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removes_pending_opt_in()
     {
         $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));
@@ -106,9 +99,7 @@ class TaskTest extends TestCase
         $this->task->confirmRegistration($pendingOptIn, 'webfactory@example.com');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function writes_success_flash()
     {
         $pendingOptIn = new PendingOptIn('uuid', $this->emailAddressFactory->fromString('webfactory@example.com'));

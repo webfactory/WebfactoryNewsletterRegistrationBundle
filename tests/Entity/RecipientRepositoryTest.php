@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
@@ -26,9 +27,7 @@ class RecipientRepositoryTest extends KernelTestCase
             ->getRepository(Recipient::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isEmailAddressAlreadyRegistered_returns_true_if_already_registered()
     {
         $emailAddress = new EmailAddress('webfactory@example.com', null);
@@ -40,9 +39,7 @@ class RecipientRepositoryTest extends KernelTestCase
         $this->assertEquals($registeredRecipient->getUuid(), $retrievedRecipient->getUuid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function isEmailAddressAlreadyRegistered_returns_null_if_not_already_registered()
     {
         $this->assertNull(

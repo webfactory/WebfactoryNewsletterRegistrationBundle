@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use App\Recipient as AppRecipient;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory;
@@ -11,9 +12,7 @@ use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 class RecipientFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function fromPendingOptIn()
     {
         // The RecipientFactory uses get_declared_classes() to find a RecipientInterface

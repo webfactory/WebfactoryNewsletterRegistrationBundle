@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\DeleteOutdatedBlockedEmailAddresses;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\DeleteOutdatedPendingOptIns\Task;
@@ -23,9 +24,7 @@ class TaskTest extends TestCase
         $this->task = new Task($this->repository, self::BLOCK_EMAIL_DURATION_IN_DAYS);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function delegates_to_repository(): void
     {
         $this->repository
@@ -35,9 +34,7 @@ class TaskTest extends TestCase
         $this->task->deleteOutdatedPendingOptIns();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function sets_threshold_date_from_now_if_called_without_one(): void
     {
         $expected = new DateTimeImmutable('-'.self::BLOCK_EMAIL_DURATION_IN_DAYS.' hour');

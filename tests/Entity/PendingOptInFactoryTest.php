@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use App\PendingOptIn as AppPendingOptIn;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory;
@@ -20,9 +21,7 @@ class PendingOptInFactoryTest extends TestCase
         $this->factory = new PendingOptInFactory();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fromRegistrationFormData_without_newsletter_choices(): void
     {
         // The PendingOptInFactory uses get_declared_classes() to find a PendingOptInInterface
@@ -37,9 +36,7 @@ class PendingOptInFactoryTest extends TestCase
         $this->assertEquals('webfactory@example.com', (string) $pendingOptIn->getEmailAddress());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function fromRegistrationFormData_with_newsletter_choices(): void
     {
         // The PendingOptInFactory uses get_declared_classes() to find a PendingOptInInterface

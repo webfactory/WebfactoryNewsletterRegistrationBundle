@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Entity;
 
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
@@ -27,9 +28,7 @@ class PendingOptInRepositoryTest extends KernelTestCase
             ->getRepository(PendingOptIn::class);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findByEmailAddress_returns_PendingOptIn_if_it_exists(): void
     {
         $emailAddress = new EmailAddress('webfactory@example.com', 'secret');
@@ -41,9 +40,7 @@ class PendingOptInRepositoryTest extends KernelTestCase
         $this->assertEquals($proxy->getUuid(), $result->getUuid());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function findByEmailAddress_returns_null_if_no_matching_PendingOptIn_exists(): void
     {
         $this->assertNull(
@@ -51,9 +48,7 @@ class PendingOptInRepositoryTest extends KernelTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeOutdated_removes_outdated_ones(): void
     {
         PendingOptInFactory::createOne(['registrationDate' => new DateTimeImmutable('2000-01-01')]);
@@ -64,9 +59,7 @@ class PendingOptInRepositoryTest extends KernelTestCase
         $this->assertCount(0, $this->repository->findAll());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function removeOutdated_does_not_remove_current_ones(): void
     {
         PendingOptInFactory::createOne(['registrationDate' => new DateTimeImmutable('-1h')]);

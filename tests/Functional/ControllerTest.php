@@ -2,6 +2,7 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Functional;
 
+use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -11,7 +12,7 @@ class ControllerTest extends WebTestCase
     use Factories;
     use ResetDatabase;
 
-    /** @test */
+    #[Test]
     public function start_registration_route_renders_the_registration_form(): void
     {
         $client = static::createClient();
@@ -21,7 +22,7 @@ class ControllerTest extends WebTestCase
         self::assertSelectorExists('form');
     }
 
-    /** @test */
+    #[Test]
     public function edit_registration_route_returns_not_found_for_unknown_uuid(): void
     {
         $client = static::createClient();
