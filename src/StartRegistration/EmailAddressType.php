@@ -50,7 +50,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
         $this->translator = $translator;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->setDataMapper($this);
 
@@ -72,7 +72,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
         return TextType::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'empty_data' => null,

@@ -4,11 +4,11 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
 use DateTimeImmutable;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHash;
-use Zenstruck\Foundry\ModelFactory;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class BlockedEmailAddressHashFactory extends ModelFactory
+final class BlockedEmailAddressHashFactory extends PersistentProxyObjectFactory
 {
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'hash' => self::faker()->sha1(),
@@ -16,14 +16,14 @@ final class BlockedEmailAddressHashFactory extends ModelFactory
         ];
     }
 
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this->instantiateWith(function (array $attributes): BlockedEmailAddressHash {
             return new BlockedEmailAddressHash($attributes['hash'], $attributes['blockDate']);
         });
     }
 
-    protected static function getClass(): string
+    public static function class(): string
     {
         return BlockedEmailAddressHash::class;
     }

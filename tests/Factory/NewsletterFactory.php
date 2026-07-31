@@ -3,11 +3,11 @@
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
-use Zenstruck\Foundry\ModelFactory;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class NewsletterFactory extends ModelFactory
+final class NewsletterFactory extends PersistentProxyObjectFactory
 {
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return [
             'name' => self::faker()->word(),
@@ -16,14 +16,14 @@ final class NewsletterFactory extends ModelFactory
         ];
     }
 
-    protected function initialize(): self
+    protected function initialize(): static
     {
         return $this->instantiateWith(function (array $attributes): Newsletter {
             return new Newsletter(null, $attributes['name'], $attributes['rank'], $attributes['visible']);
         });
     }
 
-    protected static function getClass(): string
+    public static function class(): string
     {
         return Newsletter::class;
     }

@@ -3,6 +3,7 @@
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 use Exception;
+use ReflectionClass;
 
 class DetermineAppsSubclassHelper
 {
@@ -12,6 +13,7 @@ class DetermineAppsSubclassHelper
             if (
                 is_subclass_of($class, $parentClass)
                 && 0 !== strpos($class, 'Webfactory\NewsletterRegistrationBundle')
+                && is_file((string) (new ReflectionClass($class))->getFileName())
             ) {
                 return $class;
             }
