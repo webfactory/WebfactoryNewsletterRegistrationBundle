@@ -3,7 +3,8 @@
 namespace Webfactory\NewsletterRegistrationBundle\ConfirmRegistration;
 
 use DateTimeImmutable;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
@@ -21,7 +22,7 @@ class Task implements TaskInterface
     protected EmailAddressFactoryInterface $emailAddressFactory;
     protected RecipientFactoryInterface $recipientFactory;
     protected RecipientRepositoryInterface $recipientRepo;
-    protected FlashBagInterface $flashBag;
+    protected RequestStack $requestStack;
     protected TranslatorInterface $translator;
 
     public function __construct(
@@ -30,7 +31,7 @@ class Task implements TaskInterface
         EmailAddressFactoryInterface $emailAddressFactory,
         RecipientFactoryInterface $recipientFactory,
         RecipientRepositoryInterface $recipientRepo,
-        FlashBagInterface $flashBag,
+        RequestStack $requestStack,
         TranslatorInterface $translator
     ) {
         $this->pendingOptInRepo = $pendingOptInRepo;
@@ -38,7 +39,7 @@ class Task implements TaskInterface
         $this->emailAddressFactory = $emailAddressFactory;
         $this->recipientFactory = $recipientFactory;
         $this->recipientRepo = $recipientRepo;
-        $this->flashBag = $flashBag;
+        $this->requestStack = $requestStack;
         $this->translator = $translator;
     }
 
@@ -62,7 +63,9 @@ class Task implements TaskInterface
         $this->recipientRepo->save($recipient);
         $this->pendingOptInRepo->remove($pendingOptIn);
 
-        $this->flashBag->add(
+        $session = $this->requestStack->getSession();
+        \assert($session instanceof FlashBagAwareSessionInterface);
+        $session->getFlashBag()->add(
             'success',
             $this->translator->trans('confirm.registration.complete', [], 'webfactory-newsletter-registration')
         );

@@ -5,7 +5,9 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\ConfirmRegistration;
 use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\ConfirmRegistration\Task;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
@@ -25,6 +27,7 @@ class TaskTest extends TestCase
     protected RecipientFactoryInterface&MockObject $recipientFactory;
     protected RecipientRepositoryInterface&MockObject $recipientRepo;
     protected PendingOptInRepositoryInterface&MockObject $pendingOptInRepo;
+    protected RequestStack&MockObject $requestStack;
     protected FlashBagInterface&MockObject $flashBag;
     protected TranslatorInterface&MockObject $translator;
     protected Task $task;
@@ -38,6 +41,10 @@ class TaskTest extends TestCase
         $this->recipientRepo = $this->createMock(RecipientRepositoryInterface::class);
         $this->pendingOptInRepo = $this->createMock(PendingOptInRepositoryInterface::class);
         $this->flashBag = $this->createMock(FlashBagInterface::class);
+        $session = $this->createMock(FlashBagAwareSessionInterface::class);
+        $session->method('getFlashBag')->willReturn($this->flashBag);
+        $this->requestStack = $this->createMock(RequestStack::class);
+        $this->requestStack->method('getSession')->willReturn($session);
         $this->translator = $this->createMock(TranslatorInterface::class);
         $this->task = new Task(
             $this->pendingOptInRepo,
@@ -45,7 +52,7 @@ class TaskTest extends TestCase
             $this->emailAddressFactory,
             $this->recipientFactory,
             $this->recipientRepo,
-            $this->flashBag,
+            $this->requestStack,
             $this->translator
         );
     }
