@@ -4,9 +4,9 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-final class RecipientFactory extends PersistentProxyObjectFactory
+final class RecipientFactory extends PersistentObjectFactory
 {
     protected function defaults(): array
     {

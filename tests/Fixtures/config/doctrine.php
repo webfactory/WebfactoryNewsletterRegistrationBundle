@@ -11,7 +11,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             'path' => '%kernel.cache_dir%/test.db',
         ],
         'orm' => [
-            'auto_generate_proxy_classes' => true,
             'resolve_target_entities' => [
                 NewsletterInterface::class => Newsletter::class,
             ],

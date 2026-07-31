@@ -21,7 +21,7 @@ trait TypeHasNewslettersElementTrait
 
         $constraints = [];
         if (true === $recipientHasToChooseAtLeastOne) {
-            $constraints[] = new Choice(['min' => 1, 'choices' => $choices, 'multiple' => true]);
+            $constraints[] = new Choice(choices: $choices, multiple: true, min: 1);
         }
 
         $builder->add(

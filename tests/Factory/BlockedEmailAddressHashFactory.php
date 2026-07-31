@@ -4,9 +4,9 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
 use DateTimeImmutable;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHash;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-final class BlockedEmailAddressHashFactory extends PersistentProxyObjectFactory
+final class BlockedEmailAddressHashFactory extends PersistentObjectFactory
 {
     protected function defaults(): array
     {
