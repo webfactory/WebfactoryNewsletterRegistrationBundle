@@ -13,36 +13,36 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\BlockedEmailAddressHashRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactory;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddressFactoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\EmailAddressType;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\HoneypotType;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 class TypeTest extends TypeTestCase
 {
     protected const MINIMAL_INTERVAL_BETWEEN_OPT_IN_EMAILS_IN_HOURS = 1;
 
-    protected NewsletterRepositoryInterface&MockObject $newsletterRepository;
+    protected CategoryRepositoryInterface&MockObject $categoryRepository;
     protected PendingOptInFactoryInterface&MockObject $pendingOptInFactory;
     protected BlockedEmailAddressHashRepositoryInterface&MockObject $blockedEmailAddressHashRepository;
     protected PendingOptInRepositoryInterface&MockObject $pendingOptInRepository;
     protected RecipientRepositoryInterface&MockObject $recipientRepository;
     protected EmailAddressFactoryInterface $emailAddressFactory;
     protected TranslatorInterface&MockObject $translator;
-    protected ?Newsletter $newsletter1;
-    protected ?Newsletter $newsletter2;
+    protected ?Category $category1;
+    protected ?Category $category2;
 
     protected function setUp(): void
     {
-        $this->newsletterRepository = $this->createMock(NewsletterRepositoryInterface::class);
+        $this->categoryRepository = $this->createMock(CategoryRepositoryInterface::class);
         $this->pendingOptInFactory = $this->createMock(PendingOptInFactoryInterface::class);
         $this->blockedEmailAddressHashRepository = $this->createMock(BlockedEmailAddressHashRepositoryInterface::class);
         $this->pendingOptInRepository = $this->createMock(PendingOptInRepositoryInterface::class);
@@ -55,35 +55,35 @@ class TypeTest extends TypeTestCase
     }
 
     #[Test]
-    public function view_has_no_newsletter_choices_element_if_there_are_no_choices(): void
+    public function view_has_no_category_choices_element_if_there_are_no_choices(): void
     {
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
+        $this->assertArrayNotHasKey(StartRegistrationType::ELEMENT_CATEGORIES, $formView->vars['form']->children);
     }
 
     #[Test]
-    public function view_has_no_newsletter_choice_element_if_there_is_exactly_one_choice(): void
+    public function view_has_no_category_choice_element_if_there_is_exactly_one_choice(): void
     {
-        $this->setUpOneNewsletter();
+        $this->setUpOneCategory();
 
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $this->assertArrayNotHasKey(startRegistrationType::ELEMENT_NEWSLETTERS, $formView->vars['form']->children);
+        $this->assertArrayNotHasKey(StartRegistrationType::ELEMENT_CATEGORIES, $formView->vars['form']->children);
     }
 
     #[Test]
-    public function view_contains_newsletter_choice_element_if_there_is_more_than_one_choice(): void
+    public function view_contains_category_choice_element_if_there_is_more_than_one_choice(): void
     {
-        $this->setUpTwoNewsletters();
+        $this->setUpTwoCategories();
 
         $formView = $this->factory->create(StartRegistrationType::class)->createView();
-        $newslettersVars = $formView->vars['form']->children[startRegistrationType::ELEMENT_NEWSLETTERS]->vars;
-        $this->assertArrayHasKey('choices', $newslettersVars);
+        $categoriesVars = $formView->vars['form']->children[StartRegistrationType::ELEMENT_CATEGORIES]->vars;
+        $this->assertArrayHasKey('choices', $categoriesVars);
 
-        $this->assertCount(2, $newslettersVars['choices']);
-        $this->assertEquals($this->newsletter1->getId(), $newslettersVars['choices'][0]->value);
-        $this->assertEquals($this->newsletter1->getName(), $newslettersVars['choices'][0]->label);
-        $this->assertEquals($this->newsletter2->getId(), $newslettersVars['choices'][1]->value);
-        $this->assertEquals($this->newsletter2->getName(), $newslettersVars['choices'][1]->label);
+        $this->assertCount(2, $categoriesVars['choices']);
+        $this->assertEquals($this->category1->getId(), $categoriesVars['choices'][0]->value);
+        $this->assertEquals($this->category1->getName(), $categoriesVars['choices'][0]->label);
+        $this->assertEquals($this->category2->getId(), $categoriesVars['choices'][1]->value);
+        $this->assertEquals($this->category2->getName(), $categoriesVars['choices'][1]->label);
     }
 
     #[Test]
@@ -91,7 +91,7 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -107,8 +107,8 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => 'http://spam.com',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => 'http://spam.com',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -121,8 +121,8 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => '',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => '',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
         $this->assertTrue($form->isSynchronized());
         $this->assertFalse($form->isValid());
@@ -135,8 +135,8 @@ class TypeTest extends TypeTestCase
     {
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'this is no valid email address',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'this is no valid email address',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -155,8 +155,8 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isSynchronized());
@@ -185,23 +185,23 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
     }
 
     #[Test]
-    public function does_not_validate_if_newsletter_choices_exist_but_none_was_selected()
+    public function does_not_validate_if_category_choices_exist_but_none_was_selected()
     {
-        $this->setUpTwoNewsletters();
+        $this->setUpTwoCategories();
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_NEWSLETTERS => [],
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_CATEGORIES => [],
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertFalse($form->isValid());
@@ -214,7 +214,7 @@ class TypeTest extends TypeTestCase
     }
 
     #[Test]
-    public function provides_PendingOptIn_if_submitted_with_valid_data_without_newsletter_choices()
+    public function provides_PendingOptIn_if_submitted_with_valid_data_without_category_choices()
     {
         $pendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'));
         $this->pendingOptInFactory
@@ -232,8 +232,8 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
@@ -241,14 +241,14 @@ class TypeTest extends TypeTestCase
     }
 
     #[Test]
-    public function provides_PendingOptIn_if_submitted_with_valid_data_and_newsletter_choices()
+    public function provides_PendingOptIn_if_submitted_with_valid_data_and_category_choices()
     {
-        $this->setUpTwoNewsletters();
+        $this->setUpTwoCategories();
 
         $pendingOptIn = new PendingOptIn(
             null,
             new EmailAddress('webfactory@example.com', 'secret'),
-            [$this->newsletter1, $this->newsletter2]
+            [$this->category1, $this->category2]
         );
         $this->pendingOptInFactory
             ->method('fromRegistrationFormData')
@@ -258,8 +258,8 @@ class TypeTest extends TypeTestCase
                         return \array_key_exists(StartRegistrationType::ELEMENT_EMAIL_ADDRESS, $formData)
                             && $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS] instanceof EmailAddress
                             && 'webfactory@example.com' === (string) $formData[StartRegistrationType::ELEMENT_EMAIL_ADDRESS]->getEmailAddress()
-                            && \array_key_exists(StartRegistrationType::ELEMENT_NEWSLETTERS, $formData)
-                            && $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] === [$this->newsletter1, $this->newsletter2];
+                            && \array_key_exists(StartRegistrationType::ELEMENT_CATEGORIES, $formData)
+                            && $formData[StartRegistrationType::ELEMENT_CATEGORIES] === [$this->category1, $this->category2];
                     }
                 )
             )
@@ -267,9 +267,9 @@ class TypeTest extends TypeTestCase
 
         $form = $this->factory->create(StartRegistrationType::class);
         $form->submit([
-            startRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
-            startRegistrationType::ELEMENT_NEWSLETTERS => [$this->newsletter1->getId(), $this->newsletter2->getId()],
-            startRegistrationType::ELEMENT_HONEYPOT => '',
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_CATEGORIES => [$this->category1->getId(), $this->category2->getId()],
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
         ]);
 
         $this->assertTrue($form->isValid());
@@ -283,7 +283,7 @@ class TypeTest extends TypeTestCase
         return [
             new PreloadedExtension(
                 [
-                    new StartRegistrationType($this->newsletterRepository, $this->pendingOptInFactory),
+                    new StartRegistrationType($this->categoryRepository, $this->pendingOptInFactory),
                     new EmailAddressType(
                         $this->blockedEmailAddressHashRepository,
                         $this->pendingOptInRepository,
@@ -299,16 +299,16 @@ class TypeTest extends TypeTestCase
         ];
     }
 
-    protected function setUpOneNewsletter(): void
+    protected function setUpOneCategory(): void
     {
-        $this->newsletter1 = new Newsletter(1, 'Newsletter 1');
-        $this->newsletterRepository->method('findVisible')->willReturn([$this->newsletter1]);
+        $this->category1 = new Category(1, 'Category 1');
+        $this->categoryRepository->method('findVisible')->willReturn([$this->category1]);
     }
 
-    protected function setUpTwoNewsletters(): void
+    protected function setUpTwoCategories(): void
     {
-        $this->newsletter1 = new Newsletter(1, 'Newsletter 1');
-        $this->newsletter2 = new Newsletter(2, 'Newsletter 2');
-        $this->newsletterRepository->method('findVisible')->willReturn([$this->newsletter1, $this->newsletter2]);
+        $this->category1 = new Category(1, 'Category 1');
+        $this->category2 = new Category(2, 'Category 2');
+        $this->categoryRepository->method('findVisible')->willReturn([$this->category1, $this->category2]);
     }
 }

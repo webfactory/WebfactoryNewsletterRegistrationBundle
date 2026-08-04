@@ -5,7 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Tests\Functional;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
-use Webfactory\NewsletterRegistrationBundle\Tests\Factory\NewsletterFactory;
+use Webfactory\NewsletterRegistrationBundle\Tests\Factory\CategoryFactory;
 use Webfactory\NewsletterRegistrationBundle\Tests\Factory\PendingOptInFactory;
 use Webfactory\NewsletterRegistrationBundle\Tests\Factory\RecipientFactory;
 use Zenstruck\Foundry\Test\Factories;
@@ -51,14 +51,14 @@ class ControllerTest extends WebTestCase
     }
 
     #[Test]
-    public function edit_registration_with_no_newsletter_selected_sets_success_flash(): void
+    public function edit_registration_with_no_category_selected_sets_success_flash(): void
     {
         $client = static::createClient();
-        NewsletterFactory::createMany(2);
+        CategoryFactory::createMany(2);
         $recipient = RecipientFactory::createOne();
 
         $crawler = $client->request('GET', sprintf('/%s/', $recipient->getUuid()));
-        $form = $crawler->selectButton("Change newsletters you're subscribed to")->form();
+        $form = $crawler->selectButton("Change newsletter categories you're subscribed to")->form();
         $client->submit($form);
 
         self::assertSelectorTextContains(
@@ -70,15 +70,15 @@ class ControllerTest extends WebTestCase
     }
 
     #[Test]
-    public function edit_registration_with_newsletter_selected_sets_success_flash(): void
+    public function edit_registration_with_category_selected_sets_success_flash(): void
     {
         $client = static::createClient();
-        $newsletters = NewsletterFactory::createMany(2);
+        $categories = CategoryFactory::createMany(2);
         $recipient = RecipientFactory::createOne();
 
         $crawler = $client->request('GET', sprintf('/%s/', $recipient->getUuid()));
-        $form = $crawler->selectButton("Change newsletters you're subscribed to")->form();
-        $client->submit($form, ['newsletters' => [$newsletters[0]->getId()]]);
+        $form = $crawler->selectButton("Change newsletter categories you're subscribed to")->form();
+        $client->submit($form, ['categories' => [$categories[0]->getId()]]);
 
         self::assertSelectorTextContains('.flash-success', 'Your newsletter registration was updated.');
     }

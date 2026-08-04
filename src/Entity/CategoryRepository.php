@@ -4,7 +4,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-abstract class NewsletterRepository extends EntityRepository implements NewsletterRepositoryInterface
+abstract class CategoryRepository extends EntityRepository implements CategoryRepositoryInterface
 {
     public function findVisible(): array
     {

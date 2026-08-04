@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactory;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 class RecipientFactoryTest extends TestCase
@@ -20,13 +20,13 @@ class RecipientFactoryTest extends TestCase
         // the class must be loaded before the factory is called:
         class_exists(AppRecipient::class);
 
-        $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1')];
+        $categoriesForPendingOptIn = [new Category(1, 'category 1')];
         $recipient = (new RecipientFactory())->fromPendingOptIn(
-            new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $newslettersForPendingOptIn)
+            new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $categoriesForPendingOptIn)
         );
 
         $this->assertEquals('uuid', $recipient->getUuid());
         $this->assertEquals('webfactory@example.com', (string) $recipient->getEmailAddress());
-        $this->assertEquals($newslettersForPendingOptIn, $recipient->getNewsletters());
+        $this->assertEquals($categoriesForPendingOptIn, $recipient->getCategories());
     }
 }

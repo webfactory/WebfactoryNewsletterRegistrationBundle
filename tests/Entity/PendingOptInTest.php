@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Exception\EmailAddressDoesNotMatchHashOfPendingOptInException;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 
 class PendingOptInTest extends TestCase
@@ -35,14 +35,14 @@ class PendingOptInTest extends TestCase
 
     #[DoesNotPerformAssertions]
     #[Test]
-    public function static_construction_with_newsletters(): void
+    public function static_construction_with_categories(): void
     {
         PendingOptIn::fromRegistrationFormData(
             [
                 StartRegistrationType::ELEMENT_EMAIL_ADDRESS => new EmailAddress('webfactory@example.org', 'secret'),
-                StartRegistrationType::ELEMENT_NEWSLETTERS => [
-                    new Newsletter(null, 'First Newsletter'),
-                    new Newsletter(null, 'Second Newsletter'),
+                StartRegistrationType::ELEMENT_CATEGORIES => [
+                    new Category(null, 'First Category'),
+                    new Category(null, 'Second Category'),
                 ],
             ]
         );
@@ -50,7 +50,7 @@ class PendingOptInTest extends TestCase
 
     #[DoesNotPerformAssertions]
     #[Test]
-    public function static_construction_without_newsletters(): void
+    public function static_construction_without_categories(): void
     {
         PendingOptIn::fromRegistrationFormData(
             [

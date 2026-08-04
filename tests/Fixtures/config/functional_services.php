@@ -4,11 +4,11 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\RecipientRepositoryInterface;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 use Webfactory\NewsletterRegistrationBundle\Tests\Fixtures\DummyRecipientFactory;
@@ -39,7 +39,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->factory([service('doctrine.orm.entity_manager'), 'getRepository'])
         ->args([Recipient::class]);
 
-    $services->set(NewsletterRepositoryInterface::class)
+    $services->set(CategoryRepositoryInterface::class)
         ->factory([service('doctrine.orm.entity_manager'), 'getRepository'])
-        ->args([Newsletter::class]);
+        ->args([Category::class]);
 };

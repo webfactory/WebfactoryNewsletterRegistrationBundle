@@ -2,10 +2,10 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Entity;
 
-interface NewsletterRepositoryInterface
+interface CategoryRepositoryInterface
 {
     /**
-     * @return NewsletterInterface[]
+     * @return CategoryInterface[]
      */
     public function findVisible(): array;
 }

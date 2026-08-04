@@ -1,8 +1,8 @@
 <?php
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('doctrine', [
@@ -12,7 +12,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'orm' => [
             'resolve_target_entities' => [
-                NewsletterInterface::class => Newsletter::class,
+                CategoryInterface::class => Category::class,
             ],
             'mappings' => [
                 'BundleEntities' => [

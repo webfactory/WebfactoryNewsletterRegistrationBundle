@@ -16,9 +16,9 @@ interface PendingOptInInterface
     public function setEmailAddressIfItMatchesStoredHash(EmailAddress $email): void;
 
     /**
-     * @return NewsletterInterface[]
+     * @return CategoryInterface[]
      */
-    public function getNewsletters(): array;
+    public function getCategories(): array;
 
     public function getRegistrationDate(): DateTimeImmutable;
 

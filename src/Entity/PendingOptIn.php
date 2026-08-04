@@ -29,14 +29,14 @@ abstract class PendingOptIn implements PendingOptInInterface
     protected DateTimeImmutable $registrationDate;
 
     /**
-     * @var Collection<int, NewsletterInterface>
+     * @var Collection<int, CategoryInterface>
      */
-    #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
+    #[ORM\ManyToMany(targetEntity: CategoryInterface::class)]
     #[ORM\JoinTable(
         joinColumns: [new ORM\JoinColumn(referencedColumnName: 'uuid', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected Collection $newsletters;
+    protected Collection $categories;
 
     public static function fromRegistrationFormData(array $formData): ?PendingOptInInterface
     {
@@ -48,20 +48,20 @@ abstract class PendingOptIn implements PendingOptInInterface
         return new static(
             null,
             $emailAddress,
-            $formData[StartRegistrationType::ELEMENT_NEWSLETTERS] ?? []
+            $formData[StartRegistrationType::ELEMENT_CATEGORIES] ?? []
         );
     }
 
     public function __construct(
         ?string $uuid,
         EmailAddress $emailAddress,
-        array $newsletters = [],
+        array $categories = [],
         ?DateTimeImmutable $registrationDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $emailAddress;
         $this->emailAddressHash = $emailAddress->getHash();
-        $this->newsletters = new ArrayCollection($newsletters);
+        $this->categories = new ArrayCollection($categories);
         $this->registrationDate = $registrationDate ?: new DateTimeImmutable();
     }
 
@@ -84,9 +84,9 @@ abstract class PendingOptIn implements PendingOptInInterface
         $this->emailAddress = $emailAddress;
     }
 
-    public function getNewsletters(): array
+    public function getCategories(): array
     {
-        return $this->newsletters->toArray();
+        return $this->categories->toArray();
     }
 
     public function getRegistrationDate(): DateTimeImmutable

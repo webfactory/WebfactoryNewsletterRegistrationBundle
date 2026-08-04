@@ -13,10 +13,10 @@
     {{ form_label(registrationForm.emailAddress) }}:
     {{ form_widget(registrationForm.emailAddress) }}
 
-    {% if registrationForm.newsletters is defined %}
-        {{ form_errors(registrationForm.newsletters) }}
-        {{ form_label(registrationForm.newsletters) }}:
-        {{ form_widget(registrationForm.newsletters) }}
+    {% if registrationForm.categories is defined %}
+        {{ form_errors(registrationForm.categories) }}
+        {{ form_label(registrationForm.categories) }}:
+        {{ form_widget(registrationForm.categories) }}
     {% endif %}
 
     {{ form_widget(registrationForm.url) }}

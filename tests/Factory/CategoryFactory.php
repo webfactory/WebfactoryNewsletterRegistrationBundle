@@ -2,10 +2,10 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Factory;
 
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-final class NewsletterFactory extends PersistentObjectFactory
+final class CategoryFactory extends PersistentObjectFactory
 {
     protected function defaults(): array
     {
@@ -18,13 +18,13 @@ final class NewsletterFactory extends PersistentObjectFactory
 
     protected function initialize(): static
     {
-        return $this->instantiateWith(function (array $attributes): Newsletter {
-            return new Newsletter(null, $attributes['name'], $attributes['rank'], $attributes['visible']);
+        return $this->instantiateWith(function (array $attributes): Category {
+            return new Category(null, $attributes['name'], $attributes['rank'], $attributes['visible']);
         });
     }
 
     public static function class(): string
     {
-        return Newsletter::class;
+        return Category::class;
     }
 }

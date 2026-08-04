@@ -62,7 +62,7 @@ In either case, configure Doctrine's interface mapping to deal with your custom 
 doctrine:
     orm:
         resolve_target_entities:
-            \Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface: '\AppBundle\Newsletter\Entity\Newsletter'
+            \Webfactory\NewsletterRegistrationBundle\Entity\CategoryInterface: '\AppBundle\Newsletter\Entity\Category'
 ```
 
 Side node: The templates and example above assume that you want to keep your Newsletter classes inside a Newsletter
@@ -116,15 +116,15 @@ implementations:
 # src/services.yml
 
 services:
-  AppBundle\Newsletter\Entity\NewsletterRepository:
+  AppBundle\Newsletter\Entity\CategoryRepository:
     factory:
       - '@doctrine.orm.entity_manager'
       - 'getRepository'
     arguments:
-      - 'AppBundle\Newsletter\Entity\Newsletter'
+      - 'AppBundle\Newsletter\Entity\Category'
 
-  Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface:
-    alias: 'AppBundle\Newsletter\Entity\NewsletterRepository'
+  Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface:
+    alias: 'AppBundle\Newsletter\Entity\CategoryRepository'
 
   AppBundle\Newsletter\Entity\PendingOptInRepository:
     factory:
