@@ -8,6 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'wfd_newsletterRecipient')]
 #[ORM\UniqueConstraint(name: 'email_unique', columns: ['email'])]
 #[ORM\UniqueConstraint(name: 'uuid_unique', columns: ['uuid'])]
+#[ORM\AssociationOverrides([
+    new ORM\AssociationOverride(
+        name: 'categories',
+        joinTable: new ORM\JoinTable(name: 'wfd_newsletterRecipient_category'),
+        joinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
+        inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
+    ),
+])]
 class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipient
 {
 }
