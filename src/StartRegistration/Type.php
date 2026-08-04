@@ -5,24 +5,24 @@ namespace Webfactory\NewsletterRegistrationBundle\StartRegistration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Webfactory\NewsletterRegistrationBundle\EditRegistration\TypeHasNewslettersElementTrait;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\EditRegistration\TypeHasCategoriesElementTrait;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactoryInterface;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInInterface;
 
 class Type extends AbstractType
 {
-    use TypeHasNewslettersElementTrait;
+    use TypeHasCategoriesElementTrait;
 
     public const ELEMENT_EMAIL_ADDRESS = 'emailAddress';
-    public const ELEMENT_NEWSLETTERS = 'newsletters';
+    public const ELEMENT_CATEGORIES = 'categories';
     public const ELEMENT_HONEYPOT = 'url';
 
     protected PendingOptInFactoryInterface $pendingOptInFactory;
 
-    public function __construct(NewsletterRepositoryInterface $newsletterRepository, PendingOptInFactoryInterface $pendingOptInFactory)
+    public function __construct(CategoryRepositoryInterface $categoryRepository, PendingOptInFactoryInterface $pendingOptInFactory)
     {
-        $this->newsletterRepository = $newsletterRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->pendingOptInFactory = $pendingOptInFactory;
     }
 
@@ -30,7 +30,7 @@ class Type extends AbstractType
     {
         $builder->add(static::ELEMENT_EMAIL_ADDRESS, EmailAddressType::class);
 
-        $this->addNewslettersElementToForm($builder, true);
+        $this->addCategoriesElementToForm($builder, true);
 
         // fake field for spam protection
         $builder->add(static::ELEMENT_HONEYPOT, HoneypotType::class);
@@ -44,7 +44,7 @@ class Type extends AbstractType
 
                 return [
                     static::ELEMENT_EMAIL_ADDRESS => (string) $pendingOptIn->getEmailAddress(),
-                    static::ELEMENT_NEWSLETTERS => $pendingOptIn->getNewsletters(),
+                    static::ELEMENT_CATEGORIES => $pendingOptIn->getCategories(),
                 ];
             },
             function (array $formData) use ($that): ?PendingOptInInterface {

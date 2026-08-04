@@ -2,8 +2,8 @@
 
 namespace Webfactory\NewsletterRegistrationBundle\Tests\Resources;
 
-use AppBundle\Newsletter\Entity\Newsletter as NewsletterTemplate;
-use AppBundle\Newsletter\Entity\NewsletterRepository as NewsletterRepositoryTemplate;
+use AppBundle\Newsletter\Entity\Category as CategoryTemplate;
+use AppBundle\Newsletter\Entity\CategoryRepository as CategoryRepositoryTemplate;
 use AppBundle\Newsletter\Entity\PendingOptIn as PendingOptInTemplate;
 use AppBundle\Newsletter\Entity\PendingOptInRepository as PendingOptInRepositoryTemplate;
 use AppBundle\Newsletter\Entity\Recipient as RecipientTemplate;
@@ -17,9 +17,9 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\SchemaValidator;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Webfactory\NewsletterRegistrationBundle\Entity\Newsletter as AbstractNewsletter;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepository as AbstractNewsletterRepository;
+use Webfactory\NewsletterRegistrationBundle\Entity\Category as AbstractCategory;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepository as AbstractCategoryRepository;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptIn as AbstractPendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInRepository as AbstractPendingOptInRepository;
 use Webfactory\NewsletterRegistrationBundle\Entity\Recipient as AbstractRecipient;
@@ -33,8 +33,8 @@ class AppClassTemplatesTest extends TestCase
     {
         $resolveTargetEntityListener = new ResolveTargetEntityListener();
         $resolveTargetEntityListener->addResolveTargetEntity(
-            NewsletterInterface::class,
-            NewsletterTemplate::class,
+            CategoryInterface::class,
+            CategoryTemplate::class,
             []
         );
 
@@ -55,9 +55,9 @@ class AppClassTemplatesTest extends TestCase
     }
 
     #[Test]
-    public function newsletter_template_extends_abstract_newsletter(): void
+    public function category_template_extends_abstract_category(): void
     {
-        self::assertTrue(is_subclass_of(NewsletterTemplate::class, AbstractNewsletter::class));
+        self::assertTrue(is_subclass_of(CategoryTemplate::class, AbstractCategory::class));
     }
 
     #[Test]
@@ -73,9 +73,9 @@ class AppClassTemplatesTest extends TestCase
     }
 
     #[Test]
-    public function newsletter_repository_template_extends_abstract_newsletter_repository(): void
+    public function category_repository_template_extends_abstract_category_repository(): void
     {
-        self::assertTrue(is_subclass_of(NewsletterRepositoryTemplate::class, AbstractNewsletterRepository::class));
+        self::assertTrue(is_subclass_of(CategoryRepositoryTemplate::class, AbstractCategoryRepository::class));
     }
 
     #[Test]
@@ -99,9 +99,9 @@ class AppClassTemplatesTest extends TestCase
     }
 
     #[Test]
-    public function newsletter_table_name_is_correct(): void
+    public function category_table_name_is_correct(): void
     {
-        self::assertTrue($this->getSchema()->hasTable('wfd_newsletterNewsletter'));
+        self::assertTrue($this->getSchema()->hasTable('wfd_newsletterCategory'));
     }
 
     #[Test]

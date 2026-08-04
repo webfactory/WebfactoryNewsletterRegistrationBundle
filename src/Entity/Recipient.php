@@ -30,33 +30,33 @@ abstract class Recipient implements RecipientInterface
     protected DateTimeImmutable $optInDate;
 
     /**
-     * @var Collection<int, NewsletterInterface>
+     * @var Collection<int, CategoryInterface>
      */
-    #[ORM\ManyToMany(targetEntity: NewsletterInterface::class)]
+    #[ORM\ManyToMany(targetEntity: CategoryInterface::class)]
     #[ORM\JoinTable(
         joinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')]
     )]
-    protected Collection $newsletters;
+    protected Collection $categories;
 
     public static function fromPendingOptIn(PendingOptInInterface $pendingOptIn): RecipientInterface
     {
         return new static(
             $pendingOptIn->getUuid(),
             $pendingOptIn->getEmailAddress(),
-            $pendingOptIn->getNewsletters()
+            $pendingOptIn->getCategories()
         );
     }
 
     public function __construct(
         ?string $uuid,
         EmailAddress $emailAddress,
-        array $newsletters = [],
+        array $categories = [],
         ?DateTimeImmutable $optInDate = null
     ) {
         $this->uuid = $uuid ?: Uuid::uuid4()->toString();
         $this->emailAddress = $emailAddress->getEmailAddress();
-        $this->newsletters = new ArrayCollection($newsletters);
+        $this->categories = new ArrayCollection($categories);
         $this->optInDate = $optInDate ?: new DateTimeImmutable();
     }
 
@@ -75,13 +75,13 @@ abstract class Recipient implements RecipientInterface
         return $this->optInDate;
     }
 
-    public function getNewsletters(): array
+    public function getCategories(): array
     {
-        return $this->newsletters->toArray();
+        return $this->categories->toArray();
     }
 
-    public function setNewsletters(array $newsletters): void
+    public function setCategories(array $categories): void
     {
-        $this->newsletters = new ArrayCollection($newsletters);
+        $this->categories = new ArrayCollection($categories);
     }
 }

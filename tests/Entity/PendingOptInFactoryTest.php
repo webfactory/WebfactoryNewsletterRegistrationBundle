@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
 use Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory;
 use Webfactory\NewsletterRegistrationBundle\StartRegistration\Type as StartRegistrationType;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 
 class PendingOptInFactoryTest extends TestCase
 {
@@ -22,7 +22,7 @@ class PendingOptInFactoryTest extends TestCase
     }
 
     #[Test]
-    public function fromRegistrationFormData_without_newsletter_choices(): void
+    public function fromRegistrationFormData_without_category_choices(): void
     {
         // The PendingOptInFactory uses get_declared_classes() to find a PendingOptInInterface
         // implementation outside the Webfactory\NewsletterRegistrationBundle namespace —
@@ -37,20 +37,20 @@ class PendingOptInFactoryTest extends TestCase
     }
 
     #[Test]
-    public function fromRegistrationFormData_with_newsletter_choices(): void
+    public function fromRegistrationFormData_with_category_choices(): void
     {
         // The PendingOptInFactory uses get_declared_classes() to find a PendingOptInInterface
         // implementation outside the Webfactory\NewsletterRegistrationBundle namespace —
         // the class must be loaded before the factory is called:
         class_exists(AppPendingOptIn::class);
 
-        $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1')];
+        $categoriesForPendingOptIn = [new Category(1, 'category 1')];
         $pendingOptIn = $this->factory->fromRegistrationFormData([
             StartRegistrationType::ELEMENT_EMAIL_ADDRESS => new EmailAddress('webfactory@example.com', 'secret'),
-            StartRegistrationType::ELEMENT_NEWSLETTERS => $newslettersForPendingOptIn,
+            StartRegistrationType::ELEMENT_CATEGORIES => $categoriesForPendingOptIn,
         ]);
 
         $this->assertEquals('webfactory@example.com', (string) $pendingOptIn->getEmailAddress());
-        $this->assertEquals($newslettersForPendingOptIn, $pendingOptIn->getNewsletters());
+        $this->assertEquals($categoriesForPendingOptIn, $pendingOptIn->getCategories());
     }
 }

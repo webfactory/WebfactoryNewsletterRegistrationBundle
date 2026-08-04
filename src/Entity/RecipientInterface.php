@@ -11,12 +11,12 @@ interface RecipientInterface
     public function getEmailAddress(): EmailAddress;
 
     /**
-     * @return NewsletterInterface[]
+     * @return CategoryInterface[]
      */
-    public function getNewsletters(): array;
+    public function getCategories(): array;
 
     /**
-     * @param NewsletterInterface[] $newsletters
+     * @param CategoryInterface[] $categories
      */
-    public function setNewsletters(array $newsletters): void;
+    public function setCategories(array $categories): void;
 }

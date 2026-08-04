@@ -16,7 +16,7 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\StartRegistration\Type:
         arguments:
-            - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface'
             - '@Webfactory\NewsletterRegistrationBundle\Entity\PendingOptInFactory'
         tags: ['form.type']
 
@@ -44,7 +44,7 @@ services:
 
     Webfactory\NewsletterRegistrationBundle\EditRegistration\Type:
         arguments:
-            - '@Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface'
+            - '@Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface'
         tags: ['form.type']
 
     Webfactory\NewsletterRegistrationBundle\DeleteRegistration\Type:

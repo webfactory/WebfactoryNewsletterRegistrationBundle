@@ -5,16 +5,16 @@ namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Choice;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface;
 
-trait TypeHasNewslettersElementTrait
+trait TypeHasCategoriesElementTrait
 {
-    protected NewsletterRepositoryInterface $newsletterRepository;
+    protected CategoryRepositoryInterface $categoryRepository;
 
-    protected function addNewslettersElementToForm(FormBuilderInterface $builder, bool $recipientHasToChooseAtLeastOne)
+    protected function addCategoriesElementToForm(FormBuilderInterface $builder, bool $recipientHasToChooseAtLeastOne)
     {
-        // add newsletter choices, if there is more than one
-        $choices = $this->newsletterRepository->findVisible();
+        // add category choices, if there is more than one
+        $choices = $this->categoryRepository->findVisible();
         if (\count($choices) < 2) {
             return;
         }
@@ -25,10 +25,10 @@ trait TypeHasNewslettersElementTrait
         }
 
         $builder->add(
-            self::ELEMENT_NEWSLETTERS,
+            self::ELEMENT_CATEGORIES,
             ChoiceType::class,
             [
-                'label' => 'Newsletters',
+                'label' => 'Categories',
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => $choices,

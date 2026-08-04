@@ -5,25 +5,25 @@ namespace Webfactory\NewsletterRegistrationBundle\EditRegistration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Webfactory\NewsletterRegistrationBundle\Entity\NewsletterRepositoryInterface;
+use Webfactory\NewsletterRegistrationBundle\Entity\CategoryRepositoryInterface;
 
 class Type extends AbstractType
 {
-    use TypeHasNewslettersElementTrait;
+    use TypeHasCategoriesElementTrait;
 
-    public const ELEMENT_NEWSLETTERS = 'newsletters';
+    public const ELEMENT_CATEGORIES = 'categories';
 
-    public function __construct(NewsletterRepositoryInterface $newsletterRepository)
+    public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
-        $this->newsletterRepository = $newsletterRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->addNewslettersElementToForm($builder, false);
+        $this->addCategoriesElementToForm($builder, false);
 
-        // We need at least one element in addition to the newsletters above, so that Symfony recognizes the form being
-        // submitted even if no newsletters where chosen.
+        // We need at least one element in addition to the categories above, so that Symfony recognizes the form being
+        // submitted even if no categories where chosen.
         $builder->add('hidden', HiddenType::class, ['mapped' => false]);
     }
 }

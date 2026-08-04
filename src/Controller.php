@@ -169,9 +169,9 @@ class Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->editRegistrationTask->editRegistration($recipient);
-            $messageKey = \count($recipient->getNewsletters()) > 0
+            $messageKey = \count($recipient->getCategories()) > 0
                 ? 'edit.registration.updated'
-                : 'edit.registration.updated.no.newsletters.chosen';
+                : 'edit.registration.updated.no.categories.chosen';
             $session->getFlashBag()->add(
                 'success',
                 $this->translator->trans($messageKey, [], 'webfactory-newsletter-registration')

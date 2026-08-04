@@ -25,8 +25,8 @@
         <source>edit.registration.updated</source>
         <target>Your newsletter registration was updated.</target>
       </trans-unit>
-      <trans-unit id="AGtLjHG" resname="edit.registration.updated.no.newsletters.chosen">
-        <source>edit.registration.updated.no.newsletters.chosen</source>
+      <trans-unit id="AGtLjHG" resname="edit.registration.updated.no.categories.chosen">
+        <source>edit.registration.updated.no.categories.chosen</source>
         <target>All your newsletter subscriptions have been deleted, but your registration data (like your email address) is still saved in our database. If you would like to delete that data too, please delete your registration with the button below.</target>
       </trans-unit>
       <trans-unit id="T83i0qx" resname="delete.registration.success">

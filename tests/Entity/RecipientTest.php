@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Webfactory\NewsletterRegistrationBundle\Entity\EmailAddress;
-use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Newsletter;
+use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Category;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\PendingOptIn;
 use Webfactory\NewsletterRegistrationBundle\Tests\Entity\Dummy\Recipient;
 
@@ -32,21 +32,21 @@ class RecipientTest extends TestCase
     }
 
     #[Test]
-    public function static_construction_with_newsletters()
+    public function static_construction_with_categories()
     {
-        $newslettersForPendingOptIn = [new Newsletter(1, 'newsletter 1'), new Newsletter(2, 'newsletter 2')];
-        $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $newslettersForPendingOptIn);
+        $categoriesForPendingOptIn = [new Category(1, 'category 1'), new Category(2, 'category 2')];
+        $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'), $categoriesForPendingOptIn);
 
         $recipient = Recipient::fromPendingOptIn($pendingOptIn);
 
         $this->assertEquals('uuid', $recipient->getUuid());
         $this->assertEquals('webfactory@example.com', (string) $recipient->getEmailAddress());
-        $this->assertEquals($newslettersForPendingOptIn, $recipient->getNewsletters());
+        $this->assertEquals($categoriesForPendingOptIn, $recipient->getCategories());
     }
 
     #[DoesNotPerformAssertions]
     #[Test]
-    public function static_construction_without_newsletters()
+    public function static_construction_without_categories()
     {
         $pendingOptIn = new PendingOptIn('uuid', new EmailAddress('webfactory@example.com', 'secret'));
 

@@ -5,7 +5,7 @@ namespace Webfactory\NewsletterRegistrationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\MappedSuperclass]
-abstract class Newsletter implements NewsletterInterface
+abstract class Category implements CategoryInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -18,7 +18,7 @@ abstract class Newsletter implements NewsletterInterface
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => true])]
     protected bool $visible;
 
-    /** Used for sorting amongst other Newsletters. */
+    /** Used for sorting amongst other Categories. */
     #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
     protected int $rank;
 
