@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
         name: 'categories',
         joinTable: new ORM\JoinTable(name: 'wfd_newsletterRecipient_category'),
         joinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
-        inverseJoinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
+        inverseJoinColumns: [new ORM\JoinColumn(name: 'category_id', onDelete: 'CASCADE')],
     ),
 ])]
 class Recipient extends \Webfactory\NewsletterRegistrationBundle\Entity\Recipient
