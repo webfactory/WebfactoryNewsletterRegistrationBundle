@@ -19,6 +19,7 @@ class Type extends AbstractType
     public const ELEMENT_HONEYPOT = 'url';
 
     protected PendingOptInFactoryInterface $pendingOptInFactory;
+    protected CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(CategoryRepositoryInterface $categoryRepository, PendingOptInFactoryInterface $pendingOptInFactory)
     {
@@ -30,7 +31,11 @@ class Type extends AbstractType
     {
         $builder->add(static::ELEMENT_EMAIL_ADDRESS, EmailAddressType::class);
 
-        $this->addCategoriesElementToForm($builder, true);
+        $choices = $this->categoryRepository->findVisible();
+
+        if (\count($choices) > 1) {
+            $this->addCategoriesElementToForm($builder, $choices, true);
+        }
 
         // fake field for spam protection
         $builder->add(static::ELEMENT_HONEYPOT, HoneypotType::class);
@@ -47,7 +52,14 @@ class Type extends AbstractType
                     static::ELEMENT_CATEGORIES => $pendingOptIn->getCategories(),
                 ];
             },
-            function (array $formData) use ($that): ?PendingOptInInterface {
+            function (array $formData) use ($that, $choices): ?PendingOptInInterface {
+                if (!isset($formData[self::ELEMENT_CATEGORIES]) && 1 === \count($choices)) {
+                    // if the field 'categories' is not in the form because you could choose only one anyway, we need to
+                    // set that one category here.
+                    $singleCategory = $choices[0];
+                    $formData[self::ELEMENT_CATEGORIES] = [$singleCategory];
+                }
+
                 return $that->pendingOptInFactory->fromRegistrationFormData($formData);
             }
         ));
