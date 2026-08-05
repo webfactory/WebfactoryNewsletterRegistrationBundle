@@ -12,6 +12,7 @@ class Type extends AbstractType
     use TypeHasCategoriesElementTrait;
 
     public const ELEMENT_CATEGORIES = 'categories';
+    protected CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(CategoryRepositoryInterface $categoryRepository)
     {
@@ -20,7 +21,11 @@ class Type extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->addCategoriesElementToForm($builder, false);
+        $choices = $this->categoryRepository->findVisible();
+
+        if (\count($choices) > 1) {
+            $this->addCategoriesElementToForm($builder, $choices, false);
+        }
 
         // We need at least one element in addition to the categories above, so that Symfony recognizes the form being
         // submitted even if no categories where chosen.

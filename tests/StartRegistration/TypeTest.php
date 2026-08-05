@@ -241,6 +241,34 @@ class TypeTest extends TypeTestCase
     }
 
     #[Test]
+    public function provides_PendingOptIn_with_single_category_auto_assigned_when_only_one_exists(): void
+    {
+        $this->setUpOneCategory();
+
+        $pendingOptIn = new PendingOptIn(null, new EmailAddress('webfactory@example.com', 'secret'), [$this->category1]);
+        $this->pendingOptInFactory
+            ->method('fromRegistrationFormData')
+            ->with(
+                $this->callback(
+                    function (array $formData) {
+                        return \array_key_exists(StartRegistrationType::ELEMENT_CATEGORIES, $formData)
+                            && $formData[StartRegistrationType::ELEMENT_CATEGORIES] === [$this->category1];
+                    }
+                )
+            )
+            ->willReturn($pendingOptIn);
+
+        $form = $this->factory->create(StartRegistrationType::class);
+        $form->submit([
+            StartRegistrationType::ELEMENT_EMAIL_ADDRESS => 'webfactory@example.com',
+            StartRegistrationType::ELEMENT_HONEYPOT => '',
+        ]);
+
+        $this->assertTrue($form->isValid());
+        $this->assertEquals($pendingOptIn, $form->getData());
+    }
+
+    #[Test]
     public function provides_PendingOptIn_if_submitted_with_valid_data_and_category_choices()
     {
         $this->setUpTwoCategories();
