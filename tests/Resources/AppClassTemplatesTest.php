@@ -49,7 +49,7 @@ class AppClassTemplatesTest extends TestCase
             [__DIR__.'/../../Resources/app-class-templates'],
             isDevMode: true,
         );
-        // our templates are opinionated in regard of using the UnderscoreNamingStrategy, and their custom mapping relies on this
+        // our templates are opinionated in favour of the UnderscoreNamingStrategy, and their custom mapping relies on this
         $config->setNamingStrategy(new \Doctrine\ORM\Mapping\UnderscoreNamingStrategy(\CASE_LOWER, true));
         $config->enableNativeLazyObjects(true);
 
