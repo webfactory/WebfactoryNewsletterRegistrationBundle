@@ -113,6 +113,12 @@ class AppClassTemplatesTest extends TestCase
     }
 
     #[Test]
+    public function recipient_subscription_join_table_name_is_correct(): void
+    {
+        self::assertTrue($this->getSchema()->hasTable('wfd_newsletterSubscription'));
+    }
+
+    #[Test]
     public function recipient_has_unique_constraints_on_email_and_uuid(): void
     {
         $constrainedColumns = $this->getUniqueConstraintColumns('wfd_newsletterRecipient');

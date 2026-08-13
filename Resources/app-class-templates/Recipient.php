@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\AssociationOverrides([
     new ORM\AssociationOverride(
         name: 'categories',
-        joinTable: new ORM\JoinTable(name: 'wfd_newsletterRecipient_category'),
+        joinTable: new ORM\JoinTable(name: 'wfd_newsletterSubscription'),
         joinColumns: [new ORM\JoinColumn(onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn(name: 'category_id', onDelete: 'CASCADE')],
     ),
