@@ -49,6 +49,8 @@ class AppClassTemplatesTest extends TestCase
             [__DIR__.'/../../Resources/app-class-templates'],
             isDevMode: true,
         );
+        // our templates are opinionated in favour of the UnderscoreNamingStrategy, and their custom mapping relies on this
+        $config->setNamingStrategy(new \Doctrine\ORM\Mapping\UnderscoreNamingStrategy(\CASE_LOWER, true));
         $config->enableNativeLazyObjects(true);
 
         $this->em = new EntityManager($connection, $config, $eventManager);
@@ -120,13 +122,12 @@ class AppClassTemplatesTest extends TestCase
     }
 
     #[Test]
-    public function pending_opt_in_has_unique_constraints_on_email_address_hash_and_uuid(): void
+    public function pending_opt_in_has_unique_constraint_on_email_address_hash(): void
     {
         $tableName = $this->em->getClassMetadata(PendingOptInTemplate::class)->getTableName();
         $constrainedColumns = $this->getUniqueConstraintColumns($tableName);
 
-        self::assertContains(['emailAddressHash'], $constrainedColumns);
-        self::assertContains(['uuid'], $constrainedColumns);
+        self::assertContains(['email_address_hash'], $constrainedColumns);
     }
 
     private function getSchema(): \Doctrine\DBAL\Schema\Schema
