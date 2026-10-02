@@ -152,6 +152,14 @@ class EmailAddressTypeTest extends TypeTestCase
         $this->assertEquals('webfactory@example.com', $emailAddress->getEmailAddress());
     }
 
+    #[Test]
+    public function identifies_input_purpose_for_autofill()
+    {
+        $view = $this->form->createView();
+
+        $this->assertEquals('email', $view['emailAddress']->vars['attr']['autocomplete']);
+    }
+
     protected function getExtensions(): array
     {
         return [

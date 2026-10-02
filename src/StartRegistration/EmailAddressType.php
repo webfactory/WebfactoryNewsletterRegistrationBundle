@@ -79,6 +79,7 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
             'required' => true,
             'compound' => false,
             'label' => 'Email address',
+            'attr' => ['autocomplete' => 'email'],
             'constraints' => [
                 new NotBlank(),
                 new Email(),
