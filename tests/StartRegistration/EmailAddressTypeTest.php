@@ -160,6 +160,14 @@ class EmailAddressTypeTest extends TypeTestCase
         $this->assertEquals('email', $view['emailAddress']->vars['attr']['autocomplete']);
     }
 
+    public function has_translatable_label()
+    {
+        $view = $this->form->createView();
+
+        $this->assertEquals('start.registration.label.email.address', $view['emailAddress']->vars['label']);
+        $this->assertEquals('webfactory-newsletter-registration', $view['emailAddress']->vars['translation_domain']);
+    }
+
     protected function getExtensions(): array
     {
         return [

@@ -19,7 +19,8 @@ trait TypeHasCategoriesElementTrait
             self::ELEMENT_CATEGORIES,
             ChoiceType::class,
             [
-                'label' => 'Categories',
+                'label' => 'registration.label.categories',
+                'translation_domain' => 'webfactory-newsletter-registration',
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => $choices,

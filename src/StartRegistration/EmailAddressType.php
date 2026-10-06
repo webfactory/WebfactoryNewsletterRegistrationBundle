@@ -78,8 +78,9 @@ class EmailAddressType extends AbstractType implements DataMapperInterface
             'empty_data' => null,
             'required' => true,
             'compound' => false,
-            'label' => 'Email address',
             'attr' => ['autocomplete' => 'email'],
+            'label' => 'start.registration.label.email.address',
+            'translation_domain' => 'webfactory-newsletter-registration',
             'constraints' => [
                 new NotBlank(),
                 new Email(),

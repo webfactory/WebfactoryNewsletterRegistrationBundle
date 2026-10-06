@@ -87,6 +87,17 @@ class TypeTest extends TypeTestCase
     }
 
     #[Test]
+    public function category_choice_element_has_translatable_label(): void
+    {
+        $this->setUpTwoCategories();
+
+        $formView = $this->factory->create(StartRegistrationType::class)->createView();
+        $categoriesVars = $formView->vars['form']->children[StartRegistrationType::ELEMENT_CATEGORIES]->vars;
+        $this->assertEquals('registration.label.categories', $categoriesVars['label']);
+        $this->assertEquals('webfactory-newsletter-registration', $categoriesVars['translation_domain']);
+    }
+
+    #[Test]
     public function does_not_validate_without_honeypot()
     {
         $form = $this->factory->create(StartRegistrationType::class);

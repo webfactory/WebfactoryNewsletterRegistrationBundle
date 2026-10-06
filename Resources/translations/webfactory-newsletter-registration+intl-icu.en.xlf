@@ -37,6 +37,14 @@
         <source>confirm.registration.complete</source>
         <target>Your newsletter registration is now active.</target>
       </trans-unit>
+      <trans-unit id="start.registration.label.email.address" resname="start.registration.label.email.address">
+        <source>start.registration.label.email.address</source>
+        <target>Email address</target>
+      </trans-unit>
+      <trans-unit id="registration.label.categories" resname="registration.label.categories">
+        <source>registration.label.categories</source>
+        <target>Categories</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
