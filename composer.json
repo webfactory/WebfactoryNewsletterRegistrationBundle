@@ -4,7 +4,7 @@
     "license": "MIT",
 
     "require": {
-        "php": "^8.4",
+        "php": "8.4.*|8.5.*",
         "ext-mbstring": "*",
         "doctrine/collections": "^2.0",
         "doctrine/orm": "^3.0",

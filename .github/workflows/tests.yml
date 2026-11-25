@@ -7,32 +7,40 @@ on:
     pull_request:
 
 env:
-    PHP_VERSION: 8.4
     TEMP: ${{ github.workspace }}/tmp
 
 jobs:
     PHPUnit:
-        name: PHPUnit
         runs-on: ubuntu-22.04
+        strategy:
+            fail-fast: false
+            matrix:
+                # Das Bundle unterstützt laut composer.json auch noch Symfony 8.0, getestet wird aber erst ab 8.1:
+                # Symfony 8.0 wird nicht mehr gepflegt (letztes Release v8.0.15 vom 29.07.2026) und alle 8.0.x-Versionen
+                # sind von Sicherheitshinweisen betroffen, die Composer seit 2.11 standardmäßig blockiert.
+                include:
+                    - { php-version: 8.4, symfony-locked-version: 8.1.*, dependency-version: prefer-stable }
+                    - { php-version: 8.5, symfony-locked-version: 8.1.*, dependency-version: prefer-stable }
+        name: PHPUnit (PHP ${{matrix.php-version}}, Symfony Version Lock ${{ matrix.symfony-locked-version }}, ${{ matrix.dependency-version }})
         steps:
             -   uses: actions/checkout@v6
             -   run: mkdir --mode=777 -p $GITHUB_WORKSPACE/{tmp,logs}
             -   name: Konfiguriere PHP-Version und -Einstellungen im Worker-Node
                 uses: shivammathur/setup-php@v2
                 with:
-                  php-version: ${{ env.PHP_VERSION }}
+                  php-version: ${{ matrix.php-version }}
                   coverage: none
                   tools: composer:v2
                   ini-values: variables_order=EGPCS, date.timezone=Europe/Berlin
             -   name: Cache Composer Dependencies
                 uses: actions/cache@v5
                 with:
-                    path: vendor/
-                    key: composer-${{ env.PHP_VERSION }}-${{ hashFiles('composer.*') }}
+                    path: vendor
+                    key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-${{ hashFiles('composer.json') }}
                     restore-keys: |
-                        composer-${{ env.PHP_VERSION }}-${{ github.ref }}
-                        composer-${{ env.PHP_VERSION }}-
-            -   run: |
-                    composer install --no-interaction --no-scripts --no-progress --no-suggest
-                    composer show
-            -   run: vendor/phpunit/phpunit/phpunit
+                        composer-${{ runner.os }}-${{ matrix.php-version }}-${{ matrix.symfony-locked-version }}-${{ matrix.dependency-version }}-
+            -   run: VERSION=${{ matrix.symfony-locked-version }} .github/workflows/lock-symfony-version.sh
+                if: matrix.symfony-locked-version != 'none'
+            -   run: composer update --${{ matrix.dependency-version }} --no-interaction --no-scripts --no-progress --ansi
+            -   run: composer show
+            -   run: vendor/bin/phpunit
